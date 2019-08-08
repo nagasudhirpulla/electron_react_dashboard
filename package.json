@@ -1,11 +1,11 @@
 {
-  "name": "electron_react_webpack_typescript_template",
+  "name": "electron_react_dashboard",
   "version": "0.1.0",
   "private": false,
   "author": "Nagasudhir",
-  "description": "Electron + Webpack + React + Typescript template",
+  "description": "electron_react_dashboard",
   "main": "./dist/main.js",
-  "homepage": "https://github.com/nagasudhirpulla/typescript_template",
+  "homepage": "https://github.com/nagasudhirpulla/electron_react_dashboard",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "react-poppop": "^1.5.0",
@@ -53,9 +53,9 @@
     "webpack-dev-server": "^3.3.1"
   },
   "build": {
-    "appId": "electron_template_app",
+    "appId": "electron_react_dashboard",
     "asar": true,
-    "productName": "Electron Template App",
+    "productName": "Electron React Dashboard",
     "files": [
       "dist/*"
     ],
