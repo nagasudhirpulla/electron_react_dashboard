@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import './rgl_styles.css';
 import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { MyProps, MyState, LayoutProps } from "./IApp";
@@ -27,7 +28,7 @@ class App extends React.Component<MyProps, MyState> {
   }
 
   generateDOM() {
-    return _.map(this.state.layouts.lg, function (l, i) {
+    return _.map(this.state.layouts.lg, function (l:LayoutProps, i) {
       return (
         <div key={i} className={l.static ? "static" : ""}>
           {l.static ? (
