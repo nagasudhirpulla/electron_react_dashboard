@@ -1,4 +1,4 @@
-export interface LayoutProps {
+export interface LayoutItem {
     x: number,
     y: number,
     w: number,
@@ -7,17 +7,17 @@ export interface LayoutProps {
     static: boolean
 }
 
-export interface MyProps {
-    className: "layout",
+export interface AppProps {
+    className: string,
     rowHeight: number,
     onLayoutChange: (a1: any, a2: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
-    initialLayout: () => LayoutProps[]
+    initialLayout: () => LayoutItem[]
 }
 
-export interface MyState {
+export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    layouts: { lg: () => LayoutProps[] }
+    layouts: { lg: () => LayoutItem[] }
 }

@@ -3,11 +3,11 @@ import './App.css';
 import './rgl_styles.css';
 import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { MyProps, MyState, LayoutProps } from "./IApp";
+import { AppProps, AppState, LayoutItem } from "./IApp";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-class App extends React.Component<MyProps, MyState> {
+class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
     rowHeight: 30,
@@ -24,11 +24,11 @@ class App extends React.Component<MyProps, MyState> {
   };
 
   componentDidMount() {
-    this.setState({ mounted: true } as MyState);
+    this.setState({ mounted: true } as AppState);
   }
 
   generateDOM() {
-    return _.map(this.state.layouts.lg, function (l:LayoutProps, i) {
+    return _.map(this.state.layouts.lg, function (l: LayoutItem, i) {
       return (
         <div key={i} className={l.static ? "static" : ""}>
           {l.static ? (
@@ -47,7 +47,7 @@ class App extends React.Component<MyProps, MyState> {
   }
 
   onBreakpointChange = breakpoint => {
-    this.setState({ currentBreakpoint: breakpoint } as MyState);
+    this.setState({ currentBreakpoint: breakpoint } as AppState);
   };
 
   onCompactTypeChange = () => {
@@ -56,7 +56,7 @@ class App extends React.Component<MyProps, MyState> {
       oldCompactType === "horizontal"
         ? "vertical"
         : oldCompactType === "vertical" ? null : "horizontal";
-    this.setState({ compactType } as MyState);
+    this.setState({ compactType } as AppState);
   };
 
   onLayoutChange = (layout, layouts) => {
@@ -64,7 +64,7 @@ class App extends React.Component<MyProps, MyState> {
   };
 
   onNewLayout = () => {
-    this.setState({ layouts: { lg: () => generateLayout() } } as MyState);
+    this.setState({ layouts: { lg: () => generateLayout() } } as AppState);
   };
 
   render() {
@@ -106,7 +106,7 @@ class App extends React.Component<MyProps, MyState> {
 
 export default App;
 
-function generateLayout(): LayoutProps[] {
+function generateLayout(): LayoutItem[] {
   return _.map(_.range(0, 25), function (item, i) {
     var y = Math.ceil(Math.random() * 4) + 1;
     return {
