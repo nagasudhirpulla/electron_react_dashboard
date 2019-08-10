@@ -31,7 +31,8 @@ class App extends React.Component<AppProps, AppState> {
     return _.map(this.state.layouts.lg, function (l: LayoutItem, i) {
       return (
         <div key={i} className={l.static ? "static" : ""}>
-          {l.static ? (
+          <div className="dragHandle"></div>
+          <div>{l.static ? (
             <span
               className="text"
               title="This item is static and cannot be removed or resized."
@@ -41,6 +42,7 @@ class App extends React.Component<AppProps, AppState> {
           ) : (
               <span className="text">{i}</span>
             )}
+          </div>
         </div>
       );
     });
@@ -96,6 +98,7 @@ class App extends React.Component<AppProps, AppState> {
           useCSSTransforms={this.state.mounted}
           compactType={this.state.compactType}
           preventCollision={!this.state.compactType}
+          draggableHandle='.dragHandle'
         >
           {this.generateDOM()}
         </ResponsiveReactGridLayout>

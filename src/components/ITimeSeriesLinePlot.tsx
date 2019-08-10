@@ -1,4 +1,4 @@
-import { Color } from "plotly.js";
+import { Color, Datum, Data, Layout } from "plotly.js";
 
 export interface TslpProps {
     series: TslpSeries[],
@@ -19,7 +19,7 @@ export interface TslpSeries {
 export interface TslpDataPoint {
     timestamp: Date,
     value: number,
-    quality: TslpDataPointQuality
+    quality?: TslpDataPointQuality
 }
 
 export enum TslpDataPointQuality {
@@ -27,4 +27,15 @@ export enum TslpDataPointQuality {
     Bad,
     Suspect,
     Replaced,
+}
+
+export interface Frame {
+    name: string;
+    data: [{ x: Datum, y: Datum }];
+    group: 'lower' | 'upper';
+}
+
+export interface Figure {
+    data: Data[];
+    layout: Partial<Layout>;
 }

@@ -2,9 +2,11 @@
  * Timeseries line plot component that takes in timeseries data
  */
 import React, { Component } from 'react';
-import Plot from 'react-plotly.js';
 import './TimeSeriesLinePlot.css';
-import { TslpProps, TslpState, TslpSeries, TslpDataPoint, TslpDataPointQuality } from "./ITimeSeriesLinePlot";
+import { TslpProps, TslpState, TslpSeries, TslpDataPoint, TslpDataPointQuality, Frame } from "./ITimeSeriesLinePlot";
+import Plot from 'react-plotly.js';
+import { Data, Datum, Config } from 'plotly.js';
+import { Color } from 'plotly.js';
 
 class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
     static defaultProps: TslpProps = {
@@ -22,17 +24,32 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
         this.setState({ mounted: true } as TslpState);
     }
 
-    generateSeriesPnts() {
-        let series_data_template = { x: [], y: [], type: 'scatter', mode: 'lines+markers', marker: { color: 'red' } }
-        
-        return ;
+    generateSeriesData(seriesIter: number): Data {
+        let series_data_template: Data = { x: [], y: [], type: 'scatter', mode: 'lines+markers', marker: { color: 'red' as Color } }
+        let seriesData: Data = { ...series_data_template };
+        seriesData.marker.color = this.state.series[seriesIter].color;
+        for (let pntIter = 0; pntIter < this.state.series[seriesIter].points.length; pntIter++) {
+            const dataPnt = this.state.series[seriesIter].points[pntIter];
+            (seriesData.x as Datum[]).push(dataPnt.timestamp);
+            (seriesData.y as Datum[]).push(dataPnt.value);
+        }
+        return seriesData;
     }
 
-    render() {
+    generatePlotData() {
         let plot_data = []
-        let plot_layout = { title: this.state.title }
-        let plot_frames = []
-        let plot_config = {}
+        for (let seriesIter = 0; seriesIter < this.state.series.length; seriesIter++) {
+            plot_data.push(this.generateSeriesData(seriesIter));
+        }
+        return plot_data;
+    }
+
+    // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
+    render() {
+        let plot_data: Plotly.Data[] = this.generatePlotData()
+        let plot_layout: Partial<Plotly.Layout> = { title: this.state.title }
+        let plot_frames: Frame[] = []
+        let plot_config: Partial<Config> = {}
 
         return (
             <Plot
