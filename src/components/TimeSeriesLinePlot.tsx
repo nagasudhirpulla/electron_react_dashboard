@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
 import { TslpProps, TslpState, TslpSeries, TslpDataPoint, TslpDataPointQuality, Frame } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
-import { Data, Datum, Config } from 'plotly.js';
+import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
 
 class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
@@ -46,8 +46,8 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
 
     // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
     render() {
-        let plot_data: Plotly.Data[] = this.generatePlotData()
-        let plot_layout: Partial<Plotly.Layout> = { title: this.state.title }
+        let plot_data: Data[] = this.generatePlotData()
+        let plot_layout: Partial<Layout> = { title: this.state.title }
         let plot_frames: Frame[] = []
         let plot_config: Partial<Config> = {}
 

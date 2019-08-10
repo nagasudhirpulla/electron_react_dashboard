@@ -42,18 +42,6 @@ body {
   background: #cce;
 }
 
-.react-grid-item .text {
-  font-size: 24px;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  height: 24px;
-}
-
 .react-grid-item .minMax {
   font-size: 12px;
 }
@@ -117,8 +105,25 @@ li b {
   height: 20px;
   width: 100%;
   display: none;
+  cursor: move;
+  /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 
-.react-grid-item:hover .dragHandle{
+.react-grid-item:hover .dragHandle {
   display: block;
+}
+
+.removeBtn {
+  position: absolute;
+  right: 2px;
+  top: 0;
+  cursor: pointer;
+  color: red;
+}
+
+.cellContent {
+  height: 100%;
 }

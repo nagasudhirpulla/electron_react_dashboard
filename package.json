@@ -23,6 +23,7 @@
     "@types/react-dom": "^16.8.5",
     "@types/react-redux": "^7.1.1",
     "@types/react-select": "^3.0.2",
+    "@types/uuid": "^3.4.5",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -53,6 +54,7 @@
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "typings": "^2.1.1",
+    "uuid": "^3.3.2",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1"
@@ -101,6 +103,7 @@
     "build": "npm run build-client && npm run build-server",
     "build-server": "webpack --mode production --config webpack-server.config.js",
     "build-client": "webpack --mode production --config webpack-client.config.js",
+    "build-client-watch": "webpack --mode production --config webpack-client.config.js --watch",
     "pack": "rm -fr ./pack_dist && npm run electron-win-package",
     "electron-win-package": "electron-builder dist/main.js"
   }

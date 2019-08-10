@@ -12,12 +12,12 @@ export interface AppProps {
     rowHeight: number,
     onLayoutChange: (a1: any, a2: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
-    initialLayout: () => LayoutItem[]
+    initialLayout: LayoutItem[]
 }
 
 export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    layouts: { lg: () => LayoutItem[] }
+    layouts: { lg: LayoutItem[] }
 }

@@ -4,13 +4,14 @@ import './rgl_styles.css';
 import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem } from "./IApp";
+import { v4 as uuid } from 'uuid';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
-    rowHeight: 30,
+    rowHeight: 200,
     onLayoutChange: function () { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     initialLayout: generateLayout()
@@ -20,35 +21,14 @@ class App extends React.Component<AppProps, AppState> {
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
-    layouts: { lg: this.props.initialLayout }
+    layouts: { lg: generateLayout() }
   };
 
   componentDidMount() {
     this.setState({ mounted: true } as AppState);
   }
 
-  generateDOM() {
-    return _.map(this.state.layouts.lg, function (l: LayoutItem, i) {
-      return (
-        <div key={i} className={l.static ? "static" : ""}>
-          <div className="dragHandle"></div>
-          <div>{l.static ? (
-            <span
-              className="text"
-              title="This item is static and cannot be removed or resized."
-            >
-              Static - {i}
-            </span>
-          ) : (
-              <span className="text">{i}</span>
-            )}
-          </div>
-        </div>
-      );
-    });
-  }
-
-  onBreakpointChange = breakpoint => {
+  onBreakpointChange = (breakpoint: string) => {
     this.setState({ currentBreakpoint: breakpoint } as AppState);
   };
 
@@ -66,7 +46,48 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onNewLayout = () => {
-    this.setState({ layouts: { lg: () => generateLayout() } } as AppState);
+    this.setState({ layouts: { lg: generateLayout() } } as AppState);
+  };
+
+  onAddItem = () => {
+    this.setState({
+      layouts: {
+        lg: this.state.layouts.lg.concat({
+          i: uuid(),
+          x: (this.state.layouts.lg.length * 2) % (this.props.cols[this.state.currentBreakpoint] || 12),
+          y: Infinity, // puts it at the bottom
+          w: 2,
+          h: 2,
+          static: false
+        })
+      }
+    } as AppState);
+  };
+
+  onRemoveItem = (ind: number) => {
+    this.setState({
+      layouts: {
+        lg: [...this.state.layouts.lg.slice(0, ind), ...this.state.layouts.lg.slice(0, ind + 1)]
+      }
+    } as AppState);
+  }
+
+  generateDOM = () => {
+    return this.state.layouts.lg.map((l: LayoutItem, i) => {
+      const keyStr = uuid();
+      return (
+        <div key={keyStr} className={l.static ? "static" : ""}>
+          <div className="dragHandle">
+            <span
+              className="removeBtn"
+              onClick={this.onRemoveItem.bind(this, i)}
+            >x</span>
+          </div>
+          <div className="cellContent">
+          </div>
+        </div>
+      );
+    });
   };
 
   render() {
@@ -86,6 +107,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onCompactTypeChange}>
           Change Compaction Type
         </button>
+        <button onClick={this.onAddItem}>Add Widget</button>
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={this.state.layouts}
@@ -110,15 +132,15 @@ class App extends React.Component<AppProps, AppState> {
 export default App;
 
 function generateLayout(): LayoutItem[] {
-  return _.map(_.range(0, 25), function (item, i) {
+  return [1, 2, 3, 4, 5].map(function (i, ind) {
     var y = Math.ceil(Math.random() * 4) + 1;
     return {
-      x: (_.random(0, 5) * 2) % 12,
-      y: Math.floor(i / 6) * y,
+      x: ind * 2,
+      y: 0,
       w: 2,
       h: y,
-      i: i.toString(),
-      static: Math.random() < 0.05
+      i: uuid(),
+      static: false
     };
   });
 }
