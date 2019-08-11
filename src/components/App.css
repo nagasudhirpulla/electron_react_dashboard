@@ -107,8 +107,8 @@ li b {
   left: 0;
   right: 0;
   height: 20px;
-  z-index: 10;
-  display: none;
+  /* z-index: 10; */
+  /* display: none; */
   cursor: move;
   /* fallback if grab cursor is unsupported */
   cursor: grab;
@@ -116,9 +116,9 @@ li b {
   cursor: -webkit-grab;
 }
 
-.react-grid-item:hover .dragHandle {
+/* .react-grid-item:hover .dragHandle {
   display: block;
-}
+} */
 
 .removeBtn {
   position: absolute;
@@ -132,7 +132,7 @@ li b {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: 20px;
   bottom: 0;
   background-color: cadetblue;
 }

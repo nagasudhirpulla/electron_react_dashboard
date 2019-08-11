@@ -78,13 +78,13 @@ class App extends React.Component<AppProps, AppState> {
       return (
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
+            <div style={{ textAlign: 'center' }}>{l.i}</div>
             <span
               className="removeBtn"
               onClick={this.onRemoveItem.bind(this, i)}
             >x</span>
           </div>
           <div className="cellContent">
-            <div style={{ marginTop: "20px", textAlign: 'center' }}>{l.i}</div>
           </div>
         </div>
       );
