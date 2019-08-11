@@ -1,19 +1,28 @@
 import { Color, Datum, Data, Layout } from "plotly.js";
+import { IMeasurement } from "../measurements/IMeasurement";
+import { VarTime } from './../variable_time/VariableTime';
 
 export interface TslpProps {
     series: TslpSeries[],
-    title: string
+    title: string,
+    backgroundColor?: Color
 }
 
 export interface TslpState {
     series: TslpSeries[],
     title: string,
+    backgroundColor?: Color,
     mounted: boolean,
 }
 
 export interface TslpSeries {
     points: TslpDataPoint[],
-    color: Color
+    color: Color,
+    meas: IMeasurement,
+    fromVarTime: VarTime
+    toVarTime: VarTime,
+    displayTimeShift: DisplayTimeShift,
+    updateData(): boolean
 }
 
 export interface TslpDataPoint {
@@ -27,6 +36,16 @@ export enum TslpDataPointQuality {
     Bad,
     Suspect,
     Replaced,
+}
+
+export interface DisplayTimeShift {
+    years: number,
+    months: number,
+    days: number,
+    hrs: number,
+    mins: number,
+    secs: number,
+    millis: number
 }
 
 export interface Frame {
