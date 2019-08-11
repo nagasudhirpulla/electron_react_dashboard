@@ -3,7 +3,7 @@ import './App.css';
 import './rgl_styles.css';
 import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { AppProps, AppState, LayoutItem } from "./IApp";
+import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -12,7 +12,7 @@ class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
     rowHeight: 200,
-    onLayoutChange: function () { },
+    onLayoutChange: function (currLayout: Layout, allLayouts) { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     initialLayout: generateLayout()
   };
@@ -41,8 +41,9 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ compactType } as AppState);
   };
 
-  onLayoutChange = (layout, layouts) => {
+  onLayoutChange = (layout: Layout, layouts) => {
     this.props.onLayoutChange(layout, layouts);
+    this.setState({ layouts: layouts } as AppState);
   };
 
   onNewLayout = () => {
@@ -131,7 +132,7 @@ class App extends React.Component<AppProps, AppState> {
 
 export default App;
 
-function generateLayout(): LayoutItem[] {
+function generateLayout(): Layout {
   return [0, 1, 2, 3].map(function (i, ind) {
     var y = Math.ceil(Math.random() * 4) + 1;
     return {

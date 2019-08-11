@@ -7,17 +7,19 @@ export interface LayoutItem {
     static: boolean
 }
 
+export interface Layout extends Array<LayoutItem>{}
+
 export interface AppProps {
     className: string,
     rowHeight: number,
-    onLayoutChange: (a1: any, a2: any) => {},
+    onLayoutChange: (currLayout: Layout, allLayouts: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
-    initialLayout: LayoutItem[]
+    initialLayout: Layout
 }
 
 export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    layouts: { lg: LayoutItem[] }
+    layouts: { lg: Layout }
 }
