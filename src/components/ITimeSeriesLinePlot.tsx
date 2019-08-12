@@ -1,28 +1,28 @@
 import { Color, Datum, Data, Layout } from "plotly.js";
 import { IMeasurement } from "../measurements/IMeasurement";
 import { VarTime } from './../variable_time/VariableTime';
+import { IDashWidgetContentState, IDashWidgetContentProps } from "./IDashWidgetContent";
 
-export interface TslpProps {
-    series: TslpSeries[],
-    title: string,
-    backgroundColor?: Color
-}
-
-export interface TslpState {
-    series: TslpSeries[],
-    title: string,
+export interface TslpProps extends IDashWidgetContentProps {
+    series: TslpSeriesState[],
     backgroundColor?: Color,
-    mounted: boolean,
+    title:string
 }
 
-export interface TslpSeries {
+export interface TslpState extends IDashWidgetContentState {
+    series: TslpSeriesState[],
+    backgroundColor?: Color,
+    title:string,
+    mounted: boolean
+}
+
+export interface TslpSeriesState {
     points: TslpDataPoint[],
     color: Color,
     meas: IMeasurement,
-    fromVarTime: VarTime
+    fromVarTime: VarTime,
     toVarTime: VarTime,
-    displayTimeShift: DisplayTimeShift,
-    updateData(): boolean
+    displayTimeShift: DisplayTimeShift
 }
 
 export interface TslpDataPoint {

@@ -7,17 +7,19 @@ import { TslpProps, TslpState, TslpSeries, TslpDataPoint, TslpDataPointQuality, 
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
+import { IDashWidgetContent } from './IDashWidget';
+import { v4 as uuid } from 'uuid';
 
-class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
+class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDashWidgetContent {
     static defaultProps: TslpProps = {
         series: [],
-        title: 'Default Title'
+        title: 'Default Title',
     };
 
     state = {
         series: this.props.series,
         mounted: false,
-        title: this.props.title
+        title: this.props.title,
     };
 
     componentDidMount() {
@@ -42,6 +44,11 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> {
             plot_data.push(this.generateSeriesData(seriesIter));
         }
         return plot_data;
+    }
+
+    refresh(): boolean {
+        this.generatePlotData();
+        return true;
     }
 
     // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
