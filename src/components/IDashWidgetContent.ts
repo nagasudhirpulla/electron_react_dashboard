@@ -8,5 +8,5 @@ export interface IDashWidgetContentState {
 }
 
 export interface IDashWidgetContent extends Component<IDashWidgetContentProps, IDashWidgetContentState> {
-    refresh(): boolean
+    fetchAndSetPntData(): boolean
 }

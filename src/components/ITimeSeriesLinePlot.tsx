@@ -4,19 +4,19 @@ import { VarTime } from './../variable_time/VariableTime';
 import { IDashWidgetContentState, IDashWidgetContentProps } from "./IDashWidgetContent";
 
 export interface ITslpProps extends IDashWidgetContentProps {
-    series: ITslpSeriesProps[],
+    seriesList: ITslpSeriesProps[],
     backgroundColor?: Color,
     title: string
 }
 
 export class TslpProps implements ITslpProps {
-    series: ITslpSeriesProps[];
+    seriesList: ITslpSeriesProps[];
     backgroundColor?: Color;
     title: string
 }
 
 export interface ITslpState extends IDashWidgetContentState {
-    series: ITslpSeriesState[],
+    seriesList: ITslpSeriesState[],
     backgroundColor?: Color,
     title: string,
     mounted: boolean

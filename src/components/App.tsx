@@ -7,9 +7,10 @@ import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
 import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpProps, ITslpSeriesProps, IDisplayTimeShift, DisplayTimeShift, TslpProps } from './ITimeSeriesLinePlot';
+import { ITslpProps, ITslpSeriesProps, IDisplayTimeShift, DisplayTimeShift, TslpProps, ITslpDataPoint } from './ITimeSeriesLinePlot';
 import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
+import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -110,9 +111,11 @@ class App extends React.Component<AppProps, AppState> {
     // });
     return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
       let l: LayoutItem = ws.layout;
-      let content = (<div className="cellContent"></div>);
+      let content = <div className="cellContent"></div>;
       if (ws.contentProps instanceof TslpProps) {
-
+        content = <div className="cellContent">
+          <TimeSeriesLinePlot {...ws.contentProps}></TimeSeriesLinePlot>
+        </div>;
       }
       return (
         <div key={l.i} className={l.static ? "static" : ""}>
@@ -188,7 +191,7 @@ function generateWidgetStates(): IDashWidgetProps[] {
   return [0, 1, 2, 3].map(function (i, ind) {
     let title: string = uuid()
     let fromVarTime = new VarTime()
-    fromVarTime.offsetHrs = -2;
+    fromVarTime.absoluteTime = new Date((new Date()).getTime() - 2 * 60 * 60 * 1000)
 
     let seriesProps: ITslpSeriesProps = {
       color: "yellow",
@@ -197,14 +200,16 @@ function generateWidgetStates(): IDashWidgetProps[] {
       toVarTime: new VarTime(),
       displayTimeShift: new DisplayTimeShift()
     }
-    let contentProps: ITslpProps = { series: [seriesProps], title: title };
+    let contentProps: TslpProps = new TslpProps();
+    contentProps.seriesList = [seriesProps];
+    contentProps.title = `Plot ${ind + 1}`;
 
     let widgetProps = {
       layout: {
         x: (ind * 2) % 12,
         y: Math.floor(ind / 6),
-        w: 2,
-        h: 2,
+        w: 10,
+        h: 5,
         i: title,
         static: false
       },

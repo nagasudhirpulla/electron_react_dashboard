@@ -11,12 +11,12 @@ import { IDashWidgetContent } from './IDashWidgetContent';
 
 class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
     static defaultProps: ITslpProps = {
-        series: [],
+        seriesList: [],
         title: 'Default Title',
     };
 
     state = {
-        series: this.props.series.map((s, sInd) => { return { ...s, points: [] } }),
+        seriesList: this.props.seriesList.map((s, sInd) => { return { ...s, points: [] } }),
         mounted: false,
         title: this.props.title,
     };
@@ -28,9 +28,10 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
     generateSeriesData(seriesIter: number): Data {
         let series_data_template: Data = { x: [], y: [], type: 'scatter', mode: 'lines+markers', marker: { color: 'red' as Color } }
         let seriesData: Data = { ...series_data_template };
-        seriesData.marker.color = this.state.series[seriesIter].color;
-        for (let pntIter = 0; pntIter < this.state.series[seriesIter].points.length; pntIter++) {
-            const dataPnt = this.state.series[seriesIter].points[pntIter];
+        seriesData.marker.color = this.state.seriesList[seriesIter].color;
+        // get points from measurement
+        for (let pntIter = 0; pntIter < this.state.seriesList[seriesIter].points.length; pntIter++) {
+            const dataPnt = this.state.seriesList[seriesIter].points[pntIter];
             (seriesData.x as Datum[]).push(dataPnt.timestamp);
             (seriesData.y as Datum[]).push(dataPnt.value);
         }
@@ -39,21 +40,35 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
 
     generatePlotData() {
         let plot_data = []
-        for (let seriesIter = 0; seriesIter < this.state.series.length; seriesIter++) {
+        for (let seriesIter = 0; seriesIter < this.state.seriesList.length; seriesIter++) {
             plot_data.push(this.generateSeriesData(seriesIter));
         }
         return plot_data;
     }
 
-    refresh(): boolean {
-        this.generatePlotData();
+    fetchAndSetPntData(): boolean {
+        // fetch the timeseries data
+        for (let seriesIter = 0; seriesIter < this.state.seriesList.length; seriesIter++) {
+            const series = this.state.seriesList[seriesIter];
+            const pnts: ITslpDataPoint[] = series.meas.fetchData(series.fromVarTime, series.toVarTime);
+            // const newState: ITslpState = {
+            //     ...this.state,
+            //     series: [
+            //         ...this.state.seriesList.slice(0, seriesIter),
+            //         { ...series, points: pnts },
+            //         ...this.state.seriesList.slice(seriesIter + 1),
+            //     ]
+            // } as ITslpState;
+            this.state.seriesList[seriesIter].points = pnts;
+        }
         return true;
     }
 
     // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
     render() {
+        this.fetchAndSetPntData();
         let plot_data: Data[] = this.generatePlotData()
-        let plot_layout: Partial<Layout> = { title: this.state.title }
+        let plot_layout: Partial<Layout> = { title: this.state.title, autosize: true }
         let plot_frames: IFrame[] = []
         let plot_config: Partial<Config> = {}
 
@@ -63,6 +78,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
                 layout={plot_layout}
                 frames={plot_frames}
                 config={plot_config}
+                style={{ width: '100%', height: '100%' }}
             />
         );
     }
