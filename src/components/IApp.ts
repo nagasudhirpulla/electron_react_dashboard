@@ -16,7 +16,7 @@ export interface AppProps {
     onLayoutChange: (currLayout: Layout, allLayouts: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
     initialLayout: Layout,
-    widgetStates: IDashWidgetProps[]
+    widgetProps: IDashWidgetProps[]
 }
 
 export interface AppState {
@@ -24,5 +24,5 @@ export interface AppState {
     compactType: string,
     mounted: boolean,
     layouts: { lg: Layout },
-    widgetStates: IDashWidgetProps[]
+    widgetProps: IDashWidgetProps[]
 }

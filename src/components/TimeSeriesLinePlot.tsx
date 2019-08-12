@@ -3,14 +3,14 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { TslpProps, TslpState, TslpSeriesState, TslpDataPoint, TslpDataPointQuality, Frame } from "./ITimeSeriesLinePlot";
+import { ITslpProps, ITslpState, ITslpSeriesState, ITslpDataPoint, TslpDataPointQuality, IFrame } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
 import { IDashWidgetContent } from './IDashWidgetContent';
 
-class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDashWidgetContent {
-    static defaultProps: TslpProps = {
+class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
+    static defaultProps: ITslpProps = {
         series: [],
         title: 'Default Title',
     };
@@ -22,7 +22,7 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDas
     };
 
     componentDidMount() {
-        this.setState({ mounted: true } as TslpState);
+        this.setState({ mounted: true } as ITslpState);
     }
 
     generateSeriesData(seriesIter: number): Data {
@@ -54,7 +54,7 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDas
     render() {
         let plot_data: Data[] = this.generatePlotData()
         let plot_layout: Partial<Layout> = { title: this.state.title }
-        let plot_frames: Frame[] = []
+        let plot_frames: IFrame[] = []
         let plot_config: Partial<Config> = {}
 
         return (

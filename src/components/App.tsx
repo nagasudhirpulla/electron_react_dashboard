@@ -20,7 +20,7 @@ class App extends React.Component<AppProps, AppState> {
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     initialLayout: generateLayout(),
-    widgetStates: generateWidgetStates()
+    widgetProps: generateWidgetStates()
   };
 
   state = {
@@ -28,7 +28,7 @@ class App extends React.Component<AppProps, AppState> {
     compactType: "vertical",
     mounted: false,
     layouts: { lg: this.props.initialLayout },
-    widgetStates: this.props.widgetStates
+    widgetProps: this.props.widgetProps
   };
 
   componentDidMount() {
@@ -80,16 +80,16 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
-  deriveLayoutItems = () => {
-    let layouts = [];
-    this.state.widgetStates.map((ws, wsIndex) => {
-      layouts.push({ ...ws.layout });
+  deriveLayoutItems = (): Layout => {
+    let layouts: Layout = [];
+    this.state.widgetProps.map((ws, wsIndex) => {
+      layouts[wsIndex] = { ...ws.layout };
     });
     return layouts;
   };
 
   updateDashboardLayouts = () => {
-    
+
   };
 
   generateDOM = () => {
@@ -108,7 +108,7 @@ class App extends React.Component<AppProps, AppState> {
     //     </div>
     //   );
     // });
-    return this.state.widgetStates.map((ws: IDashWidgetProps, i) => {
+    return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
       let l: LayoutItem = ws.layout;
       let content = (<div className="cellContent"></div>);
       if (ws.contentProps instanceof TslpProps) {

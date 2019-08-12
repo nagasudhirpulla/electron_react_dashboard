@@ -1,13 +1,13 @@
 import { IMeasurement } from "./IMeasurement";
 import { VarTime } from "../variable_time/VariableTime";
-import { TslpDataPoint, TslpDataPointQuality } from "../components/ITimeSeriesLinePlot";
+import { ITslpDataPoint, TslpDataPointQuality } from "../components/ITimeSeriesLinePlot";
 
 export class DummyMeasurement implements IMeasurement {
     meas_id: string | number = "";
 
-    fetchData(fromVarTime: VarTime, toVarTime: VarTime): TslpDataPoint[] {
+    fetchData(fromVarTime: VarTime, toVarTime: VarTime): ITslpDataPoint[] {
         // Initialise results
-        let resultData: TslpDataPoint[] = [];
+        let resultData: ITslpDataPoint[] = [];
 
         let fromTime: Date = fromVarTime.getDateObj();
         let toTime: Date = toVarTime.getDateObj();
@@ -16,7 +16,7 @@ export class DummyMeasurement implements IMeasurement {
         for (let currTime: Date = new Date(fromTime.getTime()); currTime.getTime() <= toTime.getTime(); currTime = new Date(currTime.getTime() + 60000)) {
             let timeStamp = new Date(currTime.getTime())
             let val = Math.random() * 10
-            let pnt: TslpDataPoint = { timestamp: timeStamp, value: val }
+            let pnt: ITslpDataPoint = { timestamp: timeStamp, value: val }
             resultData.push(pnt)
         }
 
