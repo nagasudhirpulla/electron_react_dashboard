@@ -5,9 +5,9 @@ import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
-import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
+import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
 import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpProps, ITslpSeriesProps, IDisplayTimeShift, DisplayTimeShift, TslpProps, ITslpDataPoint } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps } from './ITimeSeriesLinePlot';
 import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
@@ -17,18 +17,17 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
-    rowHeight: 200,
+    rowHeight: 150,
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    initialLayout: generateLayout(),
-    widgetProps: generateWidgetStates()
+    initialLayout: { lg: [] },
+    widgetProps: generateWidgetProps()
   };
 
   state = {
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
-    layouts: { lg: this.props.initialLayout },
     widgetProps: this.props.widgetProps
   };
 
@@ -49,36 +48,62 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ compactType } as AppState);
   };
 
-  onLayoutChange = (layout: Layout, layouts) => {
-    this.props.onLayoutChange(layout, layouts);
-    this.setState({ layouts: layouts } as AppState);
+  onLayoutChange = (layout: Layout, layts) => {
+    this.props.onLayoutChange(layout, layts);
+    let layouts = layts[this.state.currentBreakpoint];
+    let widgetProps = this.state.widgetProps;
+    for (let layInd = 0; (layInd < layouts.length) && (layInd < this.state.widgetProps.length); layInd++) {
+      this.state.widgetProps[layInd].layout = layouts[layInd];
+    }
+    this.setState({ widgetProps: widgetProps } as AppState);
   };
 
   onNewLayout = () => {
-    this.setState({ layouts: { lg: generateLayout() } } as AppState);
+    this.setState({ widgetProps: generateWidgetProps() } as AppState);
   };
 
   onAddItem = () => {
     this.setState({
-      layouts: {
-        lg: [...this.state.layouts.lg, {
-          i: uuid(),
+      widgetProps: [...this.state.widgetProps, {
+        layout: {
           x: 0,
-          y: Infinity, // puts it at the bottom
-          w: 2,
-          h: 2,
+          y: Infinity,
+          w: 5,
+          h: 1,
+          i: uuid(),
           static: false
-        }]
-      }
+        },
+        contentProps: {}
+      }]
     } as AppState);
   };
 
   onRemoveItem = (ind: number) => {
     this.setState({
-      layouts: {
-        lg: [...this.state.layouts.lg.slice(0, ind), ...this.state.layouts.lg.slice(ind + 1)]
-      }
+      widgetProps: [
+        ...this.state.widgetProps.slice(0, ind),
+        ...this.state.widgetProps.slice(ind + 1)]
     } as AppState);
+  }
+
+  onRefreshItem = (ind: number) => {
+    let wp = this.state.widgetProps[ind];
+    if (wp.contentProps instanceof TslpProps) {
+      for (let seriesIter = 0; seriesIter < wp.contentProps.seriesList.length; seriesIter++) {
+        const series = wp.contentProps.seriesList[seriesIter];
+        // fetch the timeseries data
+        wp.contentProps.seriesList[seriesIter].points = series.meas.fetchData(series.fromVarTime, series.toVarTime);
+      }
+    }
+    const newState = {
+      ...this.state,
+      widgetProps: [
+        ...this.state.widgetProps.slice(0, ind),
+        { ...wp },
+        ...this.state.widgetProps.slice(ind + 1),
+      ]
+    }
+    this.setState({ ...newState } as AppState);
   }
 
   deriveLayoutItems = (): Layout => {
@@ -89,26 +114,7 @@ class App extends React.Component<AppProps, AppState> {
     return layouts;
   };
 
-  updateDashboardLayouts = () => {
-
-  };
-
   generateDOM = () => {
-    // return this.state.layouts.lg.map((l: LayoutItem, i) => {
-    //   return (
-    //     <div key={l.i} className={l.static ? "static" : ""}>
-    //       <div className="dragHandle">
-    //         <div style={{ textAlign: 'center' }}>{l.i}</div>
-    //         <span
-    //           className="removeBtn"
-    //           onClick={this.onRemoveItem.bind(this, i)}
-    //         >x</span>
-    //       </div>
-    //       <div className="cellContent">
-    //       </div>
-    //     </div>
-    //   );
-    // });
     return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
       let l: LayoutItem = ws.layout;
       let content = <div className="cellContent"></div>;
@@ -122,6 +128,10 @@ class App extends React.Component<AppProps, AppState> {
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{l.i}</div>
             <span
+              className="refreshBtn"
+              onClick={this.onRefreshItem.bind(this, i)}
+            >()</span>
+            <span
               className="removeBtn"
               onClick={this.onRemoveItem.bind(this, i)}
             >x</span>
@@ -133,6 +143,8 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
+    let layoutsDict = {};
+    layoutsDict[this.state.currentBreakpoint] = this.deriveLayoutItems();
     return (
       <div>
         <div>
@@ -152,7 +164,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onAddItem}>Add Widget</button>
         <ResponsiveReactGridLayout
           {...this.props}
-          layouts={this.state.layouts}
+          layouts={layoutsDict}
           onBreakpointChange={this.onBreakpointChange}
           onLayoutChange={this.onLayoutChange}
           // WidthProvider option
@@ -173,21 +185,7 @@ class App extends React.Component<AppProps, AppState> {
 
 export default App;
 
-function generateLayout(): Layout {
-  return [0, 1, 2, 3].map(function (i, ind) {
-    var y = Math.ceil(Math.random() * 4) + 1;
-    return {
-      x: (ind * 2) % 12,
-      y: Math.floor(ind / 6),
-      w: 2,
-      h: 2,
-      i: uuid(),
-      static: false
-    };
-  });
-}
-
-function generateWidgetStates(): IDashWidgetProps[] {
+function generateWidgetProps(): IDashWidgetProps[] {
   return [0, 1, 2, 3].map(function (i, ind) {
     let title: string = uuid()
     let fromVarTime = new VarTime()
@@ -198,7 +196,8 @@ function generateWidgetStates(): IDashWidgetProps[] {
       meas: new DummyMeasurement(),
       fromVarTime: fromVarTime,
       toVarTime: new VarTime(),
-      displayTimeShift: new DisplayTimeShift()
+      displayTimeShift: new DisplayTimeShift(),
+      points: []
     }
     let contentProps: TslpProps = new TslpProps();
     contentProps.seriesList = [seriesProps];
@@ -208,8 +207,8 @@ function generateWidgetStates(): IDashWidgetProps[] {
       layout: {
         x: (ind * 2) % 12,
         y: Math.floor(ind / 6),
-        w: 10,
-        h: 5,
+        w: 5,
+        h: 2,
         i: title,
         static: false
       },

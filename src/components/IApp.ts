@@ -23,6 +23,5 @@ export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    layouts: { lg: Layout },
     widgetProps: IDashWidgetProps[]
 }

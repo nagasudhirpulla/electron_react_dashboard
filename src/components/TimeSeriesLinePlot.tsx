@@ -16,7 +16,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
     };
 
     state = {
-        seriesList: this.props.seriesList.map((s, sInd) => { return { ...s, points: [] } }),
+        seriesList: this.props.seriesList,
         mounted: false,
         title: this.props.title,
     };
@@ -66,7 +66,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
 
     // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
     render() {
-        this.fetchAndSetPntData();
+        // this.fetchAndSetPntData();
         let plot_data: Data[] = this.generatePlotData()
         let plot_layout: Partial<Layout> = { title: this.state.title, autosize: true }
         let plot_frames: IFrame[] = []

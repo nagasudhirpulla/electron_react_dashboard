@@ -128,6 +128,14 @@ li b {
   color: red;
 }
 
+.refreshBtn {
+  position: absolute;
+  right: 15px;
+  top: 0;
+  cursor: pointer;
+  color: rgb(224, 169, 28);
+}
+
 .cellContent {
   position: absolute;
   left: 0;

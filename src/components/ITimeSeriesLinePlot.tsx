@@ -23,7 +23,7 @@ export interface ITslpState extends IDashWidgetContentState {
 }
 
 export interface ITslpSeriesState extends ITslpSeriesProps {
-    points: ITslpDataPoint[]
+
 }
 
 export interface ITslpSeriesProps {
@@ -31,7 +31,8 @@ export interface ITslpSeriesProps {
     meas: IMeasurement,
     fromVarTime: VarTime,
     toVarTime: VarTime,
-    displayTimeShift: IDisplayTimeShift
+    displayTimeShift: IDisplayTimeShift,
+    points: ITslpDataPoint[]
 }
 
 export interface ITslpDataPoint {
