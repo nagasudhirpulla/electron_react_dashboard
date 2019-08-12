@@ -80,6 +80,18 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
+  deriveLayoutItems = () => {
+    let layouts = [];
+    this.state.widgetStates.map((ws, wsIndex) => {
+      layouts.push({ ...ws.layout });
+    });
+    return layouts;
+  };
+
+  updateDashboardLayouts = () => {
+    
+  };
+
   generateDOM = () => {
     // return this.state.layouts.lg.map((l: LayoutItem, i) => {
     //   return (
