@@ -3,29 +3,38 @@ import { IMeasurement } from "../measurements/IMeasurement";
 import { VarTime } from './../variable_time/VariableTime';
 import { IDashWidgetContentState, IDashWidgetContentProps } from "./IDashWidgetContent";
 
-export interface TslpProps extends IDashWidgetContentProps {
-    series: TslpSeriesState[],
+export interface ITslpProps extends IDashWidgetContentProps {
+    series: ITslpSeriesProps[],
     backgroundColor?: Color,
-    title:string
+    title: string
 }
 
-export interface TslpState extends IDashWidgetContentState {
-    series: TslpSeriesState[],
+export class TslpProps implements ITslpProps {
+    series: ITslpSeriesProps[];
+    backgroundColor?: Color;
+    title: string
+}
+
+export interface ITslpState extends IDashWidgetContentState {
+    series: ITslpSeriesState[],
     backgroundColor?: Color,
-    title:string,
+    title: string,
     mounted: boolean
 }
 
-export interface TslpSeriesState {
-    points: TslpDataPoint[],
+export interface ITslpSeriesState extends ITslpSeriesProps {
+    points: ITslpDataPoint[]
+}
+
+export interface ITslpSeriesProps {
     color: Color,
     meas: IMeasurement,
     fromVarTime: VarTime,
     toVarTime: VarTime,
-    displayTimeShift: DisplayTimeShift
+    displayTimeShift: IDisplayTimeShift
 }
 
-export interface TslpDataPoint {
+export interface ITslpDataPoint {
     timestamp: Date,
     value: number,
     quality?: TslpDataPointQuality
@@ -38,7 +47,7 @@ export enum TslpDataPointQuality {
     Replaced,
 }
 
-export interface DisplayTimeShift {
+export interface IDisplayTimeShift {
     years: number,
     months: number,
     days: number,
@@ -48,13 +57,23 @@ export interface DisplayTimeShift {
     millis: number
 }
 
-export interface Frame {
+export class DisplayTimeShift implements IDisplayTimeShift {
+    years = 0;
+    months = 0;
+    days = 0;
+    hrs = 0;
+    mins = 0;
+    secs = 0;
+    millis = 0;
+}
+
+export interface IFrame {
     name: string;
     data: [{ x: Datum, y: Datum }];
     group: 'lower' | 'upper';
 }
 
-export interface Figure {
+export interface IFigure {
     data: Data[];
     layout: Partial<Layout>;
 }

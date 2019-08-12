@@ -5,6 +5,11 @@ import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
+import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
+import { IDashWidgetContentProps } from './IDashWidgetContent';
+import { ITslpProps, ITslpSeriesProps, IDisplayTimeShift, DisplayTimeShift, TslpProps } from './ITimeSeriesLinePlot';
+import { DummyMeasurement } from './../measurements/DummyMeasurement';
+import { VarTime } from './../variable_time/VariableTime';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -14,14 +19,16 @@ class App extends React.Component<AppProps, AppState> {
     rowHeight: 200,
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    initialLayout: generateLayout()
+    initialLayout: generateLayout(),
+    widgetStates: generateWidgetStates()
   };
 
   state = {
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
-    layouts: { lg: this.props.initialLayout }
+    layouts: { lg: this.props.initialLayout },
+    widgetStates: this.props.widgetStates
   };
 
   componentDidMount() {
@@ -74,7 +81,27 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   generateDOM = () => {
-    return this.state.layouts.lg.map((l: LayoutItem, i) => {
+    // return this.state.layouts.lg.map((l: LayoutItem, i) => {
+    //   return (
+    //     <div key={l.i} className={l.static ? "static" : ""}>
+    //       <div className="dragHandle">
+    //         <div style={{ textAlign: 'center' }}>{l.i}</div>
+    //         <span
+    //           className="removeBtn"
+    //           onClick={this.onRemoveItem.bind(this, i)}
+    //         >x</span>
+    //       </div>
+    //       <div className="cellContent">
+    //       </div>
+    //     </div>
+    //   );
+    // });
+    return this.state.widgetStates.map((ws: IDashWidgetProps, i) => {
+      let l: LayoutItem = ws.layout;
+      let content = (<div className="cellContent"></div>);
+      if (ws.contentProps instanceof TslpProps) {
+
+      }
       return (
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
@@ -84,8 +111,7 @@ class App extends React.Component<AppProps, AppState> {
               onClick={this.onRemoveItem.bind(this, i)}
             >x</span>
           </div>
-          <div className="cellContent">
-          </div>
+          {content}
         </div>
       );
     });
@@ -143,5 +169,36 @@ function generateLayout(): Layout {
       i: uuid(),
       static: false
     };
+  });
+}
+
+function generateWidgetStates(): IDashWidgetProps[] {
+  return [0, 1, 2, 3].map(function (i, ind) {
+    let title: string = uuid()
+    let fromVarTime = new VarTime()
+    fromVarTime.offsetHrs = -2;
+
+    let seriesProps: ITslpSeriesProps = {
+      color: "yellow",
+      meas: new DummyMeasurement(),
+      fromVarTime: fromVarTime,
+      toVarTime: new VarTime(),
+      displayTimeShift: new DisplayTimeShift()
+    }
+    let contentProps: ITslpProps = { series: [seriesProps], title: title };
+
+    let widgetProps = {
+      layout: {
+        x: (ind * 2) % 12,
+        y: Math.floor(ind / 6),
+        w: 2,
+        h: 2,
+        i: title,
+        static: false
+      },
+      contentProps: contentProps
+    };
+
+    return widgetProps;
   });
 }

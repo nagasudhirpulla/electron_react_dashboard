@@ -3,12 +3,11 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { TslpProps, TslpState, TslpSeries, TslpDataPoint, TslpDataPointQuality, Frame } from "./ITimeSeriesLinePlot";
+import { TslpProps, TslpState, TslpSeriesState, TslpDataPoint, TslpDataPointQuality, Frame } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
-import { IDashWidgetContent } from './IDashWidget';
-import { v4 as uuid } from 'uuid';
+import { IDashWidgetContent } from './IDashWidgetContent';
 
 class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDashWidgetContent {
     static defaultProps: TslpProps = {
@@ -17,7 +16,7 @@ class TimeSeriesLinePlot extends Component<TslpProps, TslpState> implements IDas
     };
 
     state = {
-        series: this.props.series,
+        series: this.props.series.map((s, sInd) => { return { ...s, points: [] } }),
         mounted: false,
         title: this.props.title,
     };

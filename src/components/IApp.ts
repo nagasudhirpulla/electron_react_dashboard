@@ -1,3 +1,4 @@
+import { IDashWidgetState } from './dash_widget/IDashWidgetState';
 export interface LayoutItem {
     x: number,
     y: number,
@@ -7,19 +8,21 @@ export interface LayoutItem {
     static: boolean
 }
 
-export interface Layout extends Array<LayoutItem>{}
+export interface Layout extends Array<LayoutItem> { }
 
 export interface AppProps {
     className: string,
     rowHeight: number,
     onLayoutChange: (currLayout: Layout, allLayouts: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
-    initialLayout: Layout
+    initialLayout: Layout,
+    widgetStates: IDashWidgetState[]
 }
 
 export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    layouts: { lg: Layout }
+    layouts: { lg: Layout },
+    widgetStates: IDashWidgetState[]
 }
