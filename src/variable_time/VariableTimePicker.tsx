@@ -3,11 +3,10 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { ITslpProps, ITslpState, ITslpDataPoint, IFrame } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
-class VariableTimePicker extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
+class VariableTimePicker extends Component<ITslpProps, ITslpState> {
     static defaultProps: ITslpProps = {
         seriesList: [],
         title: 'Default Title',
