@@ -117,7 +117,7 @@ class App extends React.Component<AppProps, AppState> {
     console.log(`Opening file ${openFilename}`);
     const fileContents:string = await readFileAsync(openFilename) as string;
     console.log(`${fileContents}`);
-    this.setState(JSON.parse(fileContents));
+    this.setState(JSON.parse(fileContents) as AppState);
   };
 
   onSaveDashboard = async () => {
@@ -129,8 +129,8 @@ class App extends React.Component<AppProps, AppState> {
       title: 'Save Dashboard File'
     });
     const saveFilename: string = filePath;
-    console.log(`Saving to ${saveFilename}`);
-    const fileContents = JSON.stringify(this.state);
+    console.log(`Saving state to ${saveFilename}`);
+    const fileContents = JSON.stringify(this.state, null, 4);
     const isSaved = await writeFileAsync(saveFilename, fileContents);
     console.log(`Save status = ${isSaved}`);
   };
