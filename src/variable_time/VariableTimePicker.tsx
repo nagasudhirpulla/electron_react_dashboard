@@ -6,6 +6,7 @@ import './TimeSeriesLinePlot.css';
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
+import { ITslpProps, ITslpState } from '../components/ITimeSeriesLinePlot';
 class VariableTimePicker extends Component<ITslpProps, ITslpState> {
     static defaultProps: ITslpProps = {
         seriesList: [],
