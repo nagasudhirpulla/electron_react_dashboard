@@ -12,6 +12,31 @@ import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement } from '../measurements/ScadaMeasurement';
+const dialog = require('electron').remote.dialog;
+import fs from 'fs';
+// make promise version of fs.readFile()
+const readFileAsync = function (filename: string) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(filename, function (err, data) {
+      if (err)
+        reject(err);
+      else
+        resolve(data);
+    });
+  });
+};
+
+const writeFileAsync = function (filename: string, contents: string) {
+  return new Promise(function (resolve, reject) {
+    fs.writeFile(filename, contents, function (err) {
+      if (err)
+        reject(err);
+      else
+        resolve(true);
+    });
+  });
+};
+
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -77,6 +102,37 @@ class App extends React.Component<AppProps, AppState> {
         contentProps: {}
       }]
     } as AppState);
+  };
+
+  onOpenDashboard = async () => {
+    const filePaths = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [
+        { name: 'JSON', extensions: ['json'] },
+        { name: 'All Files', extensions: ['*'] }
+      ],
+      title: 'Open Dashboard File'
+    });
+    const openFilename: string = filePaths[0]
+    console.log(`Opening file ${openFilename}`);
+    const fileContents:string = await readFileAsync(openFilename) as string;
+    console.log(`${fileContents}`);
+    this.setState(JSON.parse(fileContents));
+  };
+
+  onSaveDashboard = async () => {
+    const filePath = await dialog.showSaveDialog({
+      filters: [
+        { name: 'JSON', extensions: ['json'] },
+        { name: 'All Files', extensions: ['*'] }
+      ],
+      title: 'Save Dashboard File'
+    });
+    const saveFilename: string = filePath;
+    console.log(`Saving to ${saveFilename}`);
+    const fileContents = JSON.stringify(this.state);
+    const isSaved = await writeFileAsync(saveFilename, fileContents);
+    console.log(`Save status = ${isSaved}`);
   };
 
   onRemoveItem = (ind: number) => {
@@ -163,6 +219,8 @@ class App extends React.Component<AppProps, AppState> {
           Change Compaction Type
         </button>
         <button onClick={this.onAddItem}>Add Widget</button>
+        <button onClick={this.onSaveDashboard}>Save Dashboard</button>
+        <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={layoutsDict}
