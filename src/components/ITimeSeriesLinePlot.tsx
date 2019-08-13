@@ -31,7 +31,7 @@ export interface ITslpSeriesProps {
     meas: IMeasurement,
     fromVarTime: VarTime,
     toVarTime: VarTime,
-    displayTimeShift: IDisplayTimeShift,
+    displayTimeShift: ITimePeriod,
     points: ITslpDataPoint[]
 }
 
@@ -48,7 +48,7 @@ export enum TslpDataPointQuality {
     Replaced,
 }
 
-export interface IDisplayTimeShift {
+export interface ITimePeriod {
     years: number,
     months: number,
     days: number,
@@ -58,7 +58,7 @@ export interface IDisplayTimeShift {
     millis: number
 }
 
-export class DisplayTimeShift implements IDisplayTimeShift {
+export class DisplayTimeShift implements ITimePeriod {
     years = 0;
     months = 0;
     days = 0;

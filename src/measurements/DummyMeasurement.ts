@@ -23,3 +23,4 @@ export class DummyMeasurement implements IMeasurement {
         return resultData;
     }
 }
+
