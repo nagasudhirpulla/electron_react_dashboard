@@ -11,6 +11,7 @@ import { ITslpSeriesProps, DisplayTimeShift, TslpProps } from './ITimeSeriesLine
 import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
+import { ScadaMeasurement } from '../measurements/ScadaMeasurement';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -86,13 +87,13 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
-  onRefreshItem = (ind: number) => {
+  onRefreshItem = async (ind: number) => {
     let wp = this.state.widgetProps[ind];
     if (wp.contentProps instanceof TslpProps) {
       for (let seriesIter = 0; seriesIter < wp.contentProps.seriesList.length; seriesIter++) {
         const series = wp.contentProps.seriesList[seriesIter];
         // fetch the timeseries data
-        wp.contentProps.seriesList[seriesIter].points = series.meas.fetchData(series.fromVarTime, series.toVarTime);
+        wp.contentProps.seriesList[seriesIter].points = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
       }
     }
     const newState = {
@@ -192,8 +193,8 @@ function generateWidgetProps(): IDashWidgetProps[] {
     fromVarTime.absoluteTime = new Date((new Date()).getTime() - 2 * 60 * 60 * 1000)
 
     let seriesProps: ITslpSeriesProps = {
-      color: "yellow",
-      meas: new DummyMeasurement(),
+      color: "blue",
+      meas: new ScadaMeasurement(),
       fromVarTime: fromVarTime,
       toVarTime: new VarTime(),
       displayTimeShift: new DisplayTimeShift(),

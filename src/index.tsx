@@ -10,7 +10,10 @@ let win;
 let createWindow = () => {
     win = new BrowserWindow({
         width: 450,
-        height: 450
+        height: 450,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
     win.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'index.html')}`);
     win.on("closed", () => {

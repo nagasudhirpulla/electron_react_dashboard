@@ -5,7 +5,7 @@ import { ITslpDataPoint, TslpDataPointQuality } from "../components/ITimeSeriesL
 export class DummyMeasurement implements IMeasurement {
     meas_id: string | number = "";
 
-    fetchData(fromVarTime: VarTime, toVarTime: VarTime): ITslpDataPoint[] {
+    async fetchData(fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
         // Initialise results
         let resultData: ITslpDataPoint[] = [];
 

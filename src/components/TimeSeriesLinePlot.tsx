@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { ITslpProps, ITslpState, ITslpSeriesState, ITslpDataPoint, TslpDataPointQuality, IFrame } from "./ITimeSeriesLinePlot";
+import { ITslpProps, ITslpState, ITslpDataPoint, IFrame } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
@@ -46,19 +46,11 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         return plot_data;
     }
 
-    fetchAndSetPntData(): boolean {
+    async fetchAndSetPntData(): Promise<boolean> {
         // fetch the timeseries data
         for (let seriesIter = 0; seriesIter < this.state.seriesList.length; seriesIter++) {
             const series = this.state.seriesList[seriesIter];
-            const pnts: ITslpDataPoint[] = series.meas.fetchData(series.fromVarTime, series.toVarTime);
-            // const newState: ITslpState = {
-            //     ...this.state,
-            //     series: [
-            //         ...this.state.seriesList.slice(0, seriesIter),
-            //         { ...series, points: pnts },
-            //         ...this.state.seriesList.slice(seriesIter + 1),
-            //     ]
-            // } as ITslpState;
+            const pnts: ITslpDataPoint[] = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
             this.state.seriesList[seriesIter].points = pnts;
         }
         return true;
