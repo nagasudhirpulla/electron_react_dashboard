@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import './App.css';
 import './rgl_styles.css';
-import _ from "lodash";
+// import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
-import { IDashWidgetContentProps } from './IDashWidgetContent';
+// import { IDashWidgetContentProps } from './IDashWidgetContent';
 import { ITslpSeriesProps, DisplayTimeShift, TslpProps } from './ITimeSeriesLinePlot';
-import { DummyMeasurement } from './../measurements/DummyMeasurement';
+// import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement } from '../measurements/ScadaMeasurement';
-const dialog = require('electron').remote.dialog;
-import fs from 'fs';
+const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
+const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
+import {readFile, writeFile} from 'fs';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
-    fs.readFile(filename, function (err, data) {
+    readFile(filename, function (err, data) {
       if (err)
         reject(err);
       else
@@ -28,7 +29,7 @@ const readFileAsync = function (filename: string) {
 
 const writeFileAsync = function (filename: string, contents: string) {
   return new Promise(function (resolve, reject) {
-    fs.writeFile(filename, contents, function (err) {
+    writeFile(filename, contents, function (err) {
       if (err)
         reject(err);
       else
@@ -105,7 +106,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onOpenDashboard = async () => {
-    const filePaths = await dialog.showOpenDialog({
+    const filePaths = await showOpenDialog({
       properties: ['openFile'],
       filters: [
         { name: 'JSON', extensions: ['json'] },
@@ -115,13 +116,13 @@ class App extends React.Component<AppProps, AppState> {
     });
     const openFilename: string = filePaths[0]
     console.log(`Opening file ${openFilename}`);
-    const fileContents:string = await readFileAsync(openFilename) as string;
+    const fileContents: string = await readFileAsync(openFilename) as string;
     console.log(`${fileContents}`);
     this.setState(JSON.parse(fileContents) as AppState);
   };
 
   onSaveDashboard = async () => {
-    const filePath = await dialog.showSaveDialog({
+    const filePath = await showSaveDialog({
       filters: [
         { name: 'JSON', extensions: ['json'] },
         { name: 'All Files', extensions: ['*'] }
@@ -212,7 +213,7 @@ class App extends React.Component<AppProps, AppState> {
         </div>
         <div>
           Compaction type:{" "}
-          {_.capitalize(this.state.compactType) || "No Compaction"}
+          {this.state.compactType || "No Compaction"}
         </div>
         <button onClick={this.onNewLayout}>Generate New Layout</button>
         <button onClick={this.onCompactTypeChange}>

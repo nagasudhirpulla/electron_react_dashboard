@@ -79,7 +79,7 @@ function createApiFetchPath(pnt: string | number, fetch_strategy: FetchStrategy,
 
 async function fetchData(pnt: string | number, fetch_strategy: FetchStrategy, periodicity: Periodicity, fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
     let resultData: ITslpDataPoint[] = [];
-    let serverBaseAddress: string = "wmrm0mc1";
+    let serverBaseAddress: string = "localhost";
     const fromTime: Date = fromVarTime.getDateObj();
     const toTime: Date = toVarTime.getDateObj();
     // do the api call to service

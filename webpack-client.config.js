@@ -9,7 +9,7 @@ module.exports = {
     },
 
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "eval",
+    // devtool: "source-map",
 
     target: 'electron-renderer',
 
@@ -17,27 +17,29 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                exclude: /node_modules/,
+                include: /src/,
                 use: ["babel-loader", "ts-loader"]
             },
             {
                 test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
+                include: /src/,
                 use: {
                     loader: "babel-loader"
                 }
             },
             {
                 test: /\.html$/,
+                include: /src/,
                 use: {
                     loader: "html-loader"
                 }
             },
             {
                 test: /\.css$/,
+                include: /src/,
                 use: ["style-loader", "css-loader"]
             },
-            // // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             // {
             //     enforce: "pre",
             //     test: /\.js$/,
