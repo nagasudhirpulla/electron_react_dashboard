@@ -17,6 +17,7 @@ const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
 import { readFile, writeFile } from 'fs';
 import { IMeasurement } from '../measurements/IMeasurement';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
+import { ILayoutDict } from '../IDictionary';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -79,12 +80,18 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ compactType } as AppState);
   };
 
-  onLayoutChange = (layout: Layout, layts) => {
+  onLayoutChange = (layout: Layout, layts: ILayoutDict) => {
     this.props.onLayoutChange(layout, layts);
-    let layouts = layts[this.state.currentBreakpoint];
-    let widgetProps = this.state.widgetProps;
-    for (let layInd = 0; (layInd < layouts.length) && (layInd < this.state.widgetProps.length); layInd++) {
-      this.state.widgetProps[layInd].layout = layouts[layInd];
+    // get the layts breakpoints
+    const laytBrPnts = Object.keys(layts);
+    const widgetProps = this.state.widgetProps;
+    for (let brPntIter = 0; brPntIter < laytBrPnts.length; brPntIter++) {
+      const laytBrPnt = laytBrPnts[brPntIter]
+      const layout: Layout = layts[laytBrPnt];
+      for (let layInd = 0; (layInd < layout.length) && (layInd < this.state.widgetProps.length); layInd++) {
+        // we assume that the order is preserved (todo be sure)
+        widgetProps[layInd].layouts[laytBrPnt] = layout[layInd]
+      }
     }
     this.setState({ widgetProps: widgetProps } as AppState);
   };
@@ -96,7 +103,7 @@ class App extends React.Component<AppProps, AppState> {
   onAddItem = () => {
     this.setState({
       widgetProps: [...this.state.widgetProps, {
-        layout: {
+        layouts: {
           x: 0,
           y: Infinity,
           w: 5,
@@ -194,17 +201,27 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  deriveLayoutItems = (): Layout => {
-    let layouts: Layout = [];
-    this.state.widgetProps.map((ws, wsIndex) => {
-      layouts[wsIndex] = { ...ws.layout };
+  deriveLayouts = (): ILayoutDict => {
+    let layouts: ILayoutDict = {};
+    this.state.widgetProps.map((wp, wsIndex) => {
+      // get breakpoint key of widget layoutsDict
+      const brPntKeys = Object.keys(wp.layouts);
+      for (let brPntKeyIter = 0; brPntKeyIter < brPntKeys.length; brPntKeyIter++) {
+        const brPntKey = brPntKeys[brPntKeyIter];
+        // check if key is present in final layouts
+        if (wsIndex == 0) {
+          layouts[brPntKey] = [];
+        }
+        // push the layout item in the layouts dictionary
+        layouts[brPntKey].push(wp.layouts[brPntKey]);
+      }
     });
     return layouts;
   };
 
   generateDOM = () => {
     return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
-      let l: LayoutItem = ws.layout;
+      let l: LayoutItem = ws.layouts[this.state.currentBreakpoint];
       let content = <div className="cellContent"></div>;
       if (ws.contentProps.discriminator == TslpProps.typename) {
         content = <div className="cellContent" key={l.i + '_timeseries'}>
@@ -231,8 +248,7 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
-    let layoutsDict = {};
-    layoutsDict[this.state.currentBreakpoint] = this.deriveLayoutItems();
+    const layoutsDict = this.deriveLayouts();
     return (
       <div>
         <div>
@@ -278,7 +294,7 @@ export default App;
 
 function generateWidgetProps(): IDashWidgetProps[] {
   return [0, 1, 2, 3].map(function (i, ind) {
-    let title: string = uuid();
+    let layKey: string = uuid();
     let fromVarTime = new VarTime();
     fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
 
@@ -294,14 +310,16 @@ function generateWidgetProps(): IDashWidgetProps[] {
     contentProps.seriesList = [seriesProps];
     contentProps.title = `Plot ${ind + 1}`;
 
-    let widgetProps = {
-      layout: {
-        x: (ind * 2) % 12,
-        y: Math.floor(ind / 6),
-        w: 5,
-        h: 2,
-        i: title,
-        static: false
+    let widgetProps: IDashWidgetProps = {
+      layouts: {
+        lg: {
+          x: (ind * 2) % 12,
+          y: Math.floor(ind / 6),
+          w: 5,
+          h: 2,
+          i: layKey,
+          static: false
+        }
       },
       contentProps: contentProps
     };
