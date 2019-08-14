@@ -9,9 +9,6 @@ export class Periodicity implements ITimePeriod {
     mins = 0;
     secs = 60;
     millis = 0;
-    static getSeconds(per: Periodicity): number {
-        return per.years * 365 * 30 * 24 * 60 * 60 + per.months * 30 * 24 * 60 * 60 + per.days * 24 * 60 * 60 + per.hrs * 60 * 60 + per.mins * 60 + per.secs + per.millis * 0.001;
-    }
 }
 
 export enum FetchStrategy {

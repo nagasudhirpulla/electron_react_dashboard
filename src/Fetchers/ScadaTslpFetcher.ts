@@ -1,10 +1,22 @@
 import { VarTime } from "../variable_time/VariableTime";
-import { ITslpDataPoint, TslpDataPointQuality } from "../components/ITimeSeriesLinePlot";
+import { ITslpDataPoint, TslpDataPointQuality, TimePeriod } from "../components/ITimeSeriesLinePlot";
 import { IScadaMeasurement, FetchStrategy, Periodicity } from "../measurements/ScadaMeasurement";
 import { ITslpDataFetcher } from "./IFetcher";
+
+export interface IScadaApiFetchPnt {
+    dval: string,
+    timestamp: string,
+    status: string
+}
+
+export interface IGetJSONResult {
+    statusCode: string,
+    json: any
+}
+
 export class ScadaTslpFetcher implements ITslpDataFetcher {
     serverBaseAddress: string;
-    getJSON(options) {
+    getJSON(options):Promise<IGetJSONResult> {
         return new Promise((resolve, reject) => {
             console.log('rest::getJSON');
             let output = '';
@@ -44,7 +56,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
     createApiFetchPath(pnt: string | number, fetch_strategy: FetchStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): string {
         var fromTimeStr = this.getApiTimeString(fromTime);
         var toTimeStr = this.getApiTimeString(toTime);
-        var secs = Periodicity.getSeconds(periodicity);
+        var secs = TimePeriod.getSeconds(periodicity);
         var url = "";
         // api/values/history?type=snap&pnt=something&strtime=30/11/2016/00:00:00&endtime=30/11/2016/23:59:00&secs=60
         url = `/api/values/history?type=${fetch_strategy}&pnt=${pnt}&strtime=${fromTimeStr}&endtime=${toTimeStr}&secs=${secs}`;
@@ -70,14 +82,15 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
         try {
             let pointsArray = await this.getJSON(options);
             for (var i = 0; i < pointsArray['json'].length; i++) {
-                const val = pointsArray['json'][i].dval;
-                const timstamp = pointsArray['json'][i].timestamp;
-                const quality: string = pointsArray['json'][i].status;
+                const fetchPnt:IScadaApiFetchPnt = pointsArray['json'][i] as IScadaApiFetchPnt
+                const val = fetchPnt.dval;
+                const timestamp = fetchPnt.timestamp;
+                const quality: string = fetchPnt.status;
                 let pntQuality: TslpDataPointQuality = TslpDataPointQuality.Good;
                 if (quality.toLowerCase() != "good" || quality.toLowerCase() != "ok") {
                     pntQuality = TslpDataPointQuality.Bad;
                 }
-                let dataPnt: ITslpDataPoint = { timestamp: timstamp, value: parseInt(val), quality: pntQuality };
+                let dataPnt: ITslpDataPoint = { timestamp: (new Date(timestamp)).getTime(), value: parseInt(val), quality: pntQuality };
                 resultData.push(dataPnt);
             }
         }
