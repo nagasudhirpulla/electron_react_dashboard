@@ -18,6 +18,7 @@ import { readFile, writeFile } from 'fs';
 import { IMeasurement } from '../measurements/IMeasurement';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
+import JwModal from './JWModal';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -251,19 +252,21 @@ class App extends React.Component<AppProps, AppState> {
     const layoutsDict = this.deriveLayouts();
     return (
       <div>
-        <div>
+        <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
             this.props.cols[this.state.currentBreakpoint]
           }{" "}
           columns)
-        </div>
-        <div>
-          Compaction type:{" "}
-          {this.state.compactType || "No Compaction"}
-        </div>
+        </span>
+        <JwModal id="add-widget-modal">
+          <h1>Select Widget Type to be added</h1>
+          <select name="widget-type-combo" id="widget-type-combo"></select>
+          <button onClick={JwModal.close('add-widget-modal')}>Close</button>
+        </JwModal>
+        
         <button onClick={this.onNewLayout}>Generate New Layout</button>
         <button onClick={this.onCompactTypeChange}>
-          Change Compaction Type
+          Compaction - {this.state.compactType || "No Compaction"}
         </button>
         <button onClick={this.onAddItem}>Add Widget</button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
