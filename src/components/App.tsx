@@ -130,7 +130,7 @@ class App extends React.Component<AppProps, AppState> {
     });
     const saveFilename: string = filePath;
     console.log(`Saving state to ${saveFilename}`);
-    const fileContents = JSON.stringify(this.state, null, 4);
+    const fileContents = JSON.stringify(this.state, null, 2);
     const isSaved = await writeFileAsync(saveFilename, fileContents);
     console.log(`Save status = ${isSaved}`);
   };
