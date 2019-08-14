@@ -110,15 +110,15 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onOpenDashboard = async () => {
-    const filePaths = await showOpenDialog({
+    const dialogRes = await showOpenDialog({
       properties: ['openFile'],
       filters: [
         { name: 'JSON', extensions: ['json'] },
         { name: 'All Files', extensions: ['*'] }
       ],
       title: 'Open Dashboard File'
-    });
-    const openFilename: string = filePaths[0]
+    }) as any;
+    const openFilename: string = dialogRes.filePaths[0] as string;
     console.log(`Opening file ${openFilename}`);
     const fileContents: string = await readFileAsync(openFilename) as string;
     console.log(`${fileContents}`);
@@ -129,18 +129,20 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onSaveDashboard = async () => {
-    const filePath = await showSaveDialog({
+    const dialogRes = await showSaveDialog({
       filters: [
         { name: 'JSON', extensions: ['json'] },
         { name: 'All Files', extensions: ['*'] }
       ],
       title: 'Save Dashboard File'
-    });
-    const saveFilename: string = filePath;
-    console.log(`Saving state to ${saveFilename}`);
-    const fileContents = JSON.stringify(this.state, null, 2);
-    const isSaved = await writeFileAsync(saveFilename, fileContents);
-    console.log(`Save status = ${isSaved}`);
+    }) as any;
+    if (!(dialogRes.cancelled == true)) {
+      const saveFilename: string = dialogRes.filePath;
+      console.log(`Saving state to ${saveFilename}`);
+      const fileContents = JSON.stringify(this.state, null, 2);
+      const isSaved = await writeFileAsync(saveFilename, fileContents);
+      console.log(`Save status = ${isSaved}`);
+    }
   };
 
   onRemoveItem = (ind: number) => {
