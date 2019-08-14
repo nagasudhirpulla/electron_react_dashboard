@@ -7,14 +7,14 @@ import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
 // import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps } from './ITimeSeriesLinePlot';
 // import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement } from '../measurements/ScadaMeasurement';
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
 const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
-import {readFile, writeFile} from 'fs';
+import { readFile, writeFile } from 'fs';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -118,6 +118,8 @@ class App extends React.Component<AppProps, AppState> {
     console.log(`Opening file ${openFilename}`);
     const fileContents: string = await readFileAsync(openFilename) as string;
     console.log(`${fileContents}`);
+    const stateObj = JSON.parse(fileContents) as AppState;
+    console.log(stateObj);
     this.setState(JSON.parse(fileContents) as AppState);
   };
 
@@ -146,11 +148,12 @@ class App extends React.Component<AppProps, AppState> {
 
   onRefreshItem = async (ind: number) => {
     let wp = this.state.widgetProps[ind];
-    if (wp.contentProps instanceof TslpProps) {
-      for (let seriesIter = 0; seriesIter < wp.contentProps.seriesList.length; seriesIter++) {
-        const series = wp.contentProps.seriesList[seriesIter];
+    if (wp.contentProps.discriminator = TslpProps.typename) {
+      const tslpProps: ITslpProps = wp.contentProps as ITslpProps;
+      for (let seriesIter = 0; seriesIter < tslpProps.seriesList.length; seriesIter++) {
+        const series = tslpProps.seriesList[seriesIter];
         // fetch the timeseries data
-        wp.contentProps.seriesList[seriesIter].points = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
+        (wp.contentProps as TslpProps).seriesList[seriesIter].points = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
       }
     }
     const newState = {
@@ -247,9 +250,9 @@ export default App;
 
 function generateWidgetProps(): IDashWidgetProps[] {
   return [0, 1, 2, 3].map(function (i, ind) {
-    let title: string = uuid()
-    let fromVarTime = new VarTime()
-    fromVarTime.absoluteTime = new Date((new Date()).getTime() - 2 * 60 * 60 * 1000)
+    let title: string = uuid();
+    let fromVarTime = new VarTime();
+    fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
 
     let seriesProps: ITslpSeriesProps = {
       color: "blue",

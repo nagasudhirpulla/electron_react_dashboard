@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { ITslpProps, ITslpState, ITslpDataPoint, IFrame } from "./ITimeSeriesLinePlot";
+import { ITslpProps, ITslpState, ITslpDataPoint, IFrame, TslpProps } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
@@ -11,6 +11,7 @@ import { IDashWidgetContent } from './IDashWidgetContent';
 
 class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
     static defaultProps: ITslpProps = {
+        discriminator: TslpProps.typename,
         seriesList: [],
         title: 'Default Title',
     };

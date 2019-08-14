@@ -2,6 +2,7 @@ import { LayoutItem } from './IApp';
 import { Component } from 'react';
 
 export interface IDashWidgetContentProps {
+    discriminator: string
 }
 
 export interface IDashWidgetContentState {

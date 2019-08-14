@@ -1,5 +1,5 @@
 export class VarTime {
-    absoluteTime: Date = new Date();
+    absoluteTime: number = (new Date()).getTime();
     offsetDays: number = 0;
     offsetMonths: number = 0;
     offsetYears: number = 0;
@@ -67,7 +67,7 @@ export class VarTime {
     }
 
     getDateObj(): Date {
-        let absTime: Date = this.absoluteTime;
+        let absTime: Date = new Date(this.absoluteTime);
         let nowTime: Date = new Date();
 
         // Make millisecond component as zero for the absolute time and now time

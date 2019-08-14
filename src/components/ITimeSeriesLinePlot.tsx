@@ -10,6 +10,8 @@ export interface ITslpProps extends IDashWidgetContentProps {
 }
 
 export class TslpProps implements ITslpProps {
+    static typename: string = 'TslpProps';
+    discriminator: string = TslpProps.typename;
     seriesList: ITslpSeriesProps[];
     backgroundColor?: Color;
     title: string
