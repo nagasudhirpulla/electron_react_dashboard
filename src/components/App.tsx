@@ -186,6 +186,14 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ ...newState } as AppState);
   }
 
+  onRefreshAll = async () => {
+    let fetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
+    fetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+    for (let wpInd = 0; wpInd < this.state.widgetProps.length; wpInd++) {
+      await this.onRefreshItem(wpInd);
+    }
+  }
+
   deriveLayoutItems = (): Layout => {
     let layouts: Layout = [];
     this.state.widgetProps.map((ws, wsIndex) => {
@@ -244,6 +252,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onAddItem}>Add Widget</button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
+        <button onClick={this.onRefreshAll}>Refresh</button>
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={layoutsDict}
