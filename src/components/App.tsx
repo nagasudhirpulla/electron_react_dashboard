@@ -7,14 +7,16 @@ import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
 // import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint } from './ITimeSeriesLinePlot';
 // import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
-import { ScadaMeasurement } from '../measurements/ScadaMeasurement';
+import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
 const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
 import { readFile, writeFile } from 'fs';
+import { IMeasurement } from '../measurements/IMeasurement';
+import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -48,6 +50,7 @@ class App extends React.Component<AppProps, AppState> {
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     initialLayout: { lg: [] },
+    appSettings: { scadaServerBase: "localhost" },
     widgetProps: generateWidgetProps()
   };
 
@@ -55,7 +58,8 @@ class App extends React.Component<AppProps, AppState> {
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
-    widgetProps: this.props.widgetProps
+    widgetProps: this.props.widgetProps,
+    appSettings: this.props.appSettings
   };
 
   componentDidMount() {
@@ -120,7 +124,8 @@ class App extends React.Component<AppProps, AppState> {
     console.log(`${fileContents}`);
     const stateObj = JSON.parse(fileContents) as AppState;
     console.log(stateObj);
-    this.setState(JSON.parse(fileContents) as AppState);
+    this.setState({ widgetProps: [] } as AppState);
+    this.setState(stateObj);
   };
 
   onSaveDashboard = async () => {
@@ -147,15 +152,27 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   onRefreshItem = async (ind: number) => {
+    let fetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
+    fetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+
     let wp = this.state.widgetProps[ind];
-    if (wp.contentProps.discriminator = TslpProps.typename) {
+
+    if (wp.contentProps.discriminator == TslpProps.typename) {
       const tslpProps: ITslpProps = wp.contentProps as ITslpProps;
       for (let seriesIter = 0; seriesIter < tslpProps.seriesList.length; seriesIter++) {
-        const series = tslpProps.seriesList[seriesIter];
+        let series = tslpProps.seriesList[seriesIter];
+        let pnts: ITslpDataPoint[] = []
+
+        if (series.meas.discriminator == ScadaMeasurement.typename) {
+          series.meas = series.meas as IScadaMeasurement;
+          pnts = await fetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IScadaMeasurement);
+        }
+
         // fetch the timeseries data
-        (wp.contentProps as TslpProps).seriesList[seriesIter].points = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
+        (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
       }
     }
+
     const newState = {
       ...this.state,
       widgetProps: [
@@ -179,8 +196,8 @@ class App extends React.Component<AppProps, AppState> {
     return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
       let l: LayoutItem = ws.layout;
       let content = <div className="cellContent"></div>;
-      if (ws.contentProps instanceof TslpProps) {
-        content = <div className="cellContent">
+      if (ws.contentProps.discriminator == TslpProps.typename) {
+        content = <div className="cellContent" key={l.i + '_timeseries'}>
           <TimeSeriesLinePlot {...ws.contentProps}></TimeSeriesLinePlot>
         </div>;
       }

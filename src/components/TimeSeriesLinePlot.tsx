@@ -33,7 +33,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         // get points from measurement
         for (let pntIter = 0; pntIter < this.state.seriesList[seriesIter].points.length; pntIter++) {
             const dataPnt = this.state.seriesList[seriesIter].points[pntIter];
-            (seriesData.x as Datum[]).push(dataPnt.timestamp);
+            (seriesData.x as Datum[]).push(new Date(dataPnt.timestamp));
             (seriesData.y as Datum[]).push(dataPnt.value);
         }
         return seriesData;
@@ -51,7 +51,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         // fetch the timeseries data
         for (let seriesIter = 0; seriesIter < this.state.seriesList.length; seriesIter++) {
             const series = this.state.seriesList[seriesIter];
-            const pnts: ITslpDataPoint[] = await series.meas.fetchData(series.fromVarTime, series.toVarTime);
+            const pnts: ITslpDataPoint[] = [];
             this.state.seriesList[seriesIter].points = pnts;
         }
         return true;

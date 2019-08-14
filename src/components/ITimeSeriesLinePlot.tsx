@@ -38,7 +38,7 @@ export interface ITslpSeriesProps {
 }
 
 export interface ITslpDataPoint {
-    timestamp: Date,
+    timestamp: number,
     value: number,
     quality?: TslpDataPointQuality
 }

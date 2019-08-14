@@ -66,8 +66,8 @@ export class VarTime {
         return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), setVal, d.getMilliseconds());
     }
 
-    getDateObj(): Date {
-        let absTime: Date = new Date(this.absoluteTime);
+    static getDateObj(varTime: VarTime): Date {
+        let absTime: Date = new Date(varTime.absoluteTime);
         let nowTime: Date = new Date();
 
         // Make millisecond component as zero for the absolute time and now time
@@ -77,42 +77,42 @@ export class VarTime {
 
 
         // Add offsets to current time as per the settings
-        if (this.isVarYears) {
-            resultTime = VarTime.addYears(resultTime, this.offsetYears);
+        if (varTime.isVarYears) {
+            resultTime = VarTime.addYears(resultTime, varTime.offsetYears);
         }
-        if (this.isVarMonths) {
-            resultTime = VarTime.addMonths(resultTime, this.offsetMonths);
+        if (varTime.isVarMonths) {
+            resultTime = VarTime.addMonths(resultTime, varTime.offsetMonths);
         }
-        if (this.isVarDays) {
-            resultTime = VarTime.addDays(resultTime, this.offsetDays);
+        if (varTime.isVarDays) {
+            resultTime = VarTime.addDays(resultTime, varTime.offsetDays);
         }
-        if (this.isVarHrs) {
-            resultTime = VarTime.addHrs(resultTime, this.offsetHrs);
+        if (varTime.isVarHrs) {
+            resultTime = VarTime.addHrs(resultTime, varTime.offsetHrs);
         }
-        if (this.isVarMins) {
-            resultTime = VarTime.addMins(resultTime, this.offsetMins);
+        if (varTime.isVarMins) {
+            resultTime = VarTime.addMins(resultTime, varTime.offsetMins);
         }
-        if (this.isVarSecs) {
-            resultTime = VarTime.addSecs(resultTime, this.offsetSecs);
+        if (varTime.isVarSecs) {
+            resultTime = VarTime.addSecs(resultTime, varTime.offsetSecs);
         }
 
         // Set absolute time settings to the result time
-        if (!this.isVarYears) {
-            resultTime = VarTime.setYears(resultTime, absTime.getFullYear() );
+        if (!varTime.isVarYears) {
+            resultTime = VarTime.setYears(resultTime, absTime.getFullYear());
         }
-        if (!this.isVarMonths) {
+        if (!varTime.isVarMonths) {
             resultTime = VarTime.setMonths(resultTime, absTime.getMonth());
         }
-        if (!this.isVarDays) {
+        if (!varTime.isVarDays) {
             resultTime = VarTime.setDays(resultTime, absTime.getDate());
         }
-        if (!this.isVarHrs) {
+        if (!varTime.isVarHrs) {
             resultTime = VarTime.setHrs(resultTime, absTime.getHours());
         }
-        if (!this.isVarMins) {
+        if (!varTime.isVarMins) {
             resultTime = VarTime.setMins(resultTime, absTime.getMinutes());
         }
-        if (!this.isVarSecs) {
+        if (!varTime.isVarSecs) {
             resultTime = VarTime.setSecs(resultTime, absTime.getSeconds());
         }
         return resultTime;
