@@ -3,27 +3,25 @@ import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik';
 import { TslpProps } from '../ITimeSeriesLinePlot';
         
 //https://programmingwithmosh.com/javascript/create-modal-using-react/
-interface WidgetSelectFormProps {
-    onFormSubmit(formRes: string):void,
-    formId: string
+interface WidgetAddFormProps {
+    onFormSubmit(formRes: string):void
 }
-interface WidgetSelectFormValues {
+interface WidgetAddFormValues {
     widgetType: string
 }
 
-export class WidgetSelectForm extends React.Component<WidgetSelectFormProps, {}> {
+export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
 
-    handleSubmit = (values: WidgetSelectFormValues, {
+    handleSubmit = (values: WidgetAddFormValues, {
         onFormSubmit = this.props.onFormSubmit,
-        formId = this.props.formId,
         setSubmitting
     }) => {
-        alert(JSON.stringify(values, null, 2));
+        // alert(JSON.stringify(values, null, 2));
 
         // call parent function to return
         onFormSubmit(values.widgetType);
         
-        setSubmitting(false);
+        setSubmitting(true);
         return;
     }
 
@@ -34,7 +32,7 @@ export class WidgetSelectForm extends React.Component<WidgetSelectFormProps, {}>
                 initialValues={{
                     widgetType: ''
                 }}
-                validate={(values: WidgetSelectFormValues) => {
+                validate={(values: WidgetAddFormValues) => {
                     let errors = {};
 
                     if (!values.widgetType)
@@ -47,7 +45,7 @@ export class WidgetSelectForm extends React.Component<WidgetSelectFormProps, {}>
                     return (
                         <Form>
                             <Field
-                                name="Widget Type"
+                                name="widgetType"
                                 component="select"
                                 placeholder="Select Widget Type">
                                 <option value={TslpProps.typename}>{TslpProps.typename}</option>
@@ -58,7 +56,7 @@ export class WidgetSelectForm extends React.Component<WidgetSelectFormProps, {}>
                             <button
                                 type="submit"
                                 disabled={formProps.isSubmitting}>
-                                Submit Form
+                                Add Widget
                             </button>
                         </Form>
                     );

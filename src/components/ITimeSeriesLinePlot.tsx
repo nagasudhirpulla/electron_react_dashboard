@@ -2,6 +2,7 @@ import { Color, Datum, Data, Layout } from "plotly.js";
 import { IMeasurement } from "../measurements/IMeasurement";
 import { VarTime } from './../variable_time/VariableTime';
 import { IDashWidgetContentState, IDashWidgetContentProps } from "./IDashWidgetContent";
+import { ScadaMeasurement } from "../measurements/ScadaMeasurement";
 
 export interface ITslpProps extends IDashWidgetContentProps {
     seriesList: ITslpSeriesProps[],
@@ -35,6 +36,15 @@ export interface ITslpSeriesProps {
     toVarTime: VarTime,
     displayTimeShift: ITimePeriod,
     points: ITslpDataPoint[]
+}
+
+export class TslpSeriesProps implements ITslpSeriesProps {
+    color: Color = "blue";
+    meas: IMeasurement = new ScadaMeasurement()
+    fromVarTime: VarTime = new VarTime();
+    toVarTime: VarTime = new VarTime();
+    displayTimeShift: ITimePeriod = new DisplayTimeShift();
+    points: ITslpDataPoint[] = []
 }
 
 export interface ITslpDataPoint {

@@ -7,7 +7,7 @@ import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
 // import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps } from './ITimeSeriesLinePlot';
 // import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
@@ -18,7 +18,9 @@ import { readFile, writeFile } from 'fs';
 import { IMeasurement } from '../measurements/IMeasurement';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
-import { WidgetSelectForm } from './modals/AddWidgetModal';
+import Modal from './modals/Modal';
+import { WidgetAddForm } from './modals/WidgetAddForm';
+import { TslpSeriesAddForm } from './modals/TslpSeriesAddForm';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -42,9 +44,8 @@ const writeFileAsync = function (filename: string, contents: string) {
   });
 };
 
-
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-const WidgetAddModalId: string = 'add-widget-modal';
+
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
@@ -103,25 +104,10 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ widgetProps: generateWidgetProps() } as AppState);
   };
 
-  onAddWidgetClick = () => {
-    // this.setState({
-    //   widgetProps: [...this.state.widgetProps, {
-    //     layouts: {
-    //       x: 0,
-    //       y: Infinity,
-    //       w: 5,
-    //       h: 3,
-    //       i: uuid(),
-    //       static: false
-    //     },
-    //     contentProps: {}
-    //   }]
-    // } as AppState);
-  };
-
   addWidget = (widType: string) => {
     const newWidgetProps = new DashWidgetProps();
-    newWidgetProps.layouts['lg'] = { x: 0, y: Infinity, w: 5, h: 3, i: uuid(), static: false };
+    const newLayout = { x: 0, y: Infinity, w: 5, h: 3, i: uuid(), static: false };
+    newWidgetProps.layouts[this.state.currentBreakpoint] = { ...newLayout };
     if (widType == TslpProps.typename) {
       // create a timeseries widget
       newWidgetProps.contentProps = new TslpProps();
@@ -130,6 +116,22 @@ class App extends React.Component<AppProps, AppState> {
       widgetProps: [...this.state.widgetProps, newWidgetProps]
     } as AppState);
   }
+
+  addTslpSeries = (tslpSeriesProps: TslpSeriesProps) => {
+
+  }
+
+  AddWidgetModalContent = (
+    <React.Fragment>
+      <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
+    </React.Fragment>
+  );
+
+  getTslpSeriesAddModalContent = (ind:number)=>(
+    <React.Fragment>
+      <TslpSeriesAddForm {...{ onFormSubmit: this.addTslpSeries, ind: ind }} />
+    </React.Fragment>
+  );
 
   onOpenDashboard = async () => {
     const dialogRes = await showOpenDialog({
@@ -266,21 +268,22 @@ class App extends React.Component<AppProps, AppState> {
     const layoutsDict = this.deriveLayouts();
     return (
       <div>
+
+        <button onClick={this.onNewLayout}>Generate New Layout</button>
+        <button onClick={this.onCompactTypeChange}>
+          Compaction - {this.state.compactType || "No Compaction"}
+        </button>
+        <button onClick={this.onSaveDashboard}>Save Dashboard</button>
+        <button onClick={this.onOpenDashboard}>Open Dashboard</button>
+        <button onClick={this.onRefreshAll}>Refresh</button>
         <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
             this.props.cols[this.state.currentBreakpoint]
           }{" "}
           columns)
         </span>
-        <button onClick={this.onNewLayout}>Generate New Layout</button>
-        <button onClick={this.onCompactTypeChange}>
-          Compaction - {this.state.compactType || "No Compaction"}
-        </button>
-        <button onClick={this.onAddWidgetClick}>Add Widget</button>
-        <button onClick={this.onSaveDashboard}>Save Dashboard</button>
-        <button onClick={this.onOpenDashboard}>Open Dashboard</button>
-        <button onClick={this.onRefreshAll}>Refresh</button>
 
+        <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent} />
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={layoutsDict}
