@@ -5,7 +5,7 @@ import './rgl_styles.css';
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
-import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
+import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
 // import { IDashWidgetContentProps } from './IDashWidgetContent';
 import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint } from './ITimeSeriesLinePlot';
 // import { DummyMeasurement } from './../measurements/DummyMeasurement';
@@ -18,7 +18,7 @@ import { readFile, writeFile } from 'fs';
 import { IMeasurement } from '../measurements/IMeasurement';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
-import JwModal from './JWModal';
+import { WidgetSelectForm } from './modals/AddWidgetModal';
 // make promise version of fs.readFile()
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -44,14 +44,14 @@ const writeFileAsync = function (filename: string, contents: string) {
 
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
+const WidgetAddModalId: string = 'add-widget-modal';
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
     rowHeight: 100,
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
-    breakpoints: { lg: 1200, md: 996, sm: 768},
-    cols: { lg: 12, md: 10, sm: 6},
+    breakpoints: { lg: 1200, md: 996, sm: 768 },
+    cols: { lg: 12, md: 10, sm: 6 },
     initialLayout: { lg: [] },
     appSettings: { scadaServerBase: "localhost" },
     widgetProps: generateWidgetProps()
@@ -62,7 +62,8 @@ class App extends React.Component<AppProps, AppState> {
     compactType: "vertical",
     mounted: false,
     widgetProps: this.props.widgetProps,
-    appSettings: this.props.appSettings
+    appSettings: this.props.appSettings,
+    showWidgetAddModal: true
   };
 
   componentDidMount() {
@@ -102,21 +103,33 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ widgetProps: generateWidgetProps() } as AppState);
   };
 
-  onAddItem = () => {
-    this.setState({
-      widgetProps: [...this.state.widgetProps, {
-        layouts: {
-          x: 0,
-          y: Infinity,
-          w: 5,
-          h: 3,
-          i: uuid(),
-          static: false
-        },
-        contentProps: {}
-      }]
-    } as AppState);
+  onAddWidgetClick = () => {
+    // this.setState({
+    //   widgetProps: [...this.state.widgetProps, {
+    //     layouts: {
+    //       x: 0,
+    //       y: Infinity,
+    //       w: 5,
+    //       h: 3,
+    //       i: uuid(),
+    //       static: false
+    //     },
+    //     contentProps: {}
+    //   }]
+    // } as AppState);
   };
+
+  addWidget = (widType: string) => {
+    const newWidgetProps = new DashWidgetProps();
+    newWidgetProps.layouts['lg'] = { x: 0, y: Infinity, w: 5, h: 3, i: uuid(), static: false };
+    if (widType == TslpProps.typename) {
+      // create a timeseries widget
+      newWidgetProps.contentProps = new TslpProps();
+    }
+    this.setState({
+      widgetProps: [...this.state.widgetProps, newWidgetProps]
+    } as AppState);
+  }
 
   onOpenDashboard = async () => {
     const dialogRes = await showOpenDialog({
@@ -259,20 +272,15 @@ class App extends React.Component<AppProps, AppState> {
           }{" "}
           columns)
         </span>
-        <JwModal id="add-widget-modal">
-          <h1>Select Widget Type to be added</h1>
-          <select name="widget-type-combo" id="widget-type-combo"></select>
-          <button onClick={JwModal.close('add-widget-modal')}>Close</button>
-        </JwModal>
-        
         <button onClick={this.onNewLayout}>Generate New Layout</button>
         <button onClick={this.onCompactTypeChange}>
           Compaction - {this.state.compactType || "No Compaction"}
         </button>
-        <button onClick={this.onAddItem}>Add Widget</button>
+        <button onClick={this.onAddWidgetClick}>Add Widget</button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onRefreshAll}>Refresh</button>
+
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={layoutsDict}
