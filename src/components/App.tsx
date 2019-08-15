@@ -48,9 +48,10 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
-    rowHeight: 150,
+    rowHeight: 100,
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
-    cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+    breakpoints: { lg: 1200, md: 996, sm: 768},
+    cols: { lg: 12, md: 10, sm: 6},
     initialLayout: { lg: [] },
     appSettings: { scadaServerBase: "localhost" },
     widgetProps: generateWidgetProps()
@@ -108,7 +109,7 @@ class App extends React.Component<AppProps, AppState> {
           x: 0,
           y: Infinity,
           w: 5,
-          h: 1,
+          h: 3,
           i: uuid(),
           static: false
         },
@@ -232,7 +233,7 @@ class App extends React.Component<AppProps, AppState> {
       return (
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
-            <div style={{ textAlign: 'center' }}>{l.i}</div>
+            <div style={{ textAlign: 'center' }}>{" "}</div>
             <span
               className="refreshBtn"
               onClick={this.onRefreshItem.bind(this, i)}
@@ -319,7 +320,7 @@ function generateWidgetProps(): IDashWidgetProps[] {
           x: (ind * 2) % 12,
           y: Math.floor(ind / 6),
           w: 5,
-          h: 2,
+          h: 3,
           i: layKey,
           static: false
         }
