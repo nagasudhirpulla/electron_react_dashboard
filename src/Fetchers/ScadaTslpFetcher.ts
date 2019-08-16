@@ -1,6 +1,6 @@
 import { VarTime } from "../variable_time/VariableTime";
 import { ITslpDataPoint, TslpDataPointQuality, TimePeriod } from "../components/ITimeSeriesLinePlot";
-import { IScadaMeasurement, FetchStrategy, Periodicity } from "../measurements/ScadaMeasurement";
+import { IScadaMeasurement, SamplingStrategy, Periodicity } from "../measurements/ScadaMeasurement";
 import { ITslpDataFetcher } from "./IFetcher";
 
 export interface IScadaApiFetchPnt {
@@ -53,7 +53,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
         return timeStr;
     };
 
-    createApiFetchPath(pnt: string | number, fetch_strategy: FetchStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): string {
+    createApiFetchPath(pnt: string | number, fetch_strategy: SamplingStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): string {
         var fromTimeStr = this.getApiTimeString(fromTime);
         var toTimeStr = this.getApiTimeString(toTime);
         var secs = TimePeriod.getSeconds(periodicity);
@@ -63,7 +63,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
         return url;
     };
 
-    async fetchServerData(pnt: string | number, fetch_strategy: FetchStrategy, periodicity: Periodicity, fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
+    async fetchServerData(pnt: string | number, fetch_strategy: SamplingStrategy, periodicity: Periodicity, fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
         let serverBaseAddress: string = this.serverBaseAddress;
         const fromTime: Date = VarTime.getDateObj(fromVarTime);
@@ -102,7 +102,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
     };
 
     async fetchData(fromVarTime: VarTime, toVarTime: VarTime, scada_meas: IScadaMeasurement): Promise<ITslpDataPoint[]> {
-        let resultData: ITslpDataPoint[] = await this.fetchServerData(scada_meas.meas_id, scada_meas.fetch_strategy, scada_meas.periodicity, fromVarTime, toVarTime);
+        let resultData: ITslpDataPoint[] = await this.fetchServerData(scada_meas.meas_id, scada_meas.sampling_strategy, scada_meas.periodicity, fromVarTime, toVarTime);
         return resultData;
     }
 }
