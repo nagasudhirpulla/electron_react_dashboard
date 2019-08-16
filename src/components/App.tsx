@@ -15,13 +15,15 @@ import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasur
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
 const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
 import { readFile, writeFile } from 'fs';
-import { IMeasurement } from '../measurements/IMeasurement';
+// import { IMeasurement } from '../measurements/IMeasurement';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
 import Modal from './modals/Modal';
 import { WidgetAddForm } from './modals/WidgetAddForm';
 import { TslpSeriesAddForm } from './modals/TslpSeriesAddForm';
-// make promise version of fs.readFile()
+import { PMUTslpFetcher } from '../Fetchers/PMUTslpFetcher';
+import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement';
+
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
     readFile(filename, function (err, data) {
@@ -54,7 +56,7 @@ class App extends React.Component<AppProps, AppState> {
     breakpoints: { lg: 1200, md: 996, sm: 768 },
     cols: { lg: 12, md: 10, sm: 6 },
     initialLayout: { lg: [] },
-    appSettings: { scadaServerBase: "localhost" },
+    appSettings: { scadaServerBase: "localhost", pmuServerBase: "172.16.184.35" },
     widgetProps: generateWidgetProps()
   };
 
@@ -127,7 +129,7 @@ class App extends React.Component<AppProps, AppState> {
     </React.Fragment>
   );
 
-  getTslpSeriesAddModalContent = (ind:number)=>(
+  getTslpSeriesAddModalContent = (ind: number) => (
     <React.Fragment>
       <TslpSeriesAddForm {...{ onFormSubmit: this.addTslpSeries, ind: ind }} />
     </React.Fragment>
@@ -178,8 +180,10 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   onRefreshItem = async (ind: number) => {
-    let fetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
-    fetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+    let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
+    scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+    let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
+    pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
 
     let wp = this.state.widgetProps[ind];
 
@@ -191,7 +195,10 @@ class App extends React.Component<AppProps, AppState> {
 
         if (series.meas.discriminator == ScadaMeasurement.typename) {
           series.meas = series.meas as IScadaMeasurement;
-          pnts = await fetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IScadaMeasurement);
+          pnts = await scadaFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IScadaMeasurement);
+        }
+        else if (series.meas.discriminator == PMUMeasurement.typename) {
+          pnts = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IPMUMeasurement);
         }
 
         // fetch the timeseries data

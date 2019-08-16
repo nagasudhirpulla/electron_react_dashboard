@@ -16,7 +16,7 @@ export interface AppProps {
     onLayoutChange: (currLayout: Layout, allLayouts: any) => {},
     cols: { lg: number, md: number, sm: number, xs: number, xxs: number },
     initialLayout: Layout,
-    appSettings: { scadaServerBase: string },
+    appSettings: { scadaServerBase: string, pmuServerBase: string },
     widgetProps: IDashWidgetProps[]
 }
 
@@ -24,6 +24,6 @@ export interface AppState {
     currentBreakpoint: string,
     compactType: string,
     mounted: boolean,
-    appSettings: { scadaServerBase: string },
+    appSettings: { scadaServerBase: string, pmuServerBase: string },
     widgetProps: IDashWidgetProps[]
 }

@@ -12,7 +12,7 @@ let createWindow = () => {
         width: 450,
         height: 450,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true, webSecurity: false
         }
     });
     win.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'index.html')}`);

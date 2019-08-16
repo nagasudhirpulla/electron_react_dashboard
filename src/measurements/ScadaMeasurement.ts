@@ -1,6 +1,6 @@
 import { IMeasurement } from "./IMeasurement";
-import { VarTime } from "../variable_time/VariableTime";
-import { ITslpDataPoint, ITimePeriod, TslpDataPointQuality } from "../components/ITimeSeriesLinePlot";
+// import { VarTime } from "../variable_time/VariableTime";
+import { ITimePeriod } from "../components/ITimeSeriesLinePlot";
 export class Periodicity implements ITimePeriod {
     years = 0;
     months = 0;
@@ -11,7 +11,7 @@ export class Periodicity implements ITimePeriod {
     millis = 0;
 }
 
-export enum FetchStrategy {
+export enum SamplingStrategy {
     Raw = "raw",
     Snap = "snap",
     Average = "average",
@@ -21,7 +21,7 @@ export enum FetchStrategy {
 }
 
 export interface IScadaMeasurement extends IMeasurement {
-    fetch_strategy: FetchStrategy,
+    sampling_strategy: SamplingStrategy,
     periodicity: Periodicity,
 };
 
@@ -29,6 +29,6 @@ export class ScadaMeasurement implements IScadaMeasurement {
     static typename: string = "ScadaMeasurement"
     discriminator: string = ScadaMeasurement.typename;
     meas_id: string | number = "WRLDCMP.SCADA1.A0015067";
-    fetch_strategy: FetchStrategy = FetchStrategy.Snap;
+    sampling_strategy: SamplingStrategy = SamplingStrategy.Snap;
     periodicity: Periodicity = new Periodicity();
-}
+};
