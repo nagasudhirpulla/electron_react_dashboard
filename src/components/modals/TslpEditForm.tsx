@@ -1,8 +1,10 @@
 import React from 'react';
 import { TslpSeriesEditFormComp } from './TslpSeriesEditFormComp';
 import { Formik, withFormik, FormikBag } from 'formik';
-import { ITslpProps } from '../ITimeSeriesLinePlot';
+import { ITslpProps, TslpSeriesProps } from '../ITimeSeriesLinePlot';
 import { IDashWidgetContentProps } from '../IDashWidgetContent';
+import { PMUMeasurement } from '../../measurements/PMUMeasurement';
+import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 
 export const TslpEditFormComp = (props) => {
     const {
@@ -15,6 +17,24 @@ export const TslpEditFormComp = (props) => {
         setFieldValue,
         setFieldTouched
     } = props;
+    let TslpSeriesFormComps = [];
+    for (let seriesIter = 0; seriesIter < values.seriesList.length; seriesIter++) {
+        TslpSeriesFormComps.push(
+            <div key={`tslpSeriesEditFormComp_${seriesIter}`}>
+                <TslpSeriesEditFormComp
+                    name={`${name}.seriesList.${seriesIter}`}
+                    values={{ ...values.seriesList[seriesIter], points: [] }}
+                    touched={touched}
+                    errors={errors}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                />
+            </div>
+        );
+    }
+
     return (
         <>
             <input
@@ -37,16 +57,8 @@ export const TslpEditFormComp = (props) => {
                 />
             }
 
-            <TslpSeriesEditFormComp
-                name={`${name}.seriesList.0`}
-                values={{ ...values.seriesList[0], points: [] }}
-                touched={touched}
-                errors={errors}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-            />
+            {TslpSeriesFormComps}
+
             {/* {
                 values.seriesList.length > 0 &&
                 values.seriesList.map((seriesObj, seriesIter) => {
@@ -81,30 +93,54 @@ export const TslpEditForm = (props) => {
         isSubmitting
     } = props;
     let nameStr = 'tslpProps';
+    const onAddSeriesClick = () => {
+        let seriesProps = new TslpSeriesProps();
+        if (values.newMeasType == ScadaMeasurement.typename) {
+            seriesProps.meas = new ScadaMeasurement();
+        } else if (values.newMeasType == PMUMeasurement.typename) {
+            seriesProps.meas = new PMUMeasurement();
+        }
+        setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
+    };
     return (
-        <form onSubmit={handleSubmit}>
-            <TslpEditFormComp
-                name={nameStr}
-                values={values[nameStr]}
-                touched={touched}
-                errors={errors}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-            />
+        <div>
+            <div>
+                <select
+                    name="newMeasType"
+                    value={values.newMeasType}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                >
+                    <option value={ScadaMeasurement.typename}>Scada</option>
+                    <option value={PMUMeasurement.typename}>PMU</option>
+                </select>
+                <button onClick={onAddSeriesClick}>Add Series</button>
+            </div>
+            <form onSubmit={handleSubmit}>
+                <TslpEditFormComp
+                    name={nameStr}
+                    values={values[nameStr]}
+                    touched={touched}
+                    errors={errors}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                />
 
-            <button type="submit" disabled={isSubmitting}>Submit</button>
+                <button type="submit" disabled={isSubmitting}>Submit</button>
 
-            <pre>{JSON.stringify(props, null, 2)}</pre>
-        </form>
+                <pre>{JSON.stringify(props, null, 2)}</pre>
+            </form>
+        </div>
     )
 };
 
 
-export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: IDashWidgetContentProps, onFormSubmit }, {}, {}>({
+export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: ITslpProps, onFormSubmit }, { tslpProps: ITslpProps }, { tslpProps: ITslpProps, newMeasType: string }>({
     mapPropsToValues: (props) => ({
-        tslpProps: { ...props.tslpProps }
+        tslpProps: { ...props.tslpProps },
+        newMeasType: ScadaMeasurement.typename
     }),
 
     validate: values => {
@@ -113,8 +149,8 @@ export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: IDashWidg
     },
 
     handleSubmit: (values, { props, setSubmitting }) => {
-        alert(JSON.stringify(values));
-        props.onFormSubmit(values);
+        // alert(JSON.stringify(values));
+        props.onFormSubmit(values.tslpProps, props.ind);
         setSubmitting(false);
     },
 

@@ -24,6 +24,7 @@ import { TslpSeriesAddForm } from './modals/TslpSeriesAddForm';
 import { PMUTslpFetcher } from '../Fetchers/PMUTslpFetcher';
 import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement';
 import { FormikTslpEditForm } from './modals/TslpEditForm';
+import { IDashWidgetContentProps } from './IDashWidgetContent';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -120,32 +121,35 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
-  addTslpSeries = (tslpSeriesProps: TslpSeriesProps) => {
-
-  }
-
   AddWidgetModalContent = (
     <>
       <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
     </>
   );
 
+  editWidget = (contentProps: IDashWidgetContentProps, ind: number) => {
+    console.log(JSON.stringify(contentProps));
+    const newState = {
+      ...this.state,
+      widgetProps: [
+        ...this.state.widgetProps.slice(0, ind),
+        { ...this.state.widgetProps[ind], contentProps: contentProps },
+        ...this.state.widgetProps.slice(ind + 1)
+      ]
+    };
+    this.setState(newState);
+  }
+
   EditWidgetModalContent = (ind: number) => {
     return (
       <>
         {
           this.state.widgetProps[ind].contentProps.discriminator == TslpProps.typename &&
-          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps, onFormSubmit: (payload) => { console.log(JSON.stringify(payload)); } }} />
+          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, onFormSubmit: this.editWidget.bind(this) }} />
         }
       </>
     );
   };
-
-  getTslpSeriesAddModalContent = (ind: number) => (
-    <React.Fragment>
-      <TslpSeriesAddForm {...{ onFormSubmit: this.addTslpSeries, ind: ind }} />
-    </React.Fragment>
-  );
 
   onOpenDashboard = async () => {
     const dialogRes = await showOpenDialog({
