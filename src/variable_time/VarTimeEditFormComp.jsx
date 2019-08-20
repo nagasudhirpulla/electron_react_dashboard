@@ -1,24 +1,38 @@
 import React from 'react';
+import DateTime from 'react-datetime';
+import moment from 'moment';
 
 export const VarTimeEditFormComp = ({
-    value,
-    label,
-    error,
-    handleBlur,
-    handleChange,
+    values,
     name,
+    touched,
+    handleChange,
+    handleBlur,
+    errors,
+    setFieldValue,
+    setFieldTouched,
     ...props
 }) => {
+    const onAbsTimeChange = value => {
+        if (value instanceof moment) {
+            let dateObj = (moment(value).toDate()).getTime();
+            setFieldValue(`${name}.absoluteTime`, dateObj);
+        }
+    };
+
+    const onAbsTimeBlur = () => {
+        setFieldTouched(`${name}.absoluteTime`, true);
+    };
+
     return (
         <div>
-            <h3>{label}</h3>
-
-            <input
-                type="date"
+            <DateTime
                 name={`${name}.absoluteTime`}
-                onChange={handleChange}
-                value={value.absoluteTime}
-                onBlur={handleBlur}
+                value={values.absoluteTime}
+                dateFormat={'DD-MM-YYYY'}
+                timeFormat={'HH:mm:ss'}
+                onChange={onAbsTimeChange}
+                onBlur={onAbsTimeBlur}
             />
             <br />
 
@@ -28,7 +42,7 @@ export const VarTimeEditFormComp = ({
                 type="checkbox"
                 name={`${name}.isVarDays`}
                 onChange={handleChange}
-                checked={value.isVarDays}
+                checked={values.isVarDays}
                 onBlur={handleBlur}
             />
 
@@ -36,7 +50,7 @@ export const VarTimeEditFormComp = ({
                 type="number"
                 name={`${name}.offsetDays`}
                 onChange={handleChange}
-                value={value.offsetDays}
+                value={values.offsetDays}
                 onBlur={handleBlur}
             />
 
@@ -46,7 +60,7 @@ export const VarTimeEditFormComp = ({
                 type="checkbox"
                 name={`${name}.isVarMonths`}
                 onChange={handleChange}
-                checked={value.isVarMonths}
+                checked={values.isVarMonths}
                 onBlur={handleBlur}
             />
 
@@ -54,7 +68,7 @@ export const VarTimeEditFormComp = ({
                 type="number"
                 name={`${name}.offsetMonths`}
                 onChange={handleChange}
-                value={value.offsetMonths}
+                value={values.offsetMonths}
                 onBlur={handleBlur}
             />
 
@@ -64,7 +78,7 @@ export const VarTimeEditFormComp = ({
                 type="checkbox"
                 name={`${name}.isVarYears`}
                 onChange={handleChange}
-                checked={value.isVarYears}
+                checked={values.isVarYears}
                 onBlur={handleBlur}
             />
 
@@ -72,7 +86,7 @@ export const VarTimeEditFormComp = ({
                 type="number"
                 name={`${name}.offsetYears`}
                 onChange={handleChange}
-                value={value.offsetYears}
+                value={values.offsetYears}
                 onBlur={handleBlur}
             />
         </div>

@@ -128,9 +128,18 @@ li b {
   color: red;
 }
 
-.refreshBtn {
+.editItemBtn {
   position: absolute;
   right: 15px;
+  top: 0;
+  cursor: pointer;
+  color: rgb(224, 169, 28);
+  font-size: 0.5em;
+}
+
+.refreshBtn {
+  position: absolute;
+  right: 30px;
   top: 0;
   cursor: pointer;
   color: rgb(224, 169, 28);

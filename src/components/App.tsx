@@ -23,6 +23,7 @@ import { WidgetAddForm } from './modals/WidgetAddForm';
 import { TslpSeriesAddForm } from './modals/TslpSeriesAddForm';
 import { PMUTslpFetcher } from '../Fetchers/PMUTslpFetcher';
 import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement';
+import { FormikTslpEditForm } from './modals/TslpEditForm';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -124,10 +125,21 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   AddWidgetModalContent = (
-    <React.Fragment>
+    <>
       <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
-    </React.Fragment>
+    </>
   );
+
+  EditWidgetModalContent = (ind: number) => {
+    return (
+      <>
+        {
+          this.state.widgetProps[ind].contentProps.discriminator == TslpProps.typename &&
+          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps, onFormSubmit: (payload) => { console.log(JSON.stringify(payload)); } }} />
+        }
+      </>
+    );
+  };
 
   getTslpSeriesAddModalContent = (ind: number) => (
     <React.Fragment>
@@ -178,6 +190,10 @@ class App extends React.Component<AppProps, AppState> {
         ...this.state.widgetProps.slice(0, ind),
         ...this.state.widgetProps.slice(ind + 1)]
     } as AppState);
+  }
+
+  onEditItem = (ind: number) => {
+
   }
 
   onRefreshItem = async (ind: number) => {
@@ -245,25 +261,26 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   generateDOM = () => {
-    return this.state.widgetProps.map((ws: IDashWidgetProps, i) => {
-      let l: LayoutItem = ws.layouts[this.state.currentBreakpoint];
+    return this.state.widgetProps.map((wp: IDashWidgetProps, ind) => {
+      let l: LayoutItem = wp.layouts[this.state.currentBreakpoint];
       let content = <div className="cellContent"></div>;
-      if (ws.contentProps.discriminator == TslpProps.typename) {
+      if (wp.contentProps.discriminator == TslpProps.typename) {
         content = <div className="cellContent" key={l.i + '_timeseries'}>
-          <TimeSeriesLinePlot {...ws.contentProps}></TimeSeriesLinePlot>
+          <TimeSeriesLinePlot {...wp.contentProps}></TimeSeriesLinePlot>
         </div>;
       }
       return (
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{" "}</div>
+            <Modal modalProps={{ btnText: "/", btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
             <span
               className="refreshBtn"
-              onClick={this.onRefreshItem.bind(this, i)}
+              onClick={this.onRefreshItem.bind(this, ind)}
             >()</span>
             <span
               className="removeBtn"
-              onClick={this.onRemoveItem.bind(this, i)}
+              onClick={this.onRemoveItem.bind(this, ind)}
             >x</span>
           </div>
           {content}
