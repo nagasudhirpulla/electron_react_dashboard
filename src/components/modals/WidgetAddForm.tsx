@@ -48,6 +48,7 @@ export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
                                 name="widgetType"
                                 component="select"
                                 placeholder="Select Widget Type">
+                                <option value={null}>Select Widget Type</option>
                                 <option value={TslpProps.typename}>{TslpProps.typename}</option>
                                 <option value="Blank">Blank</option>
                             </Field>
