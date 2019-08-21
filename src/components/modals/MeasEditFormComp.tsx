@@ -24,6 +24,7 @@ export const MeasEditFormComp = (props) => {
                 value={values.meas_id}
                 name={`${name}.meas_id`}
             />
+            <br/>
 
             {values.discriminator &&
                 values.discriminator == ScadaMeasurement.typename &&
@@ -68,6 +69,7 @@ export const ScadaMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span>Periodicity</span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -77,6 +79,8 @@ export const ScadaMeasEditFormComp = (props) => {
                 handleChange={handleChange}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
+
+            <span>Sampling Strategy</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -103,6 +107,7 @@ export const PMUMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span>Periodicity</span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -112,6 +117,8 @@ export const PMUMeasEditFormComp = (props) => {
                 handleChange={handleChange}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
+
+            <span>Sampling Strategy</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -121,6 +128,8 @@ export const PMUMeasEditFormComp = (props) => {
                 handleChange={handleChange}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
+
+            <span>Fetch Window</span>
             <TimePeriodEditFormComp
                 name={`${name}.fetchWindow`}
                 values={values.fetchWindow}

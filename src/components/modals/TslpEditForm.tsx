@@ -22,7 +22,7 @@ export const TslpEditFormComp = (props) => {
     let TslpSeriesFormComps = [];
     for (let seriesIter = 0; seriesIter < values.seriesList.length; seriesIter++) {
         TslpSeriesFormComps.push(
-            <div key={`tslpSeriesEditFormComp_${seriesIter}`} className="black_border">
+            <div key={`tslpSeriesEditFormComp_${seriesIter}`} className="series_edit_item">
                 <TslpSeriesEditFormComp
                     name={`${name}.seriesList.${seriesIter}`}
                     values={{ ...values.seriesList[seriesIter], points: [] }}
@@ -33,6 +33,7 @@ export const TslpEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                 />
+                <hr />
                 <WidgetContentDivider />
             </div>
         );
@@ -40,6 +41,7 @@ export const TslpEditFormComp = (props) => {
 
     return (
         <>
+            <span>Title</span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -52,7 +54,7 @@ export const TslpEditFormComp = (props) => {
 
             {
                 values.backgroundColor &&
-                < input
+                <>< input
                     type="text"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -60,29 +62,11 @@ export const TslpEditFormComp = (props) => {
                     value={values.backgroundColor}
 
                 />
+                    <WidgetContentDivider />
+                </>
             }
 
-            <WidgetContentDivider />
-
             {TslpSeriesFormComps}
-
-            {/* {
-                values.seriesList.length > 0 &&
-                values.seriesList.map((seriesObj, seriesIter) => {
-                    console.log(`${(this as any)[name]}.seriesList.${seriesIter}`);
-                    return (<TslpSeriesEditFormComp
-                        name={`${(this as any)[name]}.seriesList.${seriesIter}`}
-                        values={{ ...seriesObj, points: [] }}
-                        touched={this.touched}
-                        errors={this.errors}
-                        handleChange={this.handleChange}
-                        handleBlur={this.handleBlur}
-                        setFieldValue={this.setFieldValue}
-                        setFieldTouched={this.setFieldTouched}
-                    />);
-                }, { name, errors, touched, handleChange, handleBlur, setFieldValue, setFieldTouched })
-            } */}
-
         </>
     )
 };
@@ -110,7 +94,7 @@ export const TslpEditForm = (props) => {
         setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
     };
     return (
-        <div>
+        <div className="form_div">
             <div>
                 <select
                     name="newMeasType"

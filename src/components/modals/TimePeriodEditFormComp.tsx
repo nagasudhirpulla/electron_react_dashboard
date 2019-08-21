@@ -12,68 +12,89 @@ export const TimePeriodEditFormComp = ({
     ...props
 }) => {
     return (
-        <div>
-            <span>Days</span>
-
-            <input
-                type="number"
-                name={`${name}.days`}
-                onChange={handleChange}
-                value={values.days}
-                onBlur={handleBlur}
-            />
-
-            <span>Months</span>
-
-            <input
-                type="number"
-                name={`${name}.months`}
-                onChange={handleChange}
-                value={values.months}
-                onBlur={handleBlur}
-            />
-
-            <span>Years</span>
-
-            <input
-                type="number"
-                name={`${name}.years`}
-                onChange={handleChange}
-                value={values.years}
-                onBlur={handleBlur}
-            />
-
-            <br />
-
-            <span>Hours</span>
-
-            <input
-                type="number"
-                name={`${name}.hrs`}
-                onChange={handleChange}
-                value={values.hrs}
-                onBlur={handleBlur}
-            />
-
-            <span>Mins</span>
-
-            <input
-                type="number"
-                name={`${name}.mins`}
-                onChange={handleChange}
-                value={values.mins}
-                onBlur={handleBlur}
-            />
-
-            <span>Secs</span>
-
-            <input
-                type="number"
-                name={`${name}.secs`}
-                onChange={handleChange}
-                value={values.secs}
-                onBlur={handleBlur}
-            />
-        </div>
+        <table>
+            <tr>
+                <td>
+                    <span>Days</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.days`}
+                        onChange={handleChange}
+                        value={values.days}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+                <td>
+                    <span>Months</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.months`}
+                        onChange={handleChange}
+                        value={values.months}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+                <td>
+                    <span>Years</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.years`}
+                        onChange={handleChange}
+                        value={values.years}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Hours</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.hrs`}
+                        onChange={handleChange}
+                        value={values.hrs}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+                <td>
+                    <span>Mins</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.mins`}
+                        onChange={handleChange}
+                        value={values.mins}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+                <td>
+                    <span>Secs</span>
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        name={`${name}.secs`}
+                        onChange={handleChange}
+                        value={values.secs}
+                        onBlur={handleBlur}
+                        className="num_input_width"
+                    />
+                </td>
+            </tr>
+        </table>
     );
 };

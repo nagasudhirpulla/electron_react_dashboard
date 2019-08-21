@@ -48,7 +48,7 @@ p.lorem-text {
         top: 50%;
         height: auto;
         transform: translate(-50%, -50%);
-        max-width: 50em;
+        max-width: 90%;
         max-height: calc(100% - 1em);
     }
 }

@@ -158,10 +158,22 @@ li b {
   border: 1px solid black
 }
 
-.widget_content_divider{
+.widget_content_divider {
   height: 20px;
 }
 
-.series_divider{
+.series_divider {
   height: 10px;
+}
+
+.num_input_width {
+  width: 80px;
+}
+
+.series_edit_item{
+  margin-left: 15px;
+}
+
+.form_div{
+  padding: 8px
 }
