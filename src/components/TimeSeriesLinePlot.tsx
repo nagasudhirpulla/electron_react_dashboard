@@ -27,7 +27,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
     }
 
     generateSeriesData(seriesIter: number): Data {
-        let series_data_template: Data = { x: [], y: [], type: 'scatter', mode: 'lines', marker: { color: 'red' as Color } }
+        let series_data_template: Data = { name: this.state.seriesList[seriesIter].title, x: [], y: [], type: 'scatter', mode: 'lines', marker: { color: 'red' as Color } }
         let seriesData: Data = { ...series_data_template };
         seriesData.marker.color = this.state.seriesList[seriesIter].color;
         const shiftMillis: number = 1000 * TimePeriod.getSeconds(this.state.seriesList[seriesIter].displayTimeShift);
@@ -61,10 +61,16 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
     // type definitions at https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/react-plotly.js/index.d.ts
     render() {
         // this.fetchAndSetPntData();
-        let plot_data: Data[] = this.generatePlotData()
-        let plot_layout: Partial<Layout> = { title: this.state.title, autosize: true }
-        let plot_frames: IFrame[] = []
-        let plot_config: Partial<Config> = {}
+        let plot_data: Data[] = this.generatePlotData();
+        let plot_layout: Partial<Layout> = {
+            title: this.state.title,
+            autosize: true,
+            legend: {
+                orientation: "h"
+            }
+        };
+        let plot_frames: IFrame[] = [];
+        let plot_config: Partial<Config> = {};
 
         return (
             <Plot

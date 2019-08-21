@@ -30,6 +30,7 @@ export interface ITslpSeriesState extends ITslpSeriesProps {
 }
 
 export interface ITslpSeriesProps {
+    title: string,
     color: Color,
     meas: IMeasurement,
     fromVarTime: VarTime,
@@ -39,6 +40,7 @@ export interface ITslpSeriesProps {
 }
 
 export class TslpSeriesProps implements ITslpSeriesProps {
+    title:string = "Series Name";
     color: Color = "blue";
     meas: IMeasurement = new ScadaMeasurement()
     fromVarTime: VarTime = new VarTime();

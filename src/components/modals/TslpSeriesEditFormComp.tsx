@@ -18,6 +18,17 @@ export const TslpSeriesEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span>Series Title</span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.title}
+                name={`${name}.title`}
+            />
+
+            <SeriesCompDivider />
+
             <span>Series Color</span>
             <input
                 type="text"

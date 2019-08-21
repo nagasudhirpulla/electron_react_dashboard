@@ -345,6 +345,7 @@ function generateWidgetProps(): IDashWidgetProps[] {
     fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
 
     let seriesProps: ITslpSeriesProps = {
+      title: `Series ${ind + 1}`,
       color: "blue",
       meas: new ScadaMeasurement(),
       fromVarTime: fromVarTime,
