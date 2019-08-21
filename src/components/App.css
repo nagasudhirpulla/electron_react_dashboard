@@ -153,3 +153,15 @@ li b {
   bottom: 0;
   background-color: cadetblue;
 }
+
+.black_border {
+  border: 1px solid black
+}
+
+.widget_content_divider{
+  height: 20px;
+}
+
+.series_divider{
+  height: 10px;
+}

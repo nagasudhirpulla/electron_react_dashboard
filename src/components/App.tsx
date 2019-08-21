@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import './rgl_styles.css';
+import './react-datetime.css';
 // import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";

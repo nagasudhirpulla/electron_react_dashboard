@@ -26,14 +26,16 @@ export const VarTimeEditFormComp = ({
 
     return (
         <div>
-            <DateTime
-                name={`${name}.absoluteTime`}
-                value={values.absoluteTime}
-                dateFormat={'DD-MM-YYYY'}
-                timeFormat={'HH:mm:ss'}
-                onChange={onAbsTimeChange}
-                onBlur={onAbsTimeBlur}
-            />
+            <div>
+                <DateTime
+                    name={`${name}.absoluteTime`}
+                    value={values.absoluteTime}
+                    dateFormat={'DD-MM-YYYY'}
+                    timeFormat={'HH:mm:ss'}
+                    onChange={onAbsTimeChange}
+                    onBlur={onAbsTimeBlur}
+                />
+            </div>
             <br />
 
             <span>Offset Days</span>
@@ -89,6 +91,6 @@ export const VarTimeEditFormComp = ({
                 value={values.offsetYears}
                 onBlur={handleBlur}
             />
-        </div>
+        </div >
     );
 }

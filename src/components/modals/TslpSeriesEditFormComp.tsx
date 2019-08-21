@@ -3,6 +3,8 @@ import { VarTimeEditFormComp } from '../../variable_time/VarTimeEditFormComp';
 import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 import { MeasEditFormComp } from './MeasEditFormComp';
 
+const SeriesCompDivider = () => (<div className="series_divider"></div>);
+
 export const TslpSeriesEditFormComp = (props) => {
     const {
         values,
@@ -16,6 +18,7 @@ export const TslpSeriesEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span>Series Color</span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -24,7 +27,9 @@ export const TslpSeriesEditFormComp = (props) => {
                 name={`${name}.color`}
             />
 
-            <div>
+            <SeriesCompDivider />
+
+            <div className='black_border'>
                 <h4>From Time</h4>
                 <VarTimeEditFormComp
                     name={`${name}.fromVarTime`}
@@ -36,7 +41,10 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched} />
             </div>
-            <div>
+
+            <SeriesCompDivider />
+
+            <div className='black_border'>
                 <h4>To Time</h4>
                 <VarTimeEditFormComp
                     name={`${name}.toVarTime`}
@@ -48,7 +56,10 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched} />
             </div>
-            <div>
+
+            <SeriesCompDivider />
+
+            <div className='black_border'>
                 <TimePeriodEditFormComp
                     name={`${name}.displayTimeShift`}
                     values={values.displayTimeShift}
@@ -59,7 +70,10 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched} />
             </div>
-            <div>
+
+            <SeriesCompDivider />
+
+            <div className='black_border'>
                 <MeasEditFormComp
                     name={`${name}.meas`}
                     values={values.meas}

@@ -6,6 +6,8 @@ import { IDashWidgetContentProps } from '../IDashWidgetContent';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 
+const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
+
 export const TslpEditFormComp = (props) => {
     const {
         values,
@@ -20,7 +22,7 @@ export const TslpEditFormComp = (props) => {
     let TslpSeriesFormComps = [];
     for (let seriesIter = 0; seriesIter < values.seriesList.length; seriesIter++) {
         TslpSeriesFormComps.push(
-            <div key={`tslpSeriesEditFormComp_${seriesIter}`}>
+            <div key={`tslpSeriesEditFormComp_${seriesIter}`} className="black_border">
                 <TslpSeriesEditFormComp
                     name={`${name}.seriesList.${seriesIter}`}
                     values={{ ...values.seriesList[seriesIter], points: [] }}
@@ -31,6 +33,7 @@ export const TslpEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                 />
+                <WidgetContentDivider />
             </div>
         );
     }
@@ -45,6 +48,8 @@ export const TslpEditFormComp = (props) => {
                 name={`${name}.title`}
             />
 
+            <WidgetContentDivider />
+
             {
                 values.backgroundColor &&
                 < input
@@ -56,6 +61,8 @@ export const TslpEditFormComp = (props) => {
 
                 />
             }
+
+            <WidgetContentDivider />
 
             {TslpSeriesFormComps}
 
