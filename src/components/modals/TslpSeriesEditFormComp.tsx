@@ -3,7 +3,7 @@ import { VarTimeEditFormComp } from '../../variable_time/VarTimeEditFormComp';
 import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 import { MeasEditFormComp } from './MeasEditFormComp';
 
-const SeriesCompDivider = () => (<div className="series_divider"></div>);
+const SeriesCompDivider = () => (<div className="series_divider"><hr/></div>);
 
 export const TslpSeriesEditFormComp = (props) => {
     const {
@@ -40,7 +40,7 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <div className='black_border'>
+            <div>
                 <span>From Time</span>
                 <VarTimeEditFormComp
                     name={`${name}.fromVarTime`}
@@ -55,7 +55,7 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <div className='black_border'>
+            <div>
                 <span>To Time</span>
                 <VarTimeEditFormComp
                     name={`${name}.toVarTime`}
@@ -70,7 +70,7 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <div className='black_border'>
+            <div>
                 <span>Periodicity</span>
                 <TimePeriodEditFormComp
                     name={`${name}.displayTimeShift`}
@@ -85,7 +85,7 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <div className='black_border'>
+            <div>
                 <span>Measurement</span>
                 <MeasEditFormComp
                     name={`${name}.meas`}

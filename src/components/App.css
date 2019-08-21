@@ -172,6 +172,7 @@ li b {
 
 .series_edit_item{
   margin-left: 15px;
+  border: 1px solid black;
 }
 
 .form_div{

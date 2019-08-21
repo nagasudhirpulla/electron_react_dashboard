@@ -33,7 +33,6 @@ export const TslpEditFormComp = (props) => {
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
                 />
-                <hr />
                 <WidgetContentDivider />
             </div>
         );

@@ -38,139 +38,141 @@ export const VarTimeEditFormComp = ({
             </div>
 
             <table>
-                <tr>
-                    <td>
-                        <span>Offset Days</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarDays`}
-                            onChange={handleChange}
-                            checked={values.isVarDays}
-                            onBlur={handleBlur}
-                        />
-                        <input
-                            type="number"
-                            name={`${name}.offsetDays`}
-                            onChange={handleChange}
-                            value={values.offsetDays}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span>Offset Days</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarDays`}
+                                onChange={handleChange}
+                                checked={values.isVarDays}
+                                onBlur={handleBlur}
+                            />
+                            <input
+                                type="number"
+                                name={`${name}.offsetDays`}
+                                onChange={handleChange}
+                                value={values.offsetDays}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
 
-                    <td>
-                        <span>Offset Months</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarMonths`}
-                            onChange={handleChange}
-                            checked={values.isVarMonths}
-                            onBlur={handleBlur}
-                        />
+                        <td>
+                            <span>Offset Months</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarMonths`}
+                                onChange={handleChange}
+                                checked={values.isVarMonths}
+                                onBlur={handleBlur}
+                            />
 
-                        <input
-                            type="number"
-                            name={`${name}.offsetMonths`}
-                            onChange={handleChange}
-                            value={values.offsetMonths}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
+                            <input
+                                type="number"
+                                name={`${name}.offsetMonths`}
+                                onChange={handleChange}
+                                value={values.offsetMonths}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
 
-                    <td>
-                        <span>Offset Years</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarYears`}
-                            onChange={handleChange}
-                            checked={values.isVarYears}
-                            onBlur={handleBlur}
-                        />
+                        <td>
+                            <span>Offset Years</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarYears`}
+                                onChange={handleChange}
+                                checked={values.isVarYears}
+                                onBlur={handleBlur}
+                            />
 
-                        <input
-                            type="number"
-                            name={`${name}.offsetYears`}
-                            onChange={handleChange}
-                            value={values.offsetYears}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span>Offset Hours</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarHrs`}
-                            onChange={handleChange}
-                            checked={values.isVarHrs}
-                            onBlur={handleBlur}
-                        />
+                            <input
+                                type="number"
+                                name={`${name}.offsetYears`}
+                                onChange={handleChange}
+                                value={values.offsetYears}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>Offset Hours</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarHrs`}
+                                onChange={handleChange}
+                                checked={values.isVarHrs}
+                                onBlur={handleBlur}
+                            />
 
-                        <input
-                            type="number"
-                            name={`${name}.offsetHrs`}
-                            onChange={handleChange}
-                            value={values.offsetHrs}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
+                            <input
+                                type="number"
+                                name={`${name}.offsetHrs`}
+                                onChange={handleChange}
+                                value={values.offsetHrs}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
 
-                    <td>
-                        <span>Offset Minutes</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarMins`}
-                            onChange={handleChange}
-                            checked={values.isVarMins}
-                            onBlur={handleBlur}
-                        />
+                        <td>
+                            <span>Offset Minutes</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarMins`}
+                                onChange={handleChange}
+                                checked={values.isVarMins}
+                                onBlur={handleBlur}
+                            />
 
-                        <input
-                            type="number"
-                            name={`${name}.offsetMins`}
-                            onChange={handleChange}
-                            value={values.offsetMins}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
+                            <input
+                                type="number"
+                                name={`${name}.offsetMins`}
+                                onChange={handleChange}
+                                value={values.offsetMins}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
 
-                    <td>
-                        <span>Offset Seconds</span>
-                    </td>
-                    <td>
-                        <input
-                            type="checkbox"
-                            name={`${name}.isVarSecs`}
-                            onChange={handleChange}
-                            checked={values.isVarSecs}
-                            onBlur={handleBlur}
-                        />
+                        <td>
+                            <span>Offset Seconds</span>
+                        </td>
+                        <td>
+                            <input
+                                type="checkbox"
+                                name={`${name}.isVarSecs`}
+                                onChange={handleChange}
+                                checked={values.isVarSecs}
+                                onBlur={handleBlur}
+                            />
 
-                        <input
-                            type="number"
-                            name={`${name}.offsetSecs`}
-                            onChange={handleChange}
-                            value={values.offsetSecs}
-                            onBlur={handleBlur}
-                            className="num_input_width"
-                        />
-                    </td>
-                </tr>
+                            <input
+                                type="number"
+                                name={`${name}.offsetSecs`}
+                                onChange={handleChange}
+                                value={values.offsetSecs}
+                                onBlur={handleBlur}
+                                className="num_input_width"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div >
     );
