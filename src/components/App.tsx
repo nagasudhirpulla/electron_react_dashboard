@@ -137,6 +137,7 @@ class App extends React.Component<AppProps, AppState> {
         ...this.state.widgetProps.slice(ind + 1)
       ]
     };
+    this.setState({ ...this.state, widgetProps: [] });
     this.setState(newState);
   }
 
