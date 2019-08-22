@@ -21,11 +21,11 @@ import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
 import Modal from './modals/Modal';
 import { WidgetAddForm } from './modals/WidgetAddForm';
-import { TslpSeriesAddForm } from './modals/TslpSeriesAddForm';
 import { PMUTslpFetcher } from '../Fetchers/PMUTslpFetcher';
 import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement';
 import { FormikTslpEditForm } from './modals/TslpEditForm';
 import { IDashWidgetContentProps } from './IDashWidgetContent';
+import { FormikAppSettingsEditForm } from './modals/AppSettingsEditForm';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -122,9 +122,20 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
+  editAppSettings = (appSettings: AppState["appSettings"]) => {
+    console.log(JSON.stringify(appSettings));
+    this.setState({ appSettings: appSettings } as AppState);
+  }
+
   AddWidgetModalContent = (
     <>
       <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
+    </>
+  );
+
+  AppSettingsModalContent = () => (
+    <>
+      <FormikAppSettingsEditForm {...{ appSettings: this.state.appSettings, onFormSubmit: this.editAppSettings }} />
     </>
   );
 
@@ -315,6 +326,8 @@ class App extends React.Component<AppProps, AppState> {
         </span>
 
         <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent} />
+        <Modal modalProps={{ btnText: "Settings", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
+
         <ResponsiveReactGridLayout
           {...this.props}
           layouts={layoutsDict}
