@@ -36,10 +36,12 @@ export interface ITslpSeriesProps {
     fromVarTime: VarTime,
     toVarTime: VarTime,
     displayTimeShift: ITimePeriod,
+    renderStrategy: PlotlyRenderStrategy,    
     points: ITslpDataPoint[]
 }
 
 export class TslpSeriesProps implements ITslpSeriesProps {
+    renderStrategy: PlotlyRenderStrategy.scatter;
     title:string = "Series Name";
     color: Color = "blue";
     meas: IMeasurement = new ScadaMeasurement()
@@ -60,6 +62,11 @@ export enum TslpDataPointQuality {
     Bad,
     Suspect,
     Replaced,
+}
+
+export enum PlotlyRenderStrategy {
+    scatter = "scatter",
+    scattergl = "scattergl"
 }
 
 export interface ITimePeriod {

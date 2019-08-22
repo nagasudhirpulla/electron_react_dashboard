@@ -120,7 +120,7 @@ export const TslpEditForm = (props) => {
 
                 <button type="submit" disabled={isSubmitting}>Submit</button>
 
-                <pre>{JSON.stringify(props, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
             </form>
         </div>
     )

@@ -8,7 +8,7 @@ import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
 // import { IDashWidgetContentProps } from './IDashWidgetContent';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy } from './ITimeSeriesLinePlot';
 // import { DummyMeasurement } from './../measurements/DummyMeasurement';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
@@ -346,6 +346,7 @@ function generateWidgetProps(): IDashWidgetProps[] {
 
     let seriesProps: ITslpSeriesProps = {
       title: `Series ${ind + 1}`,
+      renderStrategy: PlotlyRenderStrategy.scatter,
       color: "blue",
       meas: new ScadaMeasurement(),
       fromVarTime: fromVarTime,
