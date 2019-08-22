@@ -175,7 +175,7 @@ export class PMUTslpFetcher implements ITslpDataFetcher {
             return resultData;
         }
         const totalFetchMs = (toTime.getTime() - fromTime.getTime());
-        const fetchWindowSecs = 1000 * TimePeriod.getSeconds(pmu_meas.fetchWindow);
+        const fetchWindowSecs = TimePeriod.getSeconds(pmu_meas.fetchWindow);
 
         // if fetch window is more than toTime-fromTime, then send data directly
         if (totalFetchMs < fetchWindowSecs || fetchWindowSecs == 0) {
