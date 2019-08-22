@@ -16,7 +16,7 @@ export const TimePeriodEditFormComp = ({
             <tbody>
                 <tr>
                     <td>
-                        <span>Days</span>
+                        <span>Days -</span>
                     </td>
                     <td>
                         <input
@@ -29,7 +29,7 @@ export const TimePeriodEditFormComp = ({
                         />
                     </td>
                     <td>
-                        <span>Months</span>
+                        <span>Months -</span>
                     </td>
                     <td>
                         <input
@@ -42,7 +42,7 @@ export const TimePeriodEditFormComp = ({
                         />
                     </td>
                     <td>
-                        <span>Years</span>
+                        <span>Years -</span>
                     </td>
                     <td>
                         <input
@@ -57,7 +57,7 @@ export const TimePeriodEditFormComp = ({
                 </tr>
                 <tr>
                     <td>
-                        <span>Hours</span>
+                        <span>Hours -</span>
                     </td>
                     <td>
                         <input
@@ -70,7 +70,7 @@ export const TimePeriodEditFormComp = ({
                         />
                     </td>
                     <td>
-                        <span>Mins</span>
+                        <span>Mins -</span>
                     </td>
                     <td>
                         <input
@@ -83,7 +83,7 @@ export const TimePeriodEditFormComp = ({
                         />
                     </td>
                     <td>
-                        <span>Secs</span>
+                        <span>Secs -</span>
                     </td>
                     <td>
                         <input

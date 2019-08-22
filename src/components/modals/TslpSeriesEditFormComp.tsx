@@ -85,7 +85,7 @@ export const TslpSeriesEditFormComp = (props) => {
             <SeriesCompDivider />
 
             <div>
-                <span>Periodicity</span>
+                <span>Display Time Shift</span>
                 <TimePeriodEditFormComp
                     name={`${name}.displayTimeShift`}
                     values={values.displayTimeShift}
