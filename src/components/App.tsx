@@ -26,6 +26,7 @@ import { DummyTslpFetcher } from '../Fetchers/DummyTslpFetcher';
 import { ITslpDataFetcher } from '../Fetchers/IFetcher';
 import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
 import { getCsvStringFromITslpDataPoints } from '../utils/csvUtils';
+import Excel, { Workbook } from 'exceljs';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -219,30 +220,38 @@ class App extends React.Component<AppProps, AppState> {
     let pntsArray: ITslpDataPoint[][] = []
 
     if (contentProps.discriminator == TslpProps.typename) {
+      let wb = new Excel.Workbook();
+      // Add Worksheets to the workbook
+      let ws = wb.addWorksheet('Sheet 1');
       // construct a data array for csv export
       for (let seriesIter = 0; seriesIter < (contentProps as TslpProps).seriesList.length; seriesIter++) {
-        let pnts: ITslpDataPoint[] = (contentProps as TslpProps).seriesList[seriesIter].points;
-        pntsArray.push(pnts);
+        const seriesTitle = (contentProps as TslpProps).seriesList[seriesIter].title;
+        ws.getRow(1).getCell(2 * seriesIter + 1).value = `Time_${seriesTitle}`;
+        ws.getRow(1).getCell(2 * seriesIter + 2).value = `${seriesTitle}`;
+        for (let pntIter = 0; pntIter < (contentProps as TslpProps).seriesList[seriesIter].points.length; pntIter++) {
+          const pnt = (contentProps as TslpProps).seriesList[seriesIter].points[pntIter];
+          ws.getRow(pntIter + 2).getCell(2 * seriesIter + 1).value = new Date(pnt.timestamp + 5.5 * 60 * 60 * 1000);
+          ws.getRow(pntIter + 2).getCell(2 * seriesIter + 2).value = pnt.value;
+        }
       }
-      const csvStr = getCsvStringFromITslpDataPoints(pntsArray);
-      await this.saveCsvAsync(csvStr);
+      await this.saveExcelAsync(wb);
     }
   };
 
-  saveCsvAsync = async (csvStr: string) => {
+  saveExcelAsync = async (wb: Workbook) => {
     const dialogRes = await showSaveDialog({
       filters: [
-        { name: 'csv', extensions: ['csv'] },
+        { name: 'Excel Workbook', extensions: ['xlsx'] },
         { name: 'All Files', extensions: ['*'] }
       ],
-      title: 'Save Export CSV'
+      title: 'Export Excel'
     }) as any;
     if (!(dialogRes.cancelled == true)) {
       const saveFilename: string = dialogRes.filePath;
-      console.log(`Saving csv to ${saveFilename}`);
+      console.log(`Saving excel to ${saveFilename}`);
       //todo remove points from timeseries line props
-      const isSaved = await writeFileAsync(saveFilename, csvStr);
-      console.log(`CSV Save status = ${isSaved}`);
+      await wb.xlsx.writeFile(saveFilename);
+      console.log(`Excel Saved!`);
     }
   };
 

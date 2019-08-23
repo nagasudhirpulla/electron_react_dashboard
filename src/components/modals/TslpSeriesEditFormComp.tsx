@@ -41,8 +41,8 @@ export const TslpSeriesEditFormComp = (props) => {
                 value={values.renderStrategy}
                 name={`${name}.renderStrategy`}
             >
-                <option value={PlotlyRenderStrategy.scatter}>Scatter</option>
-                <option value={PlotlyRenderStrategy.scattergl}>ScatterGL</option>
+                <option value={PlotlyRenderStrategy.scatter}>No GPU</option>
+                <option value={PlotlyRenderStrategy.scattergl}>Use GPU</option>
             </select>
 
             <SeriesCompDivider />
@@ -104,7 +104,7 @@ export const TslpSeriesEditFormComp = (props) => {
             <SeriesCompDivider />
 
             <div>
-                <span>Measurement</span>
+                <span>Measurement{` (${values.meas.discriminator})`}</span>
                 <MeasEditFormComp
                     name={`${name}.meas`}
                     values={values.meas}
