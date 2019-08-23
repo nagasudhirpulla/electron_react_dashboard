@@ -139,10 +139,18 @@ li b {
 
 .refreshBtn {
   position: absolute;
-  right: 30px;
+  right: 25px;
   top: 0;
   cursor: pointer;
   color: rgb(224, 169, 28);
+}
+
+.exportBtn {
+  position: absolute;
+  right: 50px;
+  top: 0;
+  cursor: pointer;
+  color: rgb(146, 28, 224);
 }
 
 .cellContent {

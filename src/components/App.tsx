@@ -212,9 +212,21 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
-  onEditItem = (ind: number) => {
+  onExportItem = async (ind: number) => {
+    // export the state data of the widget to a file
+    let contentProps = this.state.widgetProps[ind].contentProps;
+    let pntsArray: ITslpDataPoint[][] = []
+    
+    if (contentProps.discriminator == TslpProps.typename) {
+      // construct a data array for csv export
+      for (let seriesIter = 0; seriesIter < (contentProps as TslpProps).seriesList.length; seriesIter++) {
+        let pnts: ITslpDataPoint[] = (contentProps as TslpProps).seriesList[seriesIter].points;
+        pntsArray.push(pnts);        
+      }
+      // stub
+    }
 
-  }
+  };
 
   onRefreshItem = async (ind: number) => {
     let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
@@ -256,7 +268,7 @@ class App extends React.Component<AppProps, AppState> {
       ]
     }
     this.setState({ ...newState } as AppState);
-  }
+  };
 
   onRefreshAll = async () => {
     let fetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
@@ -264,7 +276,7 @@ class App extends React.Component<AppProps, AppState> {
     for (let wpInd = 0; wpInd < this.state.widgetProps.length; wpInd++) {
       await this.onRefreshItem(wpInd);
     }
-  }
+  };
 
   deriveLayouts = (): ILayoutDict => {
     let layouts: ILayoutDict = {};
@@ -298,6 +310,10 @@ class App extends React.Component<AppProps, AppState> {
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{" "}</div>
             <Modal modalProps={{ btnText: "/", btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
+            <span
+              className="exportBtn"
+              onClick={this.onExportItem.bind(this, ind)}
+            >v</span>
             <span
               className="refreshBtn"
               onClick={this.onRefreshItem.bind(this, ind)}
