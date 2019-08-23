@@ -1,10 +1,10 @@
 import React from 'react';
 import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik';
 import { TslpProps } from '../ITimeSeriesLinePlot';
-        
+
 //https://programmingwithmosh.com/javascript/create-modal-using-react/
 interface WidgetAddFormProps {
-    onFormSubmit(formRes: string):void
+    onFormSubmit(formRes: string): void
 }
 interface WidgetAddFormValues {
     widgetType: string
@@ -20,7 +20,7 @@ export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
 
         // call parent function to return
         onFormSubmit(values.widgetType);
-        
+
         setSubmitting(true);
         return;
     }
@@ -49,7 +49,7 @@ export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
                                 component="select"
                                 placeholder="Select Widget Type">
                                 <option value={null}>Select Widget Type</option>
-                                <option value={TslpProps.typename}>{TslpProps.typename}</option>
+                                <option value={TslpProps.typename}>Timeseries</option>
                                 <option value="Blank">Blank</option>
                             </Field>
                             <ErrorMessage name="widgetType" />

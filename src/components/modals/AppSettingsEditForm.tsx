@@ -18,7 +18,7 @@ export const AppSettingsEditFormComp = (props) => {
 
     return (
         <>
-            <span>Scada API host</span>
+            <span>Scada API host -{" "}</span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -29,7 +29,7 @@ export const AppSettingsEditFormComp = (props) => {
 
             <WidgetContentDivider />
 
-            <span>PMU API host</span>
+            <span>PMU API host -{" "}</span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -59,7 +59,7 @@ export const AppSettingsEditForm = (props) => {
     let nameStr = 'appSettings';
 
     return (
-        <div className="form_div">
+        <div className="form_div black_border">
             <form onSubmit={handleSubmit}>
                 <AppSettingsEditFormComp
                     name={nameStr}
@@ -74,7 +74,7 @@ export const AppSettingsEditForm = (props) => {
 
                 <button type="submit" disabled={isSubmitting}>Submit</button>
 
-                <pre>{JSON.stringify(props, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
             </form>
         </div>
     )

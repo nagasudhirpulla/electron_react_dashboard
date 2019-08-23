@@ -170,11 +170,25 @@ li b {
   width: 80px;
 }
 
-.series_edit_item{
+.series_edit_item {
   margin-left: 15px;
   border: 1px solid black;
 }
 
-.form_div{
+.form_div {
   padding: 8px
+}
+
+.delete_series_btn, .duplicate_series_btn {
+  margin-left: 8px;
+}
+
+.delete_series_btn {
+  background-color: orangered;
+  color: white;
+}
+
+.duplicate_series_btn {
+  background-color: greenyellow;
+  color: gray;
 }

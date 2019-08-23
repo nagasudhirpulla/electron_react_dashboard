@@ -10,6 +10,8 @@ export const TslpSeriesEditFormComp = (props) => {
     const {
         values,
         name,
+        onDeleteClick,
+        onDuplicateClick,
         touched,
         handleChange,
         handleBlur,
@@ -27,6 +29,8 @@ export const TslpSeriesEditFormComp = (props) => {
                 value={values.title}
                 name={`${name}.title`}
             />
+            <button onClick={onDeleteClick} className="delete_series_btn">Delete Series</button>
+            <button onClick={onDuplicateClick} className="duplicate_series_btn">Duplicate Series</button>
 
             <SeriesCompDivider />
 

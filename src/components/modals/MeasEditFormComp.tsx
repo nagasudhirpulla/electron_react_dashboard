@@ -3,6 +3,7 @@ import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { SamplingStrategyEditFormComp } from './SamplingStrategyEditFormComp';
+import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 
 export const MeasEditFormComp = (props) => {
     const {
@@ -43,6 +44,19 @@ export const MeasEditFormComp = (props) => {
             {values.discriminator &&
                 values.discriminator == PMUMeasurement.typename &&
                 <PMUMeasEditFormComp
+                    name={name}
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched} />
+            }
+
+            {values.discriminator &&
+                values.discriminator == DummyMeasurement.typename &&
+                <DummyMeasEditFormComp
                     name={name}
                     values={values}
                     errors={errors}
@@ -133,6 +147,33 @@ export const PMUMeasEditFormComp = (props) => {
             <TimePeriodEditFormComp
                 name={`${name}.fetchWindow`}
                 values={values.fetchWindow}
+                errors={errors}
+                touched={touched}
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched} />
+        </>
+    )
+};
+
+export const DummyMeasEditFormComp = (props) => {
+    const {
+        values,
+        name,
+        touched,
+        handleChange,
+        handleBlur,
+        errors,
+        setFieldValue,
+        setFieldTouched
+    } = props;
+    return (
+        <>
+            <span>Periodicity</span>
+            <TimePeriodEditFormComp
+                name={`${name}.periodicity`}
+                values={values.periodicity}
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}

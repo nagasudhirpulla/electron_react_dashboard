@@ -5,12 +5,15 @@ import { ITslpProps, TslpSeriesProps } from '../ITimeSeriesLinePlot';
 import { IDashWidgetContentProps } from '../IDashWidgetContent';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
+import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
 
 export const TslpEditFormComp = (props) => {
     const {
         values,
+        onDeleteSeriesClick,
+        onDuplicateSeriesClick,
         name,
         touched,
         handleChange,
@@ -32,6 +35,8 @@ export const TslpEditFormComp = (props) => {
                     handleBlur={handleBlur}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
+                    onDeleteClick={onDeleteSeriesClick(seriesIter)}
+                    onDuplicateClick={onDuplicateSeriesClick(seriesIter)}
                 />
                 <WidgetContentDivider />
             </div>
@@ -85,13 +90,41 @@ export const TslpEditForm = (props) => {
     let nameStr = 'tslpProps';
     const onAddSeriesClick = () => {
         let seriesProps = new TslpSeriesProps();
+        seriesProps.fromVarTime.absoluteTime = new Date().getTime() - 4*60*1000;
+        seriesProps.toVarTime.absoluteTime = new Date().getTime() - 2*60*1000;
         if (values.newMeasType == ScadaMeasurement.typename) {
             seriesProps.meas = new ScadaMeasurement();
         } else if (values.newMeasType == PMUMeasurement.typename) {
             seriesProps.meas = new PMUMeasurement();
+        } else if (values.newMeasType == DummyMeasurement.typename) {
+            seriesProps.meas = new DummyMeasurement();
         }
         setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
     };
+
+    const onDeleteSeriesClick = (ind: number) => {
+        return () =>
+            setFieldValue(`${nameStr}.seriesList`,
+                [
+                    ...values[nameStr].seriesList.slice(0, ind),
+                    ...values[nameStr].seriesList.slice(ind + 1)
+                ]
+            );
+    };
+
+    const onDuplicateSeriesClick = (ind: number) => {
+        return () => {
+            const newSeries = { ...values[nameStr].seriesList[ind] };
+            setFieldValue(`${nameStr}.seriesList`,
+                [
+                    ...values[nameStr].seriesList.slice(0, ind + 1),
+                    newSeries,
+                    ...values[nameStr].seriesList.slice(ind + 1)
+                ]
+            );
+        }
+    };
+
     return (
         <div className="form_div">
             <div>
@@ -103,6 +136,7 @@ export const TslpEditForm = (props) => {
                 >
                     <option value={ScadaMeasurement.typename}>Scada</option>
                     <option value={PMUMeasurement.typename}>PMU</option>
+                    <option value={DummyMeasurement.typename}>Random</option>
                 </select>
                 <button onClick={onAddSeriesClick}>Add Series</button>
             </div>
@@ -116,6 +150,8 @@ export const TslpEditForm = (props) => {
                     handleBlur={handleBlur}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
+                    onDeleteSeriesClick={onDeleteSeriesClick}
+                    onDuplicateSeriesClick={onDuplicateSeriesClick}
                 />
 
                 <button type="submit" disabled={isSubmitting}>Submit</button>

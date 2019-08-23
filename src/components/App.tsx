@@ -26,6 +26,9 @@ import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement'
 import { FormikTslpEditForm } from './modals/TslpEditForm';
 import { IDashWidgetContentProps } from './IDashWidgetContent';
 import { FormikAppSettingsEditForm } from './modals/AppSettingsEditForm';
+import { DummyTslpFetcher } from '../Fetchers/DummyTslpFetcher';
+import { ITslpDataFetcher } from '../Fetchers/IFetcher';
+import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -127,20 +130,24 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ appSettings: appSettings } as AppState);
   }
 
-  AddWidgetModalContent = (
-    <>
-      <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
-    </>
-  );
+  AddWidgetModalContent = () => {
+    return (
+      <>
+        <WidgetAddForm {...{ onFormSubmit: this.addWidget }} />
+      </>
+    );
+  };
 
-  AppSettingsModalContent = () => (
-    <>
-      <FormikAppSettingsEditForm {...{ appSettings: this.state.appSettings, onFormSubmit: this.editAppSettings }} />
-    </>
-  );
+  AppSettingsModalContent = () => {
+    return (
+      <>
+        <FormikAppSettingsEditForm {...{ appSettings: this.state.appSettings, onFormSubmit: this.editAppSettings }} />
+      </>
+    );
+  };
 
   editWidget = (contentProps: IDashWidgetContentProps, ind: number) => {
-    console.log(JSON.stringify(contentProps));
+    // console.log(JSON.stringify(contentProps));
     const newState = {
       ...this.state,
       widgetProps: [
@@ -218,6 +225,8 @@ class App extends React.Component<AppProps, AppState> {
     scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
     let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
     pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
+    let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
+    pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
 
     let wp = this.state.widgetProps[ind];
 
@@ -234,7 +243,9 @@ class App extends React.Component<AppProps, AppState> {
         else if (series.meas.discriminator == PMUMeasurement.typename) {
           pnts = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IPMUMeasurement);
         }
-
+        else if (series.meas.discriminator == DummyMeasurement.typename) {
+          pnts = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IDummyMeasurement);
+        }
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
       }
@@ -335,7 +346,7 @@ class App extends React.Component<AppProps, AppState> {
           onLayoutChange={this.onLayoutChange}
           // WidthProvider option
           measureBeforeMount={false}
-          // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
+          // Animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
           // and set `measureBeforeMount={true}`.
           useCSSTransforms={this.state.mounted}
           compactType={this.state.compactType}
@@ -352,7 +363,7 @@ class App extends React.Component<AppProps, AppState> {
 export default App;
 
 function generateWidgetProps(): IDashWidgetProps[] {
-  return [0, 1, 2, 3].map(function (i, ind) {
+  return [0].map(function (i, ind) {
     let layKey: string = uuid();
     let fromVarTime = new VarTime();
     fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
