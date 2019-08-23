@@ -25,6 +25,7 @@ import { FormikAppSettingsEditForm } from './modals/AppSettingsEditForm';
 import { DummyTslpFetcher } from '../Fetchers/DummyTslpFetcher';
 import { ITslpDataFetcher } from '../Fetchers/IFetcher';
 import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
+import { getCsvStringFromITslpDataPoints } from '../utils/csvUtils';
 
 const readFileAsync = function (filename: string) {
   return new Promise(function (resolve, reject) {
@@ -216,16 +217,33 @@ class App extends React.Component<AppProps, AppState> {
     // export the state data of the widget to a file
     let contentProps = this.state.widgetProps[ind].contentProps;
     let pntsArray: ITslpDataPoint[][] = []
-    
+
     if (contentProps.discriminator == TslpProps.typename) {
       // construct a data array for csv export
       for (let seriesIter = 0; seriesIter < (contentProps as TslpProps).seriesList.length; seriesIter++) {
         let pnts: ITslpDataPoint[] = (contentProps as TslpProps).seriesList[seriesIter].points;
-        pntsArray.push(pnts);        
+        pntsArray.push(pnts);
       }
-      // stub
+      const csvStr = getCsvStringFromITslpDataPoints(pntsArray);
+      await this.saveCsvAsync(csvStr);
     }
+  };
 
+  saveCsvAsync = async (csvStr: string) => {
+    const dialogRes = await showSaveDialog({
+      filters: [
+        { name: 'csv', extensions: ['csv'] },
+        { name: 'All Files', extensions: ['*'] }
+      ],
+      title: 'Save Export CSV'
+    }) as any;
+    if (!(dialogRes.cancelled == true)) {
+      const saveFilename: string = dialogRes.filePath;
+      console.log(`Saving csv to ${saveFilename}`);
+      //todo remove points from timeseries line props
+      const isSaved = await writeFileAsync(saveFilename, csvStr);
+      console.log(`CSV Save status = ${isSaved}`);
+    }
   };
 
   onRefreshItem = async (ind: number) => {

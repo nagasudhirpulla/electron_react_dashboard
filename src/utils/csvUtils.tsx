@@ -22,8 +22,8 @@ const timeStampToExportStr = (ts: number): string => {
     return timeStr;
 };
 
-export const getCsvStringFromITslpDataPoints = (dataArray: ITslpDataPoint[][]) => {
-    const csvData: string[][] = [];
+export const getCsvStringFromITslpDataPoints = (dataArray: ITslpDataPoint[][]): string => {
+    const csvData: string[] = [];
     for (let seriesIter = 0; seriesIter < dataArray.length; seriesIter++) {
         const seriesData = dataArray[seriesIter];
         let seriesTimeStrs = [`Time_${seriesIter}`];
@@ -33,7 +33,8 @@ export const getCsvStringFromITslpDataPoints = (dataArray: ITslpDataPoint[][]) =
             seriesTimeStrs.push(timeStampToExportStr(pnt.timestamp));
             seriesValueStrs.push("" + Math.round(pnt.value * 1000) * 0.001);
         }
-        csvData.push(seriesTimeStrs);
-        csvData.push(seriesValueStrs);
+        csvData.push(seriesTimeStrs.join(','));
+        csvData.push(seriesValueStrs.join(','));
     }
+    return csvData.join('\n');
 };
