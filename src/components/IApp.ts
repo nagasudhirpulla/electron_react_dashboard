@@ -32,8 +32,8 @@ export interface AppState {
     mounted: boolean,
     timer: {
         isOn: boolean,
-        time: number,
-        start: number
+        start: number,
+        busy: boolean
     },
     appSettings: {
         scadaServerBase: string,

@@ -74,8 +74,8 @@ class App extends React.Component<AppProps, AppState> {
     mounted: false,
     timer: {
       isOn: false,
-      time: 0,
-      start: 0
+      start: 0,
+      busy: false
     },
     widgetProps: this.props.widgetProps,
     appSettings: this.props.appSettings,
@@ -84,31 +84,42 @@ class App extends React.Component<AppProps, AppState> {
 
   timer: NodeJS.Timer;
 
-  startTimer() {
-    this.setState({
-      timer: {
-        time: this.state.timer.time,
-        start: Date.now() - this.state.timer.time,
-        isOn: true
+  startTimer = (duringRender: boolean) => {
+    const timerPeriod = 1000 * TimePeriod.getSeconds(this.state.appSettings.timerPeriodicity);
+    if (timerPeriod <= 0) {
+      return;
+    }
+    const newTimerState = { ...this.state.timer, isOn: true };
+    if (duringRender) {
+      this.state.timer = { ...newTimerState };
+    } else {
+      this.setState({ timer: { ...newTimerState } } as AppState);
+    }
+    this.timer = setInterval(async () => {
+      if (this.state.timer.busy == true) {
+        return;
       }
-    } as AppState);
-    this.timer = setInterval(() => {
-      // todo handle busy
-      this.onRefreshAll();
-      this.setState(
-        {
-          timer: { time: Date.now() - this.state.timer.start }
-        } as AppState);
-    }, 1000 * TimePeriod.getSeconds(this.state.appSettings.timerPeriodicity));
+      else {
+        this.state.timer.busy = true;
+        await this.onRefreshAll();
+        //await induceDelayAsync(5000);
+        this.state.timer.busy = false;
+      }
+    }, timerPeriod);
   };
 
-  stopTimer() {
-    this.setState({ timer: { isOn: false } } as AppState);
+  stopTimer = (duringRender: boolean) => {
+    const newTimerState = { ...this.state.timer, isOn: false, busy: false };
+    if (duringRender) {
+      this.state.timer = { ...newTimerState };
+    } else {
+      this.setState({ timer: { ...newTimerState } } as AppState);
+    }
     clearInterval(this.timer);
   }
 
-  toggleTimer() {
-    this.setState({ appSettings: { timerOn: !this.state.appSettings.timerOn } } as AppState);
+  toggleTimerClick = () => {
+    this.setState({ appSettings: { ...this.state.appSettings, timerOn: !this.state.appSettings.timerOn } } as AppState);
   }
 
   componentDidMount() {
@@ -401,12 +412,12 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     // check if we have to stop the timer
     if (this.state.timer.isOn == true && this.state.appSettings.timerOn == false) {
-      this.stopTimer();
+      this.stopTimer(true);
     }
 
     // check if we have to start the timer
     if (this.state.timer.isOn == false && this.state.appSettings.timerOn == true) {
-      this.startTimer();
+      this.startTimer(true);
     }
 
     const layoutsDict = this.deriveLayouts();
@@ -420,7 +431,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onRefreshAll}>Refresh</button>
-        <button onClick={this.toggleTimer}>{this.state.timer.isOn ? "Stop AutoFetch" : "Start AutoFetch"}</button>
+        <button onClick={this.toggleTimerClick}>{this.state.timer.isOn ? "Stop AutoFetch" : "Start AutoFetch"}</button>
         <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
             this.props.cols[this.state.currentBreakpoint]
