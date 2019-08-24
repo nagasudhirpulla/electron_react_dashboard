@@ -6,7 +6,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy, TimePeriod } from './ITimeSeriesLinePlot';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
@@ -25,7 +25,6 @@ import { FormikAppSettingsEditForm } from './modals/AppSettingsEditForm';
 import { DummyTslpFetcher } from '../Fetchers/DummyTslpFetcher';
 import { ITslpDataFetcher } from '../Fetchers/IFetcher';
 import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
-import { getCsvStringFromITslpDataPoints } from '../utils/csvUtils';
 import Excel, { Workbook } from 'exceljs';
 
 const readFileAsync = function (filename: string) {
@@ -60,7 +59,12 @@ class App extends React.Component<AppProps, AppState> {
     breakpoints: { lg: 1200, md: 996, sm: 768 },
     cols: { lg: 12, md: 10, sm: 6 },
     initialLayout: { lg: [] },
-    appSettings: { scadaServerBase: "localhost", pmuServerBase: "172.16.184.35" },
+    appSettings: {
+      scadaServerBase: "localhost",
+      pmuServerBase: "172.16.184.35",
+      timerOn: false,
+      timerPeriodicity: new TimePeriod()
+    },
     widgetProps: generateWidgetProps()
   };
 
@@ -68,13 +72,51 @@ class App extends React.Component<AppProps, AppState> {
     currentBreakpoint: "lg",
     compactType: "vertical",
     mounted: false,
+    timer: {
+      isOn: false,
+      time: 0,
+      start: 0
+    },
     widgetProps: this.props.widgetProps,
     appSettings: this.props.appSettings,
     showWidgetAddModal: true
   };
 
+  timer: NodeJS.Timer;
+
+  startTimer() {
+    this.setState({
+      timer: {
+        time: this.state.timer.time,
+        start: Date.now() - this.state.timer.time,
+        isOn: true
+      }
+    } as AppState);
+    this.timer = setInterval(() => {
+      // todo handle busy
+      this.onRefreshAll();
+      this.setState(
+        {
+          timer: { time: Date.now() - this.state.timer.start }
+        } as AppState);
+    }, 1000 * TimePeriod.getSeconds(this.state.appSettings.timerPeriodicity));
+  };
+
+  stopTimer() {
+    this.setState({ timer: { isOn: false } } as AppState);
+    clearInterval(this.timer);
+  }
+
+  toggleTimer() {
+    this.setState({ appSettings: { timerOn: !this.state.appSettings.timerOn } } as AppState);
+  }
+
   componentDidMount() {
     this.setState({ mounted: true } as AppState);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   onBreakpointChange = (breakpoint: string) => {
@@ -357,6 +399,16 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
+    // check if we have to stop the timer
+    if (this.state.timer.isOn == true && this.state.appSettings.timerOn == false) {
+      this.stopTimer();
+    }
+
+    // check if we have to start the timer
+    if (this.state.timer.isOn == false && this.state.appSettings.timerOn == true) {
+      this.startTimer();
+    }
+
     const layoutsDict = this.deriveLayouts();
     return (
       <div>
@@ -368,6 +420,7 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onRefreshAll}>Refresh</button>
+        <button onClick={this.toggleTimer}>{this.state.timer.isOn ? "Stop AutoFetch" : "Start AutoFetch"}</button>
         <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
             this.props.cols[this.state.currentBreakpoint]

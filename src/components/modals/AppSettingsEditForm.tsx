@@ -1,6 +1,7 @@
 import React from 'react';
 import { withFormik } from 'formik';
 import { AppState } from '../IApp';
+import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
 
@@ -40,6 +41,29 @@ export const AppSettingsEditFormComp = (props) => {
 
             <WidgetContentDivider />
 
+            <span>Periodic Fetch -{" "}</span>
+            <input
+                type="checkbox"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                checked={values.timerOn}
+                name={`${name}.timerOn`}
+            />
+
+            <WidgetContentDivider />
+
+            <span>Fetch Periodicity -{" "}</span>
+            <TimePeriodEditFormComp
+                name={`${name}.timerPeriodicity`}
+                values={values.timerPeriodicity}
+                errors={errors}
+                touched={touched}
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched} />
+
+            <WidgetContentDivider />
         </>
     )
 };
