@@ -1,6 +1,7 @@
 import { request } from 'http';
 import { convertDateToWbesUrlStr } from './timeUtils';
 export const baseUrl = "scheduling.wrldc.in";
+const dcTypeStrDict: { [key: string]: string } = { 'sellerdc': 'total_dc', 'dc': 'on_bar_dc', 'combineddc': 'on_bar_dc', 'onbardc': 'on_bar_dc', 'offbardc': 'off_bar_dc', 'total': 'total_dc' };
 export const defaultRequestHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
     'Accept-Encoding': 'gzip, deflate'
@@ -38,7 +39,7 @@ const getJSONAsync = async (options): Promise<{ statusCode: number, data: any }>
     const respObj = await doGetRequestAsync(options);
     let respData = {};
     if (respObj.statusCode == 200) {
-        respData = JSON.stringify(respObj.data);
+        respData = JSON.parse(respObj.data);
     }
     return { statusCode: respObj.statusCode, data: respData }
 }
@@ -70,4 +71,60 @@ export const getDeclarationGenUtils = async (): Promise<{ name: string, utilId: 
         sellers.push({ name: sellersList[sellerInd].Acronym, utilId: sellersList[sellerInd].UtilId });
     }
     return sellers;
+};
+
+export enum dcType {
+    on_bar_dc = "on_bar_dc",
+    off_bar_dc = "off_bar_dc",
+    total_dc = "total_dc"
+}
+
+export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: dcType): Promise<number[]> => {
+    // fetch cookie first and then do request
+    let urlRev = rev;
+    if (rev == -1) {
+        const revs = await getRevisionsForDate(dateObj);
+        urlRev = Math.max(...revs);
+    }
+    const path = `/wbes/Report/GetDeclarationReport?regionId=2&date=${convertDateToWbesUrlStr(dateObj)}&revision=${urlRev}&utilId=${utilId}&isBuyer=0&byOnBar=1&byDCSchd=0`;
+    console.log(`ISGS Declaration JSON fetch path = ${path}`);
+    const dcMatrix: string[][] = (await getJSONAsync({ ...defaultRequestOptions, path: path })).data['jaggedarray'];
+    // scan through dc types in second row to get the required column index
+    const colInd = (dcMatrix[1]).findIndex((comp) => dcTypeStrDict[comp.toLowerCase()] == dcType);
+    // console.log(`colIndex = ${colInd}`);
+    if (colInd == -1) {
+        return [];
+    }
+    let dcVals: number[] = []
+    // extract the component values from matrix
+    for (let rowNum = 2; rowNum <= 97; rowNum++) {
+        dcVals.push(parseFloat(dcMatrix[rowNum][colInd]));
+    }
+    return dcVals;
+};
+
+export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, dcType: dcType): Promise<number[]> => {
+    // fetch cookie first and then do request
+    let dcVals: number[] = []
+    for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
+        let urlRev = rev;
+        if (rev == -1) {
+            const revs = await getRevisionsForDate(currDate);
+            urlRev = Math.max(...revs);
+        }
+        const path = `/wbes/Report/GetDeclarationReport?regionId=2&date=${convertDateToWbesUrlStr(currDate)}&revision=${urlRev}&utilId=${utilId}&isBuyer=0&byOnBar=1&byDCSchd=0`;
+        console.log(`ISGS Declaration JSON fetch path = ${path}`);
+        const dcMatrix: string[][] = (await getJSONAsync({ ...defaultRequestOptions, path: path })).data['jaggedarray'];
+        // scan through dc types in second row to get the required column index
+        const colInd = (dcMatrix[1]).findIndex((comp) => dcTypeStrDict[comp.toLowerCase()] == dcType);
+        // console.log(`colIndex = ${colInd}`);
+        if (colInd == -1) {
+            return [];
+        }
+        // extract the component values from matrix
+        for (let rowNum = 2; rowNum <= 97; rowNum++) {
+            dcVals.push(parseFloat(dcMatrix[rowNum][colInd]));
+        }
+    }
+    return dcVals;
 };
