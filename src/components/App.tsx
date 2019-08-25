@@ -12,7 +12,6 @@ import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
 const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
-import { readFile, writeFile } from 'fs';
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
 import Modal from './modals/Modal';
@@ -25,29 +24,8 @@ import { FormikAppSettingsEditForm } from './modals/AppSettingsEditForm';
 import { DummyTslpFetcher } from '../Fetchers/DummyTslpFetcher';
 import { ITslpDataFetcher } from '../Fetchers/IFetcher';
 import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
-import Excel, { Workbook } from 'exceljs';
-
-const readFileAsync = function (filename: string) {
-  return new Promise(function (resolve, reject) {
-    readFile(filename, function (err, data) {
-      if (err)
-        reject(err);
-      else
-        resolve(data);
-    });
-  });
-};
-
-const writeFileAsync = function (filename: string, contents: string) {
-  return new Promise(function (resolve, reject) {
-    writeFile(filename, contents, function (err) {
-      if (err)
-        reject(err);
-      else
-        resolve(true);
-    });
-  });
-};
+import Excel from 'exceljs';
+import { readFileAsync, writeFileAsync, saveExcelAsync } from '../utils/fileUtils';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -270,7 +248,6 @@ class App extends React.Component<AppProps, AppState> {
   onExportItem = async (ind: number) => {
     // export the state data of the widget to a file
     let contentProps = this.state.widgetProps[ind].contentProps;
-    let pntsArray: ITslpDataPoint[][] = []
 
     if (contentProps.discriminator == TslpProps.typename) {
       let wb = new Excel.Workbook();
@@ -287,26 +264,11 @@ class App extends React.Component<AppProps, AppState> {
           ws.getRow(pntIter + 2).getCell(2 * seriesIter + 2).value = pnt.value;
         }
       }
-      await this.saveExcelAsync(wb);
+      await saveExcelAsync(wb);
     }
   };
 
-  saveExcelAsync = async (wb: Workbook) => {
-    const dialogRes = await showSaveDialog({
-      filters: [
-        { name: 'Excel Workbook', extensions: ['xlsx'] },
-        { name: 'All Files', extensions: ['*'] }
-      ],
-      title: 'Export Excel'
-    }) as any;
-    if (!(dialogRes.cancelled == true)) {
-      const saveFilename: string = dialogRes.filePath;
-      console.log(`Saving excel to ${saveFilename}`);
-      //todo remove points from timeseries line props
-      await wb.xlsx.writeFile(saveFilename);
-      console.log(`Excel Saved!`);
-    }
-  };
+
 
   onRefreshItem = async (ind: number) => {
     let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
