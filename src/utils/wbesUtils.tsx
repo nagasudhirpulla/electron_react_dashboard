@@ -107,24 +107,12 @@ export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: numbe
     // fetch cookie first and then do request
     let dcVals: number[] = []
     for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
-        let urlRev = rev;
-        if (rev == -1) {
-            const revs = await getRevisionsForDate(currDate);
-            urlRev = Math.max(...revs);
-        }
-        const path = `/wbes/Report/GetDeclarationReport?regionId=2&date=${convertDateToWbesUrlStr(currDate)}&revision=${urlRev}&utilId=${utilId}&isBuyer=0&byOnBar=1&byDCSchd=0`;
-        console.log(`ISGS Declaration JSON fetch path = ${path}`);
-        const dcMatrix: string[][] = (await getJSONAsync({ ...defaultRequestOptions, path: path })).data['jaggedarray'];
-        // scan through dc types in second row to get the required column index
-        const colInd = (dcMatrix[1]).findIndex((comp) => dcTypeStrDict[comp.toLowerCase()] == dcType);
-        // console.log(`colIndex = ${colInd}`);
-        if (colInd == -1) {
+        let vals = await getISGSDcForDate(currDate, rev, utilId, dcType);
+        if (vals.length == 0) {
             return [];
         }
         // extract the component values from matrix
-        for (let rowNum = 2; rowNum <= 97; rowNum++) {
-            dcVals.push(parseFloat(dcMatrix[rowNum][colInd]));
-        }
+        dcVals.push(...vals);
     }
     return dcVals;
 };
