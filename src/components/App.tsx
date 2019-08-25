@@ -26,6 +26,8 @@ import { ITslpDataFetcher } from '../Fetchers/IFetcher';
 import { DummyMeasurement, IDummyMeasurement } from '../measurements/DummyMeasurement';
 import Excel from 'exceljs';
 import { readFileAsync, writeFileAsync, saveExcelAsync } from '../utils/fileUtils';
+import { WbesTslpFetcher } from './../Fetchers/WbesTslpFetcher';
+import { WbesMeasurement, IWbesMeasurement } from './../measurements/WbesMeasurement';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -276,8 +278,7 @@ class App extends React.Component<AppProps, AppState> {
     let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
     pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
     let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
-    pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
-
+    let wbesFetcher: ITslpDataFetcher = new WbesTslpFetcher();
     let wp = this.state.widgetProps[ind];
 
     if (wp.contentProps.discriminator == TslpProps.typename) {
@@ -295,6 +296,9 @@ class App extends React.Component<AppProps, AppState> {
         }
         else if (series.meas.discriminator == DummyMeasurement.typename) {
           pnts = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IDummyMeasurement);
+        }
+        else if (series.meas.discriminator == WbesMeasurement.typename) {
+          pnts = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IWbesMeasurement);
         }
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
@@ -394,14 +398,14 @@ class App extends React.Component<AppProps, AppState> {
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onRefreshAll}>Refresh</button>
         <button onClick={this.toggleTimerClick}>{this.state.timer.isOn ? "Stop AutoFetch" : "Start AutoFetch"}</button>
-        <span>
+        {/* <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
             this.props.cols[this.state.currentBreakpoint]
           }{" "}
           columns)
-        </span>
+        </span> */}
 
-        <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent} />
+        <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
         <Modal modalProps={{ btnText: "Settings", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
 
         <ResponsiveReactGridLayout

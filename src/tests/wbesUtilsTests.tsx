@@ -1,4 +1,5 @@
-import { getDeclarationGenUtils, getRevisionsForDate, fetchCookiesFromReportsUrl, getISGSDcForDate, dcType, getISGSDcForDates } from '../utils/wbesUtils';
+import { getDeclarationGenUtils, getRevisionsForDate, fetchCookiesFromReportsUrl, getISGSDcForDate, getISGSDcForDates } from '../utils/wbesUtils';
+import { SchType } from '../measurements/WbesMeasurement';
 
 const testRevisionsForDate = async () => {
     const revs = await getRevisionsForDate(new Date());
@@ -16,7 +17,7 @@ const testCookieFetch = async () => {
 };
 
 const testIsgsDc = async () => {
-    const data = await getISGSDcForDates(new Date((new Date()).getTime() - 2 * 86400000), new Date(), -1, "6477e23c-660e-4587-92d2-8e3488bc8262", dcType.on_bar_dc);
+    const data = await getISGSDcForDates(new Date((new Date()).getTime() - 2 * 86400000), new Date(), -1, "6477e23c-660e-4587-92d2-8e3488bc8262", SchType.OnBarDc);
     console.log(data);
 };
 

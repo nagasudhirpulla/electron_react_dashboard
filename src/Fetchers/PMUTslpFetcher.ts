@@ -73,7 +73,7 @@ function fetchServerData(post_options, postBody): Promise<IServerFetchResult> {
  * Input data is sorted by time in ascending order
  * The sample rate of input is 25 samples per second = 40 msecs  
  */
-function resampleData(data: ITslpDataPoint[], sampling_strategy: SamplingStrategy, periodicity: Periodicity): ITslpDataPoint[] {
+export const resampleData = (data: ITslpDataPoint[], sampling_strategy: SamplingStrategy, periodicity: Periodicity): ITslpDataPoint[] => {
     if ((data.length < 2) || (sampling_strategy == SamplingStrategy.Raw)) {
         return data;
     }

@@ -4,6 +4,8 @@ import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { SamplingStrategyEditFormComp } from './SamplingStrategyEditFormComp';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
+import { SchType } from '../../measurements/WbesMeasurement';
+import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 
 export const MeasEditFormComp = (props) => {
     const {
@@ -57,6 +59,19 @@ export const MeasEditFormComp = (props) => {
             {values.discriminator &&
                 values.discriminator == DummyMeasurement.typename &&
                 <DummyMeasEditFormComp
+                    name={name}
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched} />
+            }
+
+            {values.discriminator &&
+                values.discriminator == WbesMeasurement.typename &&
+                <WbesMeasEditFormComp
                     name={name}
                     values={values}
                     errors={errors}
@@ -174,6 +189,58 @@ export const DummyMeasEditFormComp = (props) => {
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
+                errors={errors}
+                touched={touched}
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched} />
+        </>
+    )
+};
+
+export const WbesMeasEditFormComp = (props) => {
+    const {
+        values,
+        name,
+        touched,
+        handleChange,
+        handleBlur,
+        errors,
+        setFieldValue,
+        setFieldTouched
+    } = props;
+    return (
+        <>
+            <span>Schedule Type -</span>
+            <select
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.schType}
+                name={`${name}.schType`}
+            >
+                <option value={SchType.OnBarDc}>Onbar DC</option>
+                <option value={SchType.OffBarDc}>Offbar DC</option>
+                <option value={SchType.TotalDc}>Total DC</option>
+            </select>
+            <br />
+
+            <span>Periodicity</span>
+            <TimePeriodEditFormComp
+                name={`${name}.periodicity`}
+                values={values.periodicity}
+                errors={errors}
+                touched={touched}
+                handleBlur={handleBlur}
+                handleChange={handleChange}
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched} />
+            <br />
+
+            <span>Sampling Strategy -</span>
+            <SamplingStrategyEditFormComp
+                name={`${name}.sampling_strategy`}
+                values={values.sampling_strategy}
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}

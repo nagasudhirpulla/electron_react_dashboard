@@ -6,6 +6,7 @@ import { IDashWidgetContentProps } from '../IDashWidgetContent';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
+import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
 
@@ -98,6 +99,8 @@ export const TslpEditForm = (props) => {
             seriesProps.meas = new PMUMeasurement();
         } else if (values.newMeasType == DummyMeasurement.typename) {
             seriesProps.meas = new DummyMeasurement();
+        } else if (values.newMeasType == WbesMeasurement.typename) {
+            seriesProps.meas = new WbesMeasurement();
         }
         setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
     };
@@ -136,6 +139,7 @@ export const TslpEditForm = (props) => {
                 >
                     <option value={ScadaMeasurement.typename}>Scada</option>
                     <option value={PMUMeasurement.typename}>PMU</option>
+                    <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
                 </select>
                 <button onClick={onAddSeriesClick}>Add Series</button>

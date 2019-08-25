@@ -1,7 +1,8 @@
 import { request } from 'http';
 import { convertDateToWbesUrlStr } from './timeUtils';
+import { SchType } from '../measurements/WbesMeasurement';
 export const baseUrl = "scheduling.wrldc.in";
-const dcTypeStrDict: { [key: string]: string } = { 'sellerdc': 'total_dc', 'dc': 'on_bar_dc', 'combineddc': 'on_bar_dc', 'onbardc': 'on_bar_dc', 'offbardc': 'off_bar_dc', 'total': 'total_dc' };
+const dcTypeStrDict: { [key: string]: string } = { 'sellerdc': 'TotalDc', 'dc': 'OnBarDc', 'combineddc': 'OnBarDc', 'onbardc': 'OnBarDc', 'offbardc': 'OffBarDc', 'total': 'TotalDc' };
 export const defaultRequestHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
     'Accept-Encoding': 'gzip, deflate'
@@ -73,13 +74,7 @@ export const getDeclarationGenUtils = async (): Promise<{ name: string, utilId: 
     return sellers;
 };
 
-export enum dcType {
-    on_bar_dc = "on_bar_dc",
-    off_bar_dc = "off_bar_dc",
-    total_dc = "total_dc"
-}
-
-export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: dcType): Promise<number[]> => {
+export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
     // fetch cookie first and then do request
     let urlRev = rev;
     if (rev == -1) {
@@ -103,7 +98,7 @@ export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: strin
     return dcVals;
 };
 
-export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, dcType: dcType): Promise<number[]> => {
+export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
     // fetch cookie first and then do request
     let dcVals: number[] = []
     for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
