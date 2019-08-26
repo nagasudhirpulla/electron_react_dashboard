@@ -1,6 +1,8 @@
 import { request } from 'http';
 import { convertDateToWbesUrlStr } from './timeUtils';
 import { SchType } from '../measurements/WbesMeasurement';
+import { csvToArray } from './wbesCsvToArray';
+
 export const baseUrl = "scheduling.wrldc.in";
 const dcTypeStrDict: { [key: string]: string } = { 'sellerdc': 'TotalDc', 'dc': 'OnBarDc', 'combineddc': 'OnBarDc', 'onbardc': 'OnBarDc', 'offbardc': 'OffBarDc', 'total': 'TotalDc' };
 export const defaultRequestHeaders = {
@@ -75,7 +77,6 @@ export const getDeclarationGenUtils = async (): Promise<{ name: string, utilId: 
 };
 
 export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
-    // fetch cookie first and then do request
     let urlRev = rev;
     if (rev == -1) {
         const revs = await getRevisionsForDate(dateObj);
@@ -111,3 +112,17 @@ export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: numbe
     }
     return dcVals;
 };
+
+export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<any> => {
+    let urlRev = rev;
+    if (rev == -1) {
+        const revs = await getRevisionsForDate(dateObj);
+        urlRev = Math.max(...revs);
+    }
+    const sellerIsgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=1&isDrawer=0&isBuyer=0`;
+    const options = { ...defaultRequestOptions, path: sellerIsgsNetSchFetchPath };
+    console.log(`ISGS Net Schedule JSON fetch path = ${sellerIsgsNetSchFetchPath}`);
+    const respObj = await doGetRequestAsync(options);
+    var isgsNetSchedulesArray = csvToArray(respObj.data.replace(/\0/g, ''));
+    return isgsNetSchedulesArray;
+}
