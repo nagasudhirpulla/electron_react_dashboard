@@ -119,6 +119,7 @@ export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: strin
         const revs = await getRevisionsForDate(dateObj);
         urlRev = Math.max(...revs);
     }
+    // todo seller buyer differentiation and handling pending
     const sellerIsgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isDrawer=0&isBuyer=0`;
     const options = { ...defaultRequestOptions, path: sellerIsgsNetSchFetchPath };
     console.log(`ISGS Net Schedule JSON fetch path = ${sellerIsgsNetSchFetchPath}`);
