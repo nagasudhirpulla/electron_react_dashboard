@@ -2,13 +2,41 @@ import { request } from 'http';
 import { convertDateToWbesUrlStr } from './timeUtils';
 import { SchType } from '../measurements/WbesMeasurement';
 import { csvToArray } from './wbesCsvToArray';
+import { registerAppState, getAppState } from '../appState';
+import { initUtils } from '../utils'
 
 export const baseUrl = "scheduling.wrldc.in";
 const dcTypeStrDict: { [key: string]: string } = { 'sellerdc': 'TotalDc', 'dc': 'OnBarDc', 'combineddc': 'OnBarDc', 'onbardc': 'OnBarDc', 'offbardc': 'OffBarDc', 'total': 'TotalDc' };
+const netSchMapDict: { [key: string]: string } = {
+    'isgs': SchType.Isgs,
+    'mtoa': SchType.Mtoa,
+    'stoa': SchType.Stoa,
+    'lta': SchType.Lta,
+    'iex': SchType.Iex,
+    'pxi': SchType.Px,
+    'urs': SchType.Urs,
+    'rras': SchType.Rras,
+    'sced': SchType.Sced,
+    'net total': SchType.NetSch
+};
 export const defaultRequestHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
     'Accept-Encoding': 'gzip, deflate'
 };
+
+
+export const registerUtilsInfoAppState = (obj: {}) => {
+    registerAppState("utils_info", obj);
+}
+
+export const getUtilsInfoAppState = () => {
+    return getAppState("utils_info");
+}
+
+export const initUtilsObj = () => {
+    registerUtilsInfoAppState(initUtils);
+}
+
 
 export const defaultRequestOptions = {
     path: "",
@@ -63,17 +91,23 @@ export const getRevisionsForDate = async (dateObj: Date): Promise<number[]> => {
     return revsList;
 };
 
-export const getDeclarationGenUtils = async (): Promise<{ name: string, utilId: string }[]> => {
-    const options = { ...defaultRequestOptions, path: `/wbes/Report/GetUtils?regionId=2` };
+export const getUtils = async (): Promise<{ [key: string]: { name: string, utilId: string, isSeller: boolean } }> => {
+    const options = { ...defaultRequestOptions, path: `/wbes/ReportNetSchedule/GetUtils?regionId=2` };
     const utilsObjStr = (await doGetRequestAsync(options)).data;
     //console.log(utilsObjStr);
-    const utilsObj = JSON.parse(utilsObjStr) as { sellers: { UtilId: string, Acronym: string }[], buyers: [] };
+    const utilsObj = JSON.parse(utilsObjStr) as { sellers: { UtilId: string, Acronym: string }[], buyers: { UtilId: string, Acronym: string }[] };
+    let utils: { [key: string]: { name: string, utilId: string, isSeller: boolean } } = {};
     const sellersList = utilsObj.sellers;
-    let sellers: { name: string, utilId: string }[] = [];
     for (let sellerInd = 0; sellerInd < sellersList.length; sellerInd++) {
-        sellers.push({ name: sellersList[sellerInd].Acronym, utilId: sellersList[sellerInd].UtilId });
+        const utilId = sellersList[sellerInd].UtilId
+        utils[utilId] = { name: sellersList[sellerInd].Acronym, utilId: utilId, isSeller: true };
     }
-    return sellers;
+    const buyersList = utilsObj.buyers;
+    for (let buyerInd = 0; buyerInd < buyersList.length; buyerInd++) {
+        const utilId = buyersList[buyerInd].UtilId
+        utils[utilId] = { name: buyersList[buyerInd].Acronym, utilId: utilId, isSeller: false };
+    }
+    return utils;
 };
 
 export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
@@ -113,31 +147,57 @@ export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: numbe
     return dcVals;
 };
 
-export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: string): Promise<number[]> => {
+export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: string, schType: SchType): Promise<number[]> => {
     let urlRev = rev;
     if (rev == -1) {
         const revs = await getRevisionsForDate(dateObj);
         urlRev = Math.max(...revs);
     }
-    // todo seller buyer differentiation and handling pending
-    const sellerIsgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isDrawer=0&isBuyer=0`;
-    const options = { ...defaultRequestOptions, path: sellerIsgsNetSchFetchPath };
-    console.log(`ISGS Net Schedule JSON fetch path = ${sellerIsgsNetSchFetchPath}`);
+    //check if the utility is a seller or buyer
+    const util = getUtilsInfoAppState()[utilId];
+    if (util == undefined) {
+        return [];
+    }
+
+    /**
+     * Net schedule - http://scheduling.wrldc.in/wbes/ReportNetSchedule/ExportNetScheduleSummaryToPDF?scheduleDate=27-08-2019&sellerId=c88b0ddb-e90c-4a89-8855-ac6512897c72&revisionNumber=101&getTokenValue=1566885925651&fileType=csv&regionId=2&byDetails=1&isBuyer=0
+     * For buyer the sign convention is ok, but for seller the sign convention needs to be changed
+     */
+    // const isgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isDrawer=0&isBuyer=0`;
+    const isgsNetSchFetchPath = `/wbes/ReportNetSchedule/ExportNetScheduleSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isBuyer=0`;
+    const options = { ...defaultRequestOptions, path: isgsNetSchFetchPath };
+    console.log(`Net Schedule JSON fetch path = ${isgsNetSchFetchPath}`);
     const respObj = await doGetRequestAsync(options);
     var isgsNetSchedulesArray = csvToArray(respObj.data.replace(/\0/g, '')) as string[][];
-    
+
     //check if isgsNetSchedulesArray has at least 3 columns and 97 rows
     if (isgsNetSchedulesArray.length < 97) {
         return [];
     }
-    if (isgsNetSchedulesArray[0].length < 3) {
+    if (isgsNetSchedulesArray[0].length < 12) {
         return [];
     }
+    let schColInd: number = -1;
 
+    //find the index of column that contains the required schedule type
+    for (let colIter = 0; colIter < isgsNetSchedulesArray[0].length; colIter++) {
+        if (netSchMapDict[isgsNetSchedulesArray[0][colIter].toLowerCase()] == schType) {
+            schColInd = colIter;
+            break;
+        }
+    }
+    if (schColInd == -1) {
+        return [];
+    }
     const netSchVals: number[] = [];
+
     // time blocks start from row 1 (zero based index) and values are present in column 2 (zero based index)
     for (let matrixRowIter = 1; matrixRowIter <= 96; matrixRowIter++) {
-        netSchVals.push(parseFloat(isgsNetSchedulesArray[matrixRowIter][2]));
+        let schVal = parseFloat(isgsNetSchedulesArray[matrixRowIter][schColInd]);
+        if (util.isSeller == true) {
+            schVal = -1 * schVal;
+        }
+        netSchVals.push(schVal);
     }
     return netSchVals;
 }

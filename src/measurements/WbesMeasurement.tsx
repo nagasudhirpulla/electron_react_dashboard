@@ -6,9 +6,17 @@ export enum SchType {
     OnBarDc = "OnBarDc",
     OffBarDc = "OffBarDc",
     TotalDc = "TotalDc",
-    NetSch = "NetSch"
+    NetSch = "NetSch",
+    Isgs = "Isgs",
+    Mtoa = "Mtoa",
+    Stoa = "Stoa",
+    Lta = "Lta",
+    Iex = "Iex",
+    Px = "Px",
+    Urs = "Urs",
+    Rras = "Rras",
+    Sced = "Sced"
 }
-
 export interface IWbesMeasurement extends IMeasurement {
     meas_id: string,
     schType: SchType,

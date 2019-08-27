@@ -1,4 +1,4 @@
-import { getDeclarationGenUtils, getRevisionsForDate, fetchCookiesFromReportsUrl, getISGSDcForDate, getISGSDcForDates, getNetSchForDate } from '../utils/wbesUtils';
+import { getUtils, getRevisionsForDate, fetchCookiesFromReportsUrl, getISGSDcForDate, getISGSDcForDates, getNetSchForDate, initUtilsObj } from '../utils/wbesUtils';
 import { SchType } from '../measurements/WbesMeasurement';
 
 const testRevisionsForDate = async () => {
@@ -6,8 +6,8 @@ const testRevisionsForDate = async () => {
     console.log(revs);
 };
 
-const testDeclarationGenUtils = async () => {
-    const genUtils = await getDeclarationGenUtils();
+const testGetUtils = async () => {
+    const genUtils = await getUtils();
     console.log(genUtils);
 };
 
@@ -22,7 +22,8 @@ const testIsgsDc = async () => {
 };
 
 const testIsgsNetSch = async () => {
-    const data = await getNetSchForDate( new Date(), -1, "6477e23c-660e-4587-92d2-8e3488bc8262");
+    initUtilsObj();
+    const data = await getNetSchForDate( new Date(), -1, "f9b9e90c-1380-4eb1-bb00-8a0ea85f059c", SchType.Sced);
     console.log(data);
 };
 
