@@ -28,6 +28,7 @@ import Excel from 'exceljs';
 import { readFileAsync, writeFileAsync, saveExcelAsync } from '../utils/fileUtils';
 import { WbesTslpFetcher } from './../Fetchers/WbesTslpFetcher';
 import { WbesMeasurement, IWbesMeasurement } from './../measurements/WbesMeasurement';
+import { initUtilsObj } from '../utils/wbesUtils';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -103,6 +104,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
+    initUtilsObj();
     this.setState({ mounted: true } as AppState);
   }
 
