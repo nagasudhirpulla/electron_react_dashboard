@@ -6,6 +6,7 @@ import { SamplingStrategyEditFormComp } from './SamplingStrategyEditFormComp';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { SchType } from '../../measurements/WbesMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
+import { getUtilsInfoAppState } from '../../utils/wbesUtils';
 
 export const MeasEditFormComp = (props) => {
     const {
@@ -20,13 +21,16 @@ export const MeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.meas_id}
-                name={`${name}.meas_id`}
-            />
+            {values.discriminator &&
+                values.discriminator != WbesMeasurement.typename &&
+                <input
+                    type="text"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.meas_id}
+                    name={`${name}.meas_id`}
+                />
+            }
             <br />
 
             {values.discriminator &&
@@ -212,6 +216,19 @@ export const WbesMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span>Utility -</span>
+            <select
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.meas_id}
+                name={`${name}.meas_id`}
+            >
+                {Object.values(getUtilsInfoAppState()).map((util, index) => (
+                    <option value={util.utilId}>{util.name}</option>
+                ))}
+            </select>
+            <br />
+
             <span>Schedule Type -</span>
             <select
                 onChange={handleChange}
@@ -222,6 +239,14 @@ export const WbesMeasEditFormComp = (props) => {
                 <option value={SchType.OnBarDc}>Onbar DC</option>
                 <option value={SchType.OffBarDc}>Offbar DC</option>
                 <option value={SchType.TotalDc}>Total DC</option>
+                <option value={SchType.NetSch}>Net Schedule</option>
+                <option value={SchType.Isgs}>ISGS Schedule</option>
+                <option value={SchType.Lta}>LTA Schedule</option>
+                <option value={SchType.Mtoa}>MTOA Schedule</option>
+                <option value={SchType.Stoa}>STOA Schedule</option>
+                <option value={SchType.Urs}>URS Schedule</option>
+                <option value={SchType.Rras}>RRAS Schedule</option>
+                <option value={SchType.Sced}>SCED Schedule</option>
             </select>
             <br />
 

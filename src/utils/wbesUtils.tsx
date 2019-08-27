@@ -30,13 +30,12 @@ export const registerUtilsInfoAppState = (obj: {}) => {
 }
 
 export const getUtilsInfoAppState = () => {
-    return getAppState("utils_info");
+    return getAppState("utils_info") as { [key: string]: { utilId: string, name: string, isSeller: boolean } };
 }
 
 export const initUtilsObj = () => {
     registerUtilsInfoAppState(initUtils);
 }
-
 
 export const defaultRequestOptions = {
     path: "",
@@ -111,6 +110,15 @@ export const getUtils = async (): Promise<{ [key: string]: { name: string, utilI
 };
 
 export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
+    //check if the utility is a seller or buyer
+    const util = getUtilsInfoAppState()[utilId];
+    if (util == undefined) {
+        return [];
+    }
+    // check if dc is being asked for buyers
+    if (util.isSeller == false && [SchType.OnBarDc, SchType.OffBarDc, SchType.TotalDc].indexOf(dcType) != -1) {
+        return [];
+    }
     let urlRev = rev;
     if (rev == -1) {
         const revs = await getRevisionsForDate(dateObj);
@@ -134,7 +142,6 @@ export const getISGSDcForDate = async (dateObj: Date, rev: number, utilId: strin
 };
 
 export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, dcType: SchType): Promise<number[]> => {
-    // fetch cookie first and then do request
     let dcVals: number[] = []
     for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
         let vals = await getISGSDcForDate(currDate, rev, utilId, dcType);
@@ -158,15 +165,11 @@ export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: strin
     if (util == undefined) {
         return [];
     }
-
-    /**
-     * Net schedule - http://scheduling.wrldc.in/wbes/ReportNetSchedule/ExportNetScheduleSummaryToPDF?scheduleDate=27-08-2019&sellerId=c88b0ddb-e90c-4a89-8855-ac6512897c72&revisionNumber=101&getTokenValue=1566885925651&fileType=csv&regionId=2&byDetails=1&isBuyer=0
-     * For buyer the sign convention is ok, but for seller the sign convention needs to be changed
-     */
+    // For buyer the sign convention is ok, but for seller the sign convention needs to be changed
     // const isgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isDrawer=0&isBuyer=0`;
-    const isgsNetSchFetchPath = `/wbes/ReportNetSchedule/ExportNetScheduleSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isBuyer=0`;
-    const options = { ...defaultRequestOptions, path: isgsNetSchFetchPath };
-    console.log(`Net Schedule JSON fetch path = ${isgsNetSchFetchPath}`);
+    const netSchFetchPath = `/wbes/ReportNetSchedule/ExportNetScheduleSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isBuyer=0`;
+    const options = { ...defaultRequestOptions, path: netSchFetchPath };
+    console.log(`Net Schedule JSON fetch path = ${netSchFetchPath}`);
     const respObj = await doGetRequestAsync(options);
     var isgsNetSchedulesArray = csvToArray(respObj.data.replace(/\0/g, '')) as string[][];
 
@@ -200,4 +203,43 @@ export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: strin
         netSchVals.push(schVal);
     }
     return netSchVals;
+}
+
+export const getNetSchForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, schType: SchType): Promise<number[]> => {
+    let schVals: number[] = []
+    for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
+        let vals = await getNetSchForDate(currDate, rev, utilId, schType);
+        if (vals.length == 0) {
+            return [];
+        }
+        schVals.push(...vals);
+    }
+    return schVals;
+}
+
+export const getSchForDate = async (dateObj: Date, rev: number, utilId: string, schType: SchType): Promise<number[]> => {
+    let schVals: number[] = []
+    if ([SchType.OnBarDc, SchType.OffBarDc, SchType.TotalDc].indexOf(schType) != -1) {
+        schVals = await getISGSDcForDate(dateObj, rev, utilId, schType);
+    }
+    else {
+        schVals = await getNetSchForDate(dateObj, rev, utilId, schType);
+    }
+    return schVals;
+}
+
+export const getSchForDates = async (fromDate: Date, toDate: Date, rev: number, utilId: string, schType: SchType): Promise<number[]> => {
+    let schVals: number[] = []
+    let fetchFunc = getNetSchForDate;
+    if ([SchType.OnBarDc, SchType.OffBarDc, SchType.TotalDc].indexOf(schType) != -1) {
+        fetchFunc = getISGSDcForDate;
+    }
+    for (let currDate = fromDate; currDate.getTime() <= toDate.getTime(); currDate = new Date(currDate.getTime() + 24 * 60 * 60 * 1000)) {
+        let vals = await fetchFunc(currDate, rev, utilId, schType);
+        if (vals.length == 0) {
+            return [];
+        }
+        schVals.push(...vals);
+    }
+    return schVals;
 }

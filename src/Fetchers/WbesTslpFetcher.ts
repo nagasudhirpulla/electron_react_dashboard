@@ -1,7 +1,7 @@
 import { ITslpDataFetcher } from "./IFetcher";
 import { VarTime } from "../variable_time/VariableTime";
 import { ITslpDataPoint } from "../components/ITimeSeriesLinePlot";
-import { getISGSDcForDates } from "../utils/wbesUtils";
+import { getSchForDates } from "../utils/wbesUtils";
 import { IWbesMeasurement } from "../measurements/WbesMeasurement";
 import { resampleData } from "./PMUTslpFetcher";
 
@@ -9,7 +9,7 @@ export class WbesTslpFetcher implements ITslpDataFetcher {
     async fetchData(fromVarTime: VarTime, toVarTime: VarTime, meas: IWbesMeasurement): Promise<ITslpDataPoint[]> {
         const fromTime = VarTime.getDateObj(fromVarTime);
         const toTime = VarTime.getDateObj(toVarTime);
-        const vals = await getISGSDcForDates(fromTime, toTime, -1, meas.meas_id, meas.schType);
+        const vals = await getSchForDates(fromTime, toTime, -1, meas.meas_id, meas.schType);
         if (vals == []) {
             return [];
         }
