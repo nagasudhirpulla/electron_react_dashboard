@@ -113,16 +113,30 @@ export const getISGSDcForDates = async (fromDate: Date, toDate: Date, rev: numbe
     return dcVals;
 };
 
-export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: string, dcType: SchType): Promise<any> => {
+export const getNetSchForDate = async (dateObj: Date, rev: number, utilId: string): Promise<number[]> => {
     let urlRev = rev;
     if (rev == -1) {
         const revs = await getRevisionsForDate(dateObj);
         urlRev = Math.max(...revs);
     }
-    const sellerIsgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=1&isDrawer=0&isBuyer=0`;
+    const sellerIsgsNetSchFetchPath = `/wbes/ReportFullSchedule/ExportFullScheduleInjSummaryToPDF?scheduleDate=${convertDateToWbesUrlStr(dateObj)}&sellerId=${utilId}&revisionNumber=${urlRev}&getTokenValue=${(new Date()).getTime()}&fileType=csv&regionId=2&byDetails=0&isDrawer=0&isBuyer=0`;
     const options = { ...defaultRequestOptions, path: sellerIsgsNetSchFetchPath };
     console.log(`ISGS Net Schedule JSON fetch path = ${sellerIsgsNetSchFetchPath}`);
     const respObj = await doGetRequestAsync(options);
-    var isgsNetSchedulesArray = csvToArray(respObj.data.replace(/\0/g, ''));
-    return isgsNetSchedulesArray;
+    var isgsNetSchedulesArray = csvToArray(respObj.data.replace(/\0/g, '')) as string[][];
+    
+    //check if isgsNetSchedulesArray has at least 3 columns and 97 rows
+    if (isgsNetSchedulesArray.length < 97) {
+        return [];
+    }
+    if (isgsNetSchedulesArray[0].length < 3) {
+        return [];
+    }
+
+    const netSchVals: number[] = [];
+    // time blocks start from row 1 (zero based index) and values are present in column 2 (zero based index)
+    for (let matrixRowIter = 1; matrixRowIter <= 96; matrixRowIter++) {
+        netSchVals.push(parseFloat(isgsNetSchedulesArray[matrixRowIter][2]));
+    }
+    return netSchVals;
 }

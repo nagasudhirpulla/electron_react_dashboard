@@ -22,7 +22,7 @@ const testIsgsDc = async () => {
 };
 
 const testIsgsNetSch = async () => {
-    const data = await getNetSchForDate( new Date(), -1, "6477e23c-660e-4587-92d2-8e3488bc8262", SchType.OnBarDc);
+    const data = await getNetSchForDate( new Date(), -1, "6477e23c-660e-4587-92d2-8e3488bc8262");
     console.log(data);
 };
 
