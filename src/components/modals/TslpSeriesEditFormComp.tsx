@@ -21,7 +21,7 @@ export const TslpSeriesEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span>Series Title</span>
+            <span><b>Series Title</b></span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -34,7 +34,23 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <span>Plotly Render Strategy</span>
+            <div>
+                <span><b>Measurement</b>{` (${values.meas.discriminator})`}</span>
+                <MeasEditFormComp
+                    name={`${name}.meas`}
+                    values={values.meas}
+                    errors={errors}
+                    touched={touched}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                />
+            </div>
+
+            <SeriesCompDivider />
+
+            <span><b>Plotly Render Strategy</b></span>
             <select
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -47,7 +63,7 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
-            <span>Series Color</span>
+            <span><b>Series Color</b></span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -59,7 +75,7 @@ export const TslpSeriesEditFormComp = (props) => {
             <SeriesCompDivider />
 
             <div>
-                <span>From Time</span>
+                <span><b>From Time</b></span>
                 <VarTimeEditFormComp
                     name={`${name}.fromVarTime`}
                     values={values.fromVarTime}
@@ -74,7 +90,7 @@ export const TslpSeriesEditFormComp = (props) => {
             <SeriesCompDivider />
 
             <div>
-                <span>To Time</span>
+                <span><b>To Time</b></span>
                 <VarTimeEditFormComp
                     name={`${name}.toVarTime`}
                     values={values.toVarTime}
@@ -89,7 +105,7 @@ export const TslpSeriesEditFormComp = (props) => {
             <SeriesCompDivider />
 
             <div>
-                <span>Display Time Shift</span>
+                <span><b>Display Time Shift</b></span>
                 <TimePeriodEditFormComp
                     name={`${name}.displayTimeShift`}
                     values={values.displayTimeShift}
@@ -101,21 +117,6 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldTouched={setFieldTouched} />
             </div>
 
-            <SeriesCompDivider />
-
-            <div>
-                <span>Measurement{` (${values.meas.discriminator})`}</span>
-                <MeasEditFormComp
-                    name={`${name}.meas`}
-                    values={values.meas}
-                    errors={errors}
-                    touched={touched}
-                    handleBlur={handleBlur}
-                    handleChange={handleChange}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                />
-            </div>
         </>
     )
 };

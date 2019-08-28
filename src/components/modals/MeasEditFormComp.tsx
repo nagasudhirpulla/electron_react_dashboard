@@ -102,7 +102,7 @@ export const ScadaMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span>Periodicity</span>
+            <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -113,7 +113,7 @@ export const ScadaMeasEditFormComp = (props) => {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
             <br />
-            <span>Sampling Strategy -</span>
+            <span><b>Sampling Strategy</b> -</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -140,7 +140,7 @@ export const PMUMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span>Periodicity</span>
+            <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -151,7 +151,7 @@ export const PMUMeasEditFormComp = (props) => {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
             <br />
-            <span>Sampling Strategy -</span>
+            <span><b>Sampling Strategy</b> -</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -162,7 +162,7 @@ export const PMUMeasEditFormComp = (props) => {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
             <br />
-            <span>Fetch Window</span>
+            <span><b>Fetch Window</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.fetchWindow`}
                 values={values.fetchWindow}
@@ -189,7 +189,7 @@ export const DummyMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span>Periodicity</span>
+            <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -216,7 +216,7 @@ export const WbesMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span>Utility -</span>
+            <span><b>Utility</b> -</span>
             <select
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -224,12 +224,12 @@ export const WbesMeasEditFormComp = (props) => {
                 name={`${name}.meas_id`}
             >
                 {Object.values(getUtilsInfoAppState()).map((util, index) => (
-                    <option value={util.utilId}>{util.name}</option>
+                    <option key={`wbes_util_opt_${index}`} value={util.utilId}>{util.name}</option>
                 ))}
             </select>
             <br />
 
-            <span>Schedule Type -</span>
+            <span><b>Schedule Type</b> -</span>
             <select
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -250,7 +250,7 @@ export const WbesMeasEditFormComp = (props) => {
             </select>
             <br />
 
-            <span>Periodicity</span>
+            <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
@@ -262,7 +262,7 @@ export const WbesMeasEditFormComp = (props) => {
                 setFieldTouched={setFieldTouched} />
             <br />
 
-            <span>Sampling Strategy -</span>
+            <span><b>Sampling Strategy</b> -</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}

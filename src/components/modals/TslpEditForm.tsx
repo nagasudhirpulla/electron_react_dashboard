@@ -91,8 +91,8 @@ export const TslpEditForm = (props) => {
     let nameStr = 'tslpProps';
     const onAddSeriesClick = () => {
         let seriesProps = new TslpSeriesProps();
-        seriesProps.fromVarTime.absoluteTime = new Date().getTime() - 4*60*1000;
-        seriesProps.toVarTime.absoluteTime = new Date().getTime() - 2*60*1000;
+        seriesProps.fromVarTime.absoluteTime = new Date().getTime() - 4 * 60 * 1000;
+        seriesProps.toVarTime.absoluteTime = new Date().getTime() - 2 * 60 * 1000;
         if (values.newMeasType == ScadaMeasurement.typename) {
             seriesProps.meas = new ScadaMeasurement();
         } else if (values.newMeasType == PMUMeasurement.typename) {
@@ -106,13 +106,14 @@ export const TslpEditForm = (props) => {
     };
 
     const onDeleteSeriesClick = (ind: number) => {
-        return () =>
+        return () => {
             setFieldValue(`${nameStr}.seriesList`,
                 [
                     ...values[nameStr].seriesList.slice(0, ind),
                     ...values[nameStr].seriesList.slice(ind + 1)
                 ]
             );
+        }
     };
 
     const onDuplicateSeriesClick = (ind: number) => {

@@ -27,7 +27,7 @@ export class Modal extends Component {
   };
   onClickOutside = event => {
     if (this.modal && this.modal.contains(event.target)) return;
-    this.closeModal();
+    // this.closeModal();
   };
 
   toggleScrollLock = () => {

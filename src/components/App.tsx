@@ -12,6 +12,7 @@ import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
 const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
+const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 import { ScadaTslpFetcher } from '../Fetchers/ScadaTslpFetcher';
 import { ILayoutDict } from '../IDictionary';
 import Modal from './modals/Modal';
@@ -29,6 +30,7 @@ import { readFileAsync, writeFileAsync, saveExcelAsync } from '../utils/fileUtil
 import { WbesTslpFetcher } from './../Fetchers/WbesTslpFetcher';
 import { WbesMeasurement, IWbesMeasurement } from './../measurements/WbesMeasurement';
 import { initUtilsObj } from '../utils/wbesUtils';
+import { ShowMessageBoxOptions } from 'electron';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -142,7 +144,13 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onNewLayout = () => {
-    this.setState({ widgetProps: generateWidgetProps() } as AppState);
+    const dialogOptions = { type: "info", title: "Confirm Layout Reset", buttons: ['OK', 'Cancel'], message: 'Reset Layout?' };
+    showConfirmationDialog(null, dialogOptions as ShowMessageBoxOptions, i => {
+      // console.log(i);
+      if (i == 0) {
+        this.setState({ widgetProps: generateWidgetProps() } as AppState);
+      }
+    });
   };
 
   addWidget = (widType: string) => {
@@ -242,11 +250,17 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onRemoveItem = (ind: number) => {
-    this.setState({
-      widgetProps: [
-        ...this.state.widgetProps.slice(0, ind),
-        ...this.state.widgetProps.slice(ind + 1)]
-    } as AppState);
+    //stub
+    const dialogOptions = { type: "info", title: "Confirm Widget Delete", buttons: ['OK', 'Cancel'], message: 'Delete Widget' };
+    showConfirmationDialog(null, dialogOptions as ShowMessageBoxOptions, i => {
+      if (i == 0) {
+        this.setState({
+          widgetProps: [
+            ...this.state.widgetProps.slice(0, ind),
+            ...this.state.widgetProps.slice(ind + 1)]
+        } as AppState);
+      }
+    });
   }
 
   onExportItem = async (ind: number) => {
