@@ -51,7 +51,7 @@ class App extends React.Component<AppProps, AppState> {
 
   state = {
     currentBreakpoint: "lg",
-    compactType: "vertical",
+    compactType: null,
     mounted: false,
     timer: {
       isOn: false,
@@ -392,9 +392,9 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div>
 
-        <button onClick={this.onNewLayout}>Generate New Layout</button>
+        <button onClick={this.onNewLayout}>Reset Layout</button>
         <button onClick={this.onCompactTypeChange}>
-          Compaction - {this.state.compactType || "No Compaction"}
+          {this.state.compactType || "No"}{` Compaction`}
         </button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
