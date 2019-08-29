@@ -207,7 +207,7 @@ class App extends React.Component<AppProps, AppState> {
       <>
         {
           this.state.widgetProps[ind].contentProps.discriminator == TslpProps.typename &&
-          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, onFormSubmit: this.editWidget.bind(this) }} />
+          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, onFormSubmit: this.editWidget }} />
         }
       </>
     );
@@ -251,7 +251,6 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onRemoveItem = (ind: number) => {
-    //stub
     const dialogOptions = { type: "info", title: "Confirm Widget Delete", buttons: ['OK', 'Cancel'], message: 'Delete Widget' };
     showConfirmationDialog(null, dialogOptions as ShowMessageBoxOptions, i => {
       if (i == 0) {

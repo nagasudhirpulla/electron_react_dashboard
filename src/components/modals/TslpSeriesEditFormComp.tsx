@@ -30,9 +30,9 @@ export const TslpSeriesEditFormComp = (props) => {
                 value={values.title}
                 name={`${name}.title`}
             />
-            <button onClick={onDuplicateClick} className="duplicate_series_btn">Duplicate Series</button>
-            <button onClick={onTimeOverwriteClick} className="time_overwrite_series_btn">Time Overwrite all Series</button>
-            <button onClick={onDeleteClick} className="delete_series_btn">Delete Series</button>
+            <button type="button" onClick={onDuplicateClick} className="duplicate_series_btn">Duplicate Series</button>
+            <button type="button" onClick={onTimeOverwriteClick} className="time_overwrite_series_btn">Time Overwrite all Series</button>
+            <button type="button" onClick={onDeleteClick} className="delete_series_btn">Delete Series</button>
 
             <SeriesCompDivider />
 

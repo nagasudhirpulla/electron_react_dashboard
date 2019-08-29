@@ -7,6 +7,8 @@ import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
+import { ShowMessageBoxOptions } from 'electron';
+const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
 
@@ -109,12 +111,18 @@ export const TslpEditForm = (props) => {
 
     const onDeleteSeriesClick = (ind: number) => {
         return () => {
-            setFieldValue(`${nameStr}.seriesList`,
-                [
-                    ...values[nameStr].seriesList.slice(0, ind),
-                    ...values[nameStr].seriesList.slice(ind + 1)
-                ]
-            );
+            const dialogOptions = { type: "info", title: "Confirm Series Delete", buttons: ['OK', 'Cancel'], message: 'Delete Series?' };
+            showConfirmationDialog(null, dialogOptions as ShowMessageBoxOptions, i => {
+                // console.log(i);
+                if (i == 0) {
+                    setFieldValue(`${nameStr}.seriesList`,
+                        [
+                            ...values[nameStr].seriesList.slice(0, ind),
+                            ...values[nameStr].seriesList.slice(ind + 1)
+                        ]
+                    );
+                }
+            });
         }
     };
 
@@ -147,7 +155,7 @@ export const TslpEditForm = (props) => {
     };
 
     return (
-        <div className="form_div">
+        <form className="form_div" onSubmit={handleSubmit}>
             <div>
                 <select
                     name="newMeasType"
@@ -160,9 +168,9 @@ export const TslpEditForm = (props) => {
                     <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
                 </select>
-                <button onClick={onAddSeriesClick}>Add Series</button>
+                <button type="button" onClick={onAddSeriesClick}>Add Series</button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <div>
                 <TslpEditFormComp
                     name={nameStr}
                     values={values[nameStr]}
@@ -180,8 +188,8 @@ export const TslpEditForm = (props) => {
                 <button type="submit" disabled={isSubmitting}>Submit</button>
 
                 {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
-            </form>
-        </div>
+            </div>
+        </form>
     )
 };
 
