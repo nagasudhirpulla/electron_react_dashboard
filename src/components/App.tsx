@@ -31,6 +31,7 @@ import { WbesTslpFetcher } from './../Fetchers/WbesTslpFetcher';
 import { WbesMeasurement, IWbesMeasurement } from './../measurements/WbesMeasurement';
 import { initUtilsObj } from '../utils/wbesUtils';
 import { ShowMessageBoxOptions } from 'electron';
+import { stripDataFromAppState } from '../utils/dashboardUtils';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -243,7 +244,7 @@ class App extends React.Component<AppProps, AppState> {
       const saveFilename: string = dialogRes.filePath;
       console.log(`Saving state to ${saveFilename}`);
       //todo remove points from timeseries line props
-      const fileContents = JSON.stringify(this.state, null, 2);
+      const fileContents = JSON.stringify(stripDataFromAppState({ ...this.state }), null, 2);
       const isSaved = await writeFileAsync(saveFilename, fileContents);
       console.log(`Save status = ${isSaved}`);
     }
