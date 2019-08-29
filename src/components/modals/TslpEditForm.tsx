@@ -1,7 +1,7 @@
 import React from 'react';
 import { TslpSeriesEditFormComp } from './TslpSeriesEditFormComp';
 import { Formik, withFormik, FormikBag } from 'formik';
-import { ITslpProps, TslpSeriesProps } from '../ITimeSeriesLinePlot';
+import { ITslpProps, TslpSeriesProps, ITslpSeriesProps } from '../ITimeSeriesLinePlot';
 import { IDashWidgetContentProps } from '../IDashWidgetContent';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
@@ -15,6 +15,7 @@ export const TslpEditFormComp = (props) => {
         values,
         onDeleteSeriesClick,
         onDuplicateSeriesClick,
+        onTimeOverwriteSeriesClick,
         name,
         touched,
         handleChange,
@@ -38,6 +39,7 @@ export const TslpEditFormComp = (props) => {
                     setFieldTouched={setFieldTouched}
                     onDeleteClick={onDeleteSeriesClick(seriesIter)}
                     onDuplicateClick={onDuplicateSeriesClick(seriesIter)}
+                    onTimeOverwriteClick={onTimeOverwriteSeriesClick(seriesIter)}
                 />
                 <WidgetContentDivider />
             </div>
@@ -129,6 +131,21 @@ export const TslpEditForm = (props) => {
         }
     };
 
+    const onTimeOverwriteSeriesClick = (ind: number) => {
+        return () => {
+            let newSeriesList = [...values[nameStr].seriesList] as ITslpSeriesProps[];
+            for (let serIter = 0; serIter < newSeriesList.length; serIter++) {
+                if (serIter == ind) {
+                    continue;
+                }
+                newSeriesList[serIter].fromVarTime = { ...newSeriesList[ind].fromVarTime }
+                newSeriesList[serIter].toVarTime = { ...newSeriesList[ind].toVarTime }
+            }
+
+            setFieldValue(`${nameStr}.seriesList`, newSeriesList);
+        }
+    };
+
     return (
         <div className="form_div">
             <div>
@@ -157,6 +174,7 @@ export const TslpEditForm = (props) => {
                     setFieldTouched={setFieldTouched}
                     onDeleteSeriesClick={onDeleteSeriesClick}
                     onDuplicateSeriesClick={onDuplicateSeriesClick}
+                    onTimeOverwriteSeriesClick={onTimeOverwriteSeriesClick}
                 />
 
                 <button type="submit" disabled={isSubmitting}>Submit</button>
@@ -170,7 +188,7 @@ export const TslpEditForm = (props) => {
 
 export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: ITslpProps, onFormSubmit }, { tslpProps: ITslpProps }, { tslpProps: ITslpProps, newMeasType: string }>({
     mapPropsToValues: (props) => ({
-        tslpProps: { ...props.tslpProps },
+        tslpProps: JSON.parse(JSON.stringify(props.tslpProps)),
         newMeasType: ScadaMeasurement.typename
     }),
 

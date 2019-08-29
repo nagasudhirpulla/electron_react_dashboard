@@ -200,3 +200,8 @@ li b {
   background-color: greenyellow;
   color: gray;
 }
+
+.time_overwrite_series_btn{
+  background-color: blueviolet;
+  color: whitesmoke;
+}

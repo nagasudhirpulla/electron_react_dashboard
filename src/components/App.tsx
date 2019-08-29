@@ -244,7 +244,7 @@ class App extends React.Component<AppProps, AppState> {
       const saveFilename: string = dialogRes.filePath;
       console.log(`Saving state to ${saveFilename}`);
       //todo remove points from timeseries line props
-      const fileContents = JSON.stringify(stripDataFromAppState({ ...this.state }), null, 2);
+      const fileContents = JSON.stringify(stripDataFromAppState(this.state), null, 2);
       const isSaved = await writeFileAsync(saveFilename, fileContents);
       console.log(`Save status = ${isSaved}`);
     }
