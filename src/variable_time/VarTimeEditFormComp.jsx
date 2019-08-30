@@ -20,6 +20,19 @@ export const VarTimeEditFormComp = ({
         }
     };
 
+    const onAllVarCheckChanged = evnt => {
+        let newBool = false;
+        if (evnt.target.checked) {
+            newBool = true;
+        }
+        setFieldValue(`${name}.isVarDays`, newBool);
+        setFieldValue(`${name}.isVarMonths`, newBool);
+        setFieldValue(`${name}.isVarYears`, newBool);
+        setFieldValue(`${name}.isVarHrs`, newBool);
+        setFieldValue(`${name}.isVarMins`, newBool);
+        setFieldValue(`${name}.isVarSecs`, newBool);
+    };
+
     const onAbsTimeBlur = () => {
         setFieldTouched(`${name}.absoluteTime`, true);
     };
@@ -34,6 +47,11 @@ export const VarTimeEditFormComp = ({
                     timeFormat={'HH:mm:ss'}
                     onChange={onAbsTimeChange}
                     onBlur={onAbsTimeBlur}
+                />
+                <span>All Variable -{" "}</span>
+                <input type="checkbox"
+                    checked={values.isVarDays && values.isVarMonths && values.isVarYears && values.isVarHrs && values.isVarMins && values.isVarSecs}
+                    onChange={onAllVarCheckChanged}
                 />
             </div>
 
