@@ -99,7 +99,16 @@
     "win": {
       "target": "NSIS",
       "icon": "assets/img/posoco_logo.png"
-    }
+    },
+    "fileAssociations": [
+      {
+        "name": "JSON File",
+        "description": "Electron Dashboard JSON Config file",
+        "ext": [
+          "json"
+        ]
+      }
+    ]
   },
   "scripts": {
     "start": "electron dist/main.js",

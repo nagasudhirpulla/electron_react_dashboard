@@ -32,6 +32,7 @@ import { WbesMeasurement, IWbesMeasurement } from './../measurements/WbesMeasure
 import { initUtilsObj } from '../utils/wbesUtils';
 import { ShowMessageBoxOptions } from 'electron';
 import { stripDataFromAppState } from '../utils/dashboardUtils';
+import { ipcRenderer } from 'electron';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -106,9 +107,18 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ appSettings: { ...this.state.appSettings, timerOn: !this.state.appSettings.timerOn } } as AppState);
   }
 
+  openAssociatedFile = () => {
+    ipcRenderer.send('openFileInfo', 'ping');
+    ipcRenderer.on('openFileInfoResp', async (event, filePath) => {
+      console.log(`Opened file = ${filePath}`) // prints "pong"
+      await this.openDashboard(filePath);
+    });
+  }
+
   componentDidMount() {
     initUtilsObj();
     this.setState({ mounted: true } as AppState);
+    this.openAssociatedFile();
   }
 
   componentWillUnmount() {
@@ -223,14 +233,32 @@ class App extends React.Component<AppProps, AppState> {
       title: 'Open Dashboard File'
     }) as any;
     const openFilename: string = dialogRes.filePaths[0] as string;
+    await this.openDashboard(openFilename);
+    // console.log(`Opening file ${openFilename}`);
+    // const fileContents: string = await readFileAsync(openFilename) as string;
+    // console.log(`${fileContents}`);
+    // const stateObj = JSON.parse(fileContents) as AppState;
+    // console.log(stateObj);
+    // this.setState({ widgetProps: [] } as AppState);
+    // this.setState(stateObj);
+  };
+
+  openDashboard = async (openFilename: string) => {
+    if (openFilename == null) {
+      return;
+    }
+    if (openFilename.endsWith('.js')) {
+      console.log(`Not Opening js file ${openFilename}`);
+      return;
+    }
     console.log(`Opening file ${openFilename}`);
     const fileContents: string = await readFileAsync(openFilename) as string;
-    console.log(`${fileContents}`);
+    // console.log(`${fileContents}`);
     const stateObj = JSON.parse(fileContents) as AppState;
     console.log(stateObj);
     this.setState({ widgetProps: [] } as AppState);
     this.setState(stateObj);
-  };
+  }
 
   onSaveDashboard = async () => {
     const dialogRes = await showSaveDialog({
@@ -243,7 +271,6 @@ class App extends React.Component<AppProps, AppState> {
     if (!(dialogRes.cancelled == true)) {
       const saveFilename: string = dialogRes.filePath;
       console.log(`Saving state to ${saveFilename}`);
-      //todo remove points from timeseries line props
       const fileContents = JSON.stringify(stripDataFromAppState(this.state), null, 2);
       const isSaved = await writeFileAsync(saveFilename, fileContents);
       console.log(`Save status = ${isSaved}`);
