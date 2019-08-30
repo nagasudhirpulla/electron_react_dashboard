@@ -286,7 +286,22 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  onDuplicateWidget = async (ind: number) => {
+    const newWidgetProps = new DashWidgetProps();
 
+    newWidgetProps.layouts[this.state.currentBreakpoint] = {
+      ...this.state.widgetProps[ind].layouts[this.state.currentBreakpoint],
+      x: 0,
+      y: Infinity,
+      i: uuid(),
+      static: false
+    };
+    newWidgetProps.contentProps = JSON.parse(JSON.stringify(this.state.widgetProps[ind].contentProps));
+
+    this.setState({
+      widgetProps: [...this.state.widgetProps, newWidgetProps]
+    } as AppState);
+  };
 
   onRefreshItem = async (ind: number) => {
     let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
@@ -372,6 +387,10 @@ class App extends React.Component<AppProps, AppState> {
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{" "}</div>
             <Modal modalProps={{ btnText: "/", btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
+            <span
+              className="copyWidBtn"
+              onClick={this.onDuplicateWidget.bind(this, ind)}
+            >[]</span>
             <span
               className="exportBtn"
               onClick={this.onExportItem.bind(this, ind)}

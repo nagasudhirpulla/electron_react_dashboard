@@ -153,6 +153,14 @@ li b {
   color: white;
 }
 
+.copyWidBtn{
+  position: absolute;
+  right: 75px;
+  top: 0;
+  cursor: pointer;
+  color: white;
+}
+
 .cellContent {
   position: absolute;
   left: 0;
