@@ -11,8 +11,7 @@ export const defaultAppSettings = {
             port: 123,
             username: 'uname',
             password: 'pass'
-        },
-        measList: []
+        }
     },
     wbes: {
         utils: { ...initUtils }

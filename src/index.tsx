@@ -23,8 +23,23 @@ const createWindow = () => {
     });
 };
 
+const createPmuMeasPickerWindow = () => {
+    win = new BrowserWindow({
+        width: 450,
+        height: 450,
+        webPreferences: {
+            nodeIntegration: true, webSecurity: false
+        }
+    });
+    win.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'pmuMeasPicker.html')}`);
+    win.on("closed", () => {
+        win = null;
+    });
+};
+
 const onAppReady = async () => {
     createWindow();
+    createPmuMeasPickerWindow();
     console.log(await getAppSettingsJSON(app.getAppPath()));
 };
 

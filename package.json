@@ -8,6 +8,9 @@
   "homepage": "https://github.com/nagasudhirpulla/electron_react_dashboard",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "datatables.net": "^1.10.19",
+    "datatables.net-dt": "^1.10.19",
+    "jquery": "^3.4.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-poppop": "^1.5.0"
@@ -112,9 +115,10 @@
   },
   "scripts": {
     "start": "electron dist/main.js",
-    "build": "npm run build-client && npm run build-server",
+    "build": "npm run build-client && npm run build-server && build-pmu-picker",
     "build-server": "webpack --mode production --config webpack-server.config.js",
     "build-client": "webpack --mode production --config webpack-client.config.js",
+    "build-pmu-picker": "webpack --mode production --config webpack-pmu-picker.config.js",
     "build-client-watch": "webpack --mode production --config webpack-client.config.js --watch",
     "pack": "rm -fr ./pack_dist && npm run electron-win-package",
     "electron-win-package": "electron-builder dist/main.js"
