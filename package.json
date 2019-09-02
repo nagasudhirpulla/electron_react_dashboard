@@ -9,7 +9,6 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "datatables.net": "^1.10.19",
-    "datatables.net-dt": "^1.10.19",
     "jquery": "^3.4.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -41,6 +40,7 @@
     "electron-builder": "^21.2.0",
     "electron-packager": "^14.0.4",
     "exceljs": "^1.15.0",
+    "file-loader": "^4.2.0",
     "focus-trap-react": "^6.0.0",
     "formik": "^1.5.8",
     "html-loader": "^0.5.5",

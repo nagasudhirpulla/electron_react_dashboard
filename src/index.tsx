@@ -40,7 +40,7 @@ const createPmuMeasPickerWindow = () => {
 const onAppReady = async () => {
     createWindow();
     createPmuMeasPickerWindow();
-    console.log(await getAppSettingsJSON(app.getAppPath()));
+    // console.log(await getAppSettingsJSON(app.getAppPath()));
 };
 
 const getOpenedFilePath = () => {
