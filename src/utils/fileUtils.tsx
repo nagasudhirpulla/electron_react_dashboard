@@ -1,6 +1,5 @@
 import { readFile, writeFile } from 'fs';
 import { Workbook } from 'exceljs';
-const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
 
 export const readFileAsync = function (filename: string) {
     return new Promise(function (resolve, reject) {
@@ -25,6 +24,7 @@ export const writeFileAsync = function (filename: string, contents: string): Pro
 };
 
 export const saveExcelAsync = async (wb: Workbook) => {
+    const showSaveDialog = require('electron').remote.dialog.showSaveDialog;
     const dialogRes = await showSaveDialog({
         filters: [
             { name: 'Excel Workbook', extensions: ['xlsx'] },
