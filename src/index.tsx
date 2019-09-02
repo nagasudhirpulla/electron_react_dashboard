@@ -3,12 +3,18 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
+import { getAppSettingsJSON, getAppDirectory } from './appSettings'
 
 // declare var __dirname, process;
 
 let win;
 
-let createWindow = () => {
+const onAppReady = async () => {
+    console.log(JSON.stringify(await getAppSettingsJSON(getAppDirectory())));
+    createWindow();
+};
+
+const createWindow = () => {
     win = new BrowserWindow({
         width: 450,
         height: 450,
@@ -20,7 +26,7 @@ let createWindow = () => {
     win.on("closed", () => {
         win = null;
     });
-}
+};
 
 const getOpenedFilePath = () => {
     let data = null
@@ -29,9 +35,9 @@ const getOpenedFilePath = () => {
         data = openFilePath
     }
     return data
-}
+};
 
-app.on("ready", createWindow);
+app.on("ready", onAppReady);
 
 ipcMain.on('openFileInfo', (event, arg) => {
     // console.log(arg) // prints "ping"

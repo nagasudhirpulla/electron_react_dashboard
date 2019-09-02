@@ -13,7 +13,7 @@ export const readFileAsync = function (filename: string) {
     });
 };
 
-export const writeFileAsync = function (filename: string, contents: string) {
+export const writeFileAsync = function (filename: string, contents: string): Promise<boolean> {
     return new Promise(function (resolve, reject) {
         writeFile(filename, contents, function (err) {
             if (err)
