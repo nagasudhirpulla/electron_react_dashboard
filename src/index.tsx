@@ -3,7 +3,7 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
-import { getAppSettingsJSON } from './appSettings'
+import { getAppSettingsJSON, getPmuMeasList } from './appSettings'
 
 // declare var __dirname, process;
 
@@ -58,4 +58,10 @@ ipcMain.on('openFileInfo', (event, arg) => {
     // console.log(arg) // prints "ping"
     let data = getOpenedFilePath();
     event.reply('openFileInfoResp', data)
+});
+
+ipcMain.on('getPmuMeasList', async (event, arg) => {
+    // console.log(arg) // prints "ping"
+    let data = await getPmuMeasList(app.getAppPath());
+    event.reply('getPmuMeasListResp', data)
 });
