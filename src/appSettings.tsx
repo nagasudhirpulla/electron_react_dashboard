@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { initUtils } from './utils';
 import { writeFileAsync, readFileAsync } from './utils/fileUtils'
-import { PmuMeasFetcher } from './Fetchers/PmuMeasFetcher'
+import { PmuMeasFetcher, IPmuMeasItem } from './Fetchers/PmuMeasFetcher'
 
 export const appSettingsFilename = "appSettings.json";
 export const pmuMeasListFilename = "pmu_meas_list.json";
@@ -36,7 +36,7 @@ export const getAppSettingsJSON = async (appDirectory: string) => {
     return appSettingsObj;
 }
 
-export const getPmuMeasList = async (appDirectory: string): Promise<[number, string, string, string, string, number, string][]> => {
+export const getPmuMeasList = async (appDirectory: string): Promise<IPmuMeasItem[]> => {
     const pmuMeasListFilePath = join(appDirectory, pmuMeasListFilename);
     if (!existsSync(pmuMeasListFilePath)) {
         // create the file with default json
@@ -51,7 +51,7 @@ export const getPmuMeasList = async (appDirectory: string): Promise<[number, str
     return pmuMeasListArr;
 };
 
-const setPmuMeasList = async (appDirectory: string, measList: [number, string, string, string, string, number, string][]): Promise<boolean> => {
+const setPmuMeasList = async (appDirectory: string, measList: IPmuMeasItem[]): Promise<boolean> => {
     const pmuMeasListFilePath = join(appDirectory, pmuMeasListFilename);
     const isSaved = await writeFileAsync(pmuMeasListFilePath, JSON.stringify(measList));
     if (isSaved) {
@@ -65,7 +65,7 @@ const setPmuMeasList = async (appDirectory: string, measList: [number, string, s
 export const refreshPmuMeasList = async (appDirectory: string): Promise<boolean> => {
     let fetcher = new PmuMeasFetcher();
     // todo set fetcher params from app settings
-    const measList: [number, string, string, string, string, number, string][] = await fetcher.getMeasIds();
+    const measList: IPmuMeasItem[] = await fetcher.getMeasIds();
     const pmuMeasListFilePath = join(appDirectory, pmuMeasListFilename);
     const isSaved = await setPmuMeasList(pmuMeasListFilePath, measList);
     return isSaved;

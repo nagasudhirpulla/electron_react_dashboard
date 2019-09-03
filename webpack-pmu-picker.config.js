@@ -2,7 +2,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require('path');
 
 module.exports = {
-    entry: ['babel-polyfill', path.resolve(__dirname, 'src/pmuMeasPicker/pmuMeasPicker.js')],
+    entry: ['babel-polyfill', path.resolve(__dirname, 'src/pmuMeasPicker/pmuMeasPicker.tsx')],
 
     output: {
         filename: "pmu-picker-bundle.js"

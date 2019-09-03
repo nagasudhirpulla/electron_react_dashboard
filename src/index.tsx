@@ -39,8 +39,6 @@ const createPmuMeasPickerWindow = () => {
 
 const onAppReady = async () => {
     createWindow();
-    createPmuMeasPickerWindow();
-    // console.log(await getAppSettingsJSON(app.getAppPath()));
 };
 
 const getOpenedFilePath = () => {
@@ -58,6 +56,10 @@ ipcMain.on('openFileInfo', (event, arg) => {
     // console.log(arg) // prints "ping"
     let data = getOpenedFilePath();
     event.reply('openFileInfoResp', data)
+});
+
+ipcMain.on('openPmuMeasPicker', (event, arg) => {
+    createPmuMeasPickerWindow();
 });
 
 ipcMain.on('getPmuMeasList', async (event, arg) => {

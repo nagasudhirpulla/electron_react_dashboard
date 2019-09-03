@@ -7,6 +7,7 @@ import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { SchType } from '../../measurements/WbesMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { getUtilsInfoAppState } from '../../utils/wbesUtils';
+import { ipcRenderer } from 'electron';
 
 export const MeasEditFormComp = (props) => {
     const {
@@ -138,8 +139,12 @@ export const PMUMeasEditFormComp = (props) => {
         setFieldValue,
         setFieldTouched
     } = props;
+    const onMeasPickerClick = () => {
+        ipcRenderer.send('openPmuMeasPicker', 'ping');
+    };
     return (
         <>
+            <button type="button" onClick={onMeasPickerClick}>...</button>
             <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}

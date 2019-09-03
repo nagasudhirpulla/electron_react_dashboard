@@ -3,6 +3,7 @@ import { request } from 'https';
 import { parse } from 'fast-xml-parser';
 
 // const measIds = [4924, 2642];
+export type IPmuMeasItem = [number, string, string, string, string, number, string];
 
 export class PmuMeasFetcher {
     username = "pdcAdmin";
@@ -100,11 +101,11 @@ export class PmuMeasFetcher {
         const res = str.split('\n')[5];
         var jsonObj = parse(res);
         return jsonObj;
-    };    
+    };
 
-    parseData = (str: string): [number, string, string, string, string, number, string][] => {
+    parseData = (str: string): IPmuMeasItem[] => {
         const regionList = this.GetMeasXmlTree(str)['soap:Envelope']['soap:Body']['ns2:DiscoverServerResponse']['systemConfiguration']['regionList']['region'];
-        let measList: [number, string, string, string, string, number, string][] = [];
+        let measList: IPmuMeasItem[] = [];
         for (let regInd = 0; regInd < regionList.length; regInd++) {
             for (let ssInd = 0; ssInd < regionList[regInd]['substations']['substation'].length; ssInd++) {
                 for (let devInd = 0; devInd < regionList[regInd]['substations']['substation'][ssInd]['devices']['device'].length; devInd++) {
@@ -129,7 +130,7 @@ export class PmuMeasFetcher {
         return measList;
     };
 
-    getMeasIds = async (): Promise<[number, string, string, string, string, number, string][]> => {
+    getMeasIds = async (): Promise<IPmuMeasItem[]> => {
         const resp = await this.fetchSoapDiscoverServer();
         const measIds = this.parseData(resp);
         return measIds;
