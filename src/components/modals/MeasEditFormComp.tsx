@@ -142,6 +142,11 @@ export const PMUMeasEditFormComp = (props) => {
     const onMeasPickerClick = () => {
         ipcRenderer.send('openPmuMeasPicker', 'ping');
     };
+
+    ipcRenderer.on('selectedMeasBroadcast', (event, measId: number) => {
+        console.log(`Obtained pmu meas from picker is ${measId}`) // prints "pong"
+    });
+
     return (
         <>
             <button type="button" onClick={onMeasPickerClick}>...</button>

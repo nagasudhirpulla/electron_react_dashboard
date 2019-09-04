@@ -4,10 +4,12 @@ import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
 import { getAppSettingsJSON, getPmuMeasList } from './appSettings'
+// const channelNames = require('./channelNames');
 
 // declare var __dirname, process;
 
-let win;
+let win: BrowserWindow;
+let pmuMeasPickerWin: BrowserWindow;
 
 const createWindow = () => {
     win = new BrowserWindow({
@@ -24,16 +26,20 @@ const createWindow = () => {
 };
 
 const createPmuMeasPickerWindow = () => {
-    win = new BrowserWindow({
+    if (pmuMeasPickerWin != null) {
+        pmuMeasPickerWin.focus();
+        return;
+    }
+    pmuMeasPickerWin = new BrowserWindow({
         width: 450,
         height: 450,
         webPreferences: {
             nodeIntegration: true, webSecurity: false
         }
     });
-    win.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'pmuMeasPicker.html')}`);
-    win.on("closed", () => {
-        win = null;
+    pmuMeasPickerWin.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'pmuMeasPicker.html')}`);
+    pmuMeasPickerWin.on("closed", () => {
+        pmuMeasPickerWin = null;
     });
 };
 
@@ -66,4 +72,9 @@ ipcMain.on('getPmuMeasList', async (event, arg) => {
     // console.log(arg) // prints "ping"
     let data = await getPmuMeasList(app.getAppPath());
     event.reply('getPmuMeasListResp', data)
+});
+
+ipcMain.on('selectedMeas', (event, measObj: any) => {
+    console.log(`Obtained pmu meas from picker is ${JSON.stringify(measObj)}`) // prints "pong"
+    win.webContents.send('selectedMeas', measObj);
 });

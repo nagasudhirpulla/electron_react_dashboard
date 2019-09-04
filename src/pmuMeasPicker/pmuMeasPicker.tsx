@@ -57,6 +57,7 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
         if (idEl.length != 0) {
             console.log(`Selected meas Id is ${idEl[0].innerText}`);
             const selectedMeas = parseInt(idEl.innerText);
+            ipcRenderer.send('selectedMeas', {selectedMeas});
         }
     });
 
