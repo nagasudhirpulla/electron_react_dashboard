@@ -10,6 +10,8 @@ require('./images/sort_asc_disabled.png');
 require('./images/sort_both.png');
 import { ipcRenderer } from 'electron';
 import { IPmuMeasItem } from '../Fetchers/PmuMeasFetcher';
+import * as channelNames from '../channelNames';
+
 
 const renderDataTable = (dataSet: IPmuMeasItem[]) => {
     let table = $('#measTable').DataTable({
@@ -56,19 +58,23 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
         const idEl = $('tr.selected>td');
         if (idEl.length != 0) {
             console.log(`Selected meas Id is ${idEl[0].innerText}`);
-            const selectedMeas = parseInt(idEl.innerText);
-            ipcRenderer.send('selectedMeas', {selectedMeas});
+            const selectedMeas = parseInt(idEl[0].innerText);
+            ipcRenderer.send(channelNames.selectedMeas, selectedMeas);
         }
+    });
+
+    $('#refreshBtn').click(function () {
+        ipcRenderer.send(channelNames.refreshPmuMeasList, "");
     });
 
 };
 
-ipcRenderer.on('getPmuMeasListResp', (event, measList: IPmuMeasItem[]) => {
+ipcRenderer.on(channelNames.getPmuMeasListResp, (event, measList: IPmuMeasItem[]) => {
     console.log(`Obtained pmu meas list from main process`) // prints "pong"
     let dataSet: IPmuMeasItem[] = measList;
     renderDataTable(dataSet);
 });
 
 $(document).ready(function () {
-    ipcRenderer.send('getPmuMeasList', 'ping');
+    ipcRenderer.send(channelNames.getPmuMeasList, 'ping');
 });

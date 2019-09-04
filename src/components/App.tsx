@@ -33,6 +33,7 @@ import { initUtilsObj } from '../utils/wbesUtils';
 import { ShowMessageBoxOptions } from 'electron';
 import { stripDataFromAppState } from '../utils/dashboardUtils';
 import { ipcRenderer } from 'electron';
+import * as channels from '../channelNames'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -108,8 +109,8 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   openAssociatedFile = () => {
-    ipcRenderer.send('openFileInfo', 'ping');
-    ipcRenderer.on('openFileInfoResp', async (event, filePath) => {
+    ipcRenderer.send(channels.openFileInfo, 'ping');
+    ipcRenderer.on(channels.openFileInfoResp, async (event, filePath) => {
       console.log(`Opened file = ${filePath}`) // prints "pong"
       await this.openDashboard(filePath);
     });

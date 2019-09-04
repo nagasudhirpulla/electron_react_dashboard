@@ -8,6 +8,7 @@ import { SchType } from '../../measurements/WbesMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { getUtilsInfoAppState } from '../../utils/wbesUtils';
 import { ipcRenderer } from 'electron';
+import * as channels from '../../channelNames';
 
 export const MeasEditFormComp = (props) => {
     const {
@@ -140,10 +141,10 @@ export const PMUMeasEditFormComp = (props) => {
         setFieldTouched
     } = props;
     const onMeasPickerClick = () => {
-        ipcRenderer.send('openPmuMeasPicker', 'ping');
+        ipcRenderer.send(channels.openPmuMeasPicker, 'ping');
     };
 
-    ipcRenderer.on('selectedMeasBroadcast', (event, measId: number) => {
+    ipcRenderer.on(channels.selectedMeas, (event, measId) => {
         console.log(`Obtained pmu meas from picker is ${measId}`) // prints "pong"
     });
 

@@ -69,10 +69,10 @@
   },
   "build": {
     "appId": "electron_react_dashboard",
-    "asar": true,
+    "asar": false,
     "productName": "Electron React Dashboard",
     "files": [
-      "dist/*"
+      "dist/**"
     ],
     "directories": {
       "output": "pack_dist"
