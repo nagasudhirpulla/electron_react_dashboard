@@ -74,7 +74,7 @@ ipcMain.on(channels.getPmuMeasList, async (event, arg) => {
 });
 
 ipcMain.on(channels.selectedMeas, (event, measObj: any) => {
-    console.log(`Obtained pmu meas from picker is ${JSON.stringify(measObj)}`) // prints "pong"
+    // console.log(`Obtained pmu meas from picker is ${JSON.stringify(measObj)}`) // prints "pong"
     win.webContents.send(channels.selectedMeas, measObj);
 });
 

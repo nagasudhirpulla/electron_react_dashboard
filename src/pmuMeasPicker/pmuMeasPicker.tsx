@@ -57,9 +57,12 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
         // table.row('.selected').remove().draw( false );
         const idEl = $('tr.selected>td');
         if (idEl.length != 0) {
-            console.log(`Selected meas Id is ${idEl[0].innerText}`);
-            const selectedMeas = parseInt(idEl[0].innerText);
-            ipcRenderer.send(channelNames.selectedMeas, selectedMeas);
+            let measInfo = [];
+            for (let infoIter = 0; infoIter < idEl.length; infoIter++) {
+                measInfo.push(idEl[infoIter].innerText);
+            }
+            console.log(`Selected meas is ${measInfo}`);
+            ipcRenderer.send(channelNames.selectedMeas, measInfo);
         }
     });
 
