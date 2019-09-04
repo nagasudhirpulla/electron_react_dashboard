@@ -468,7 +468,7 @@ class App extends React.Component<AppProps, AppState> {
         </span> */}
 
         <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
-        <Modal modalProps={{ btnText: "Settings", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
+        <Modal modalProps={{ btnText: "Dashboard Settings", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
 
         <ResponsiveReactGridLayout
           {...this.props}
