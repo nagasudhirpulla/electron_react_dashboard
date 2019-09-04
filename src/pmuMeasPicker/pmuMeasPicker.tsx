@@ -53,7 +53,11 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
 
     $('#selectBtn').click(function () {
         // table.row('.selected').remove().draw( false );
-        console.log(table.row('.selected').data());
+        const idEl = $('tr.selected>td');
+        if (idEl.length != 0) {
+            console.log(`Selected meas Id is ${idEl[0].innerText}`);
+            const selectedMeas = parseInt(idEl.innerText);
+        }
     });
 
 };
