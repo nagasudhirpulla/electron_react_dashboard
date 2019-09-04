@@ -7,13 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PMU Measurement Picker</title>
     <link rel="stylesheet" href="./css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="./css/fixedHeader.dataTables.min.css">
 </head>
 
 <body>
-    <table id="measTable" class="display" width="100%"></table>
+    <button id="selectBtn">Select Measurement</button>
+    <table id="measTable" class="display" width="100%"> </table>
 
     <!-- Dependencies -->
     <!-- <script src="../node_modules/jquery/dist/jquery.min.js"></script> -->
 </body>
+<style>
+    thead input {
+        width: 100%;
+    }
+</style>
 
 </html>

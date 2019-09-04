@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import 'datatables.net';
+require('./dataTables.fixedHeader.min.js');
 require('./css/jquery.dataTables.min.css');
+require('./css/fixedHeader.dataTables.min.css');
 require('./images/sort_asc.png');
 require('./images/sort_desc.png');
 require('./images/sort_desc_disabled.png');
@@ -10,9 +12,9 @@ import { ipcRenderer } from 'electron';
 import { IPmuMeasItem } from '../Fetchers/PmuMeasFetcher';
 
 const renderDataTable = (dataSet: IPmuMeasItem[]) => {
-    document.getElementById('measTable').innerHTML = "";
-    $('#measTable').DataTable({
+    let table = $('#measTable').DataTable({
         data: dataSet,
+        orderCellsTop: true,
         columns: [
             { title: "Meas. Id" },
             { title: "Station" },
@@ -23,6 +25,37 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
             { title: "El. Name" }
         ]
     });
+
+    $('#measTable thead tr').clone(true).appendTo('#measTable thead');
+    $('#measTable thead tr:eq(1) th').each(function (i) {
+        var title = $(this).text();
+        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+        $('input', this).on('keyup change', function () {
+            if (table.column(i).search() !== this.value) {
+                table
+                    .column(i)
+                    .search(this.value)
+                    .draw();
+            }
+        });
+    });
+
+    $('#measTable tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $('#selectBtn').click(function () {
+        // table.row('.selected').remove().draw( false );
+        console.log(table.row('.selected').data());
+    });
+
 };
 
 ipcRenderer.on('getPmuMeasListResp', (event, measList: IPmuMeasItem[]) => {
