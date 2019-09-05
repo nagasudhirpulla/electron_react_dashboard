@@ -8,7 +8,7 @@ export type IPmuMeasItem = [number, string, string, string, string, number, stri
 export class PmuMeasFetcher {
     username = "pdcAdmin";
     password = "p@ssw0rd";
-    hostname = "";
+    hostname = "172.16.183.131";
     port = 24721;
     path = '/eterra-ws/HistoricalDataProvider';
 
