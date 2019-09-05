@@ -66,7 +66,6 @@ export const refreshPmuMeasList = async (appDirectory: string): Promise<boolean>
     let fetcher = new PmuMeasFetcher();
     // todo set fetcher params from app settings
     const measList: IPmuMeasItem[] = await fetcher.getMeasIds();
-    const pmuMeasListFilePath = join(appDirectory, pmuMeasListFilename);
-    const isSaved = await setPmuMeasList(pmuMeasListFilePath, measList);
+    const isSaved = await setPmuMeasList(appDirectory, measList);
     return isSaved;
 }
