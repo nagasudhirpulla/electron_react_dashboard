@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import * as channels from '../../channelNames';
 import { FormikPrefsEditForm } from './PrefsEditForm'
 import { getAppSettings } from '../../appSettings';
-
+import merge from 'deepmerge';
 
 export interface PrefEditorProps {
     prefs: IPrefs
@@ -26,7 +26,7 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
                 }
             },
             wbes: {
-                host: 'scheduling.wrldc.in'
+                host: 'ced.wrldc.in'
             }
         }
     };
@@ -36,16 +36,15 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
         mounted: false
     };
 
-    async componentDidMount() {
-        this.setState({ mounted: true } as PrefEditorState);
+    componentDidMount() {
+        // this.setState({ mounted: true } as PrefEditorState);
+        this.loadSettings();
+    }
 
+    async loadSettings() {
         const settings = await getAppSettings(require('electron').remote.app.getAppPath());
-        // ipcRenderer.send(channels.getSettings, 'ping');
-        // ipcRenderer.on(channels.getSettingsResp, async (event, settings: IPrefs) => {
-        //     // console.log(`App settings fetched at startup = ${JSON.stringify(settings)}`) // prints "pong"
-        //     this.setState({ prefs: settings } as PrefEditorState);
-        // });
-        this.setState({ prefs: settings } as PrefEditorState);
+        const newState: PrefEditorState = merge(this.state, { prefs: settings, mounted: true }) as PrefEditorState;
+        this.setState({ ...newState });
     }
 
     onSetPrefs = (prefs: IPrefs) => {
@@ -64,7 +63,9 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
     render() {
         return (
             <>
-                <FormikPrefsEditForm {...{ prefs: this.state.prefs, onFormSubmit: this.onSetPrefs }} />
+                {this.state.mounted &&
+                    <FormikPrefsEditForm {...{ prefs: this.state.prefs, onFormSubmit: this.onSetPrefs }} />
+                }
             </>
         );
     }
