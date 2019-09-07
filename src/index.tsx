@@ -3,7 +3,7 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
-import { getAppSettings, getPmuMeasList, refreshPmuMeasList, ISettings, setAppSettings } from './appSettings'
+import { getAppSettings, getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings } from './appSettings'
 import * as channels from './channelNames';
 
 let win: BrowserWindow;
@@ -100,7 +100,7 @@ ipcMain.on(channels.getSettings, async (event, arg) => {
     event.reply(channels.getSettingsResp, appSettings);
 });
 
-ipcMain.on(channels.setSettings, async (event, appSettings: ISettings) => {
+ipcMain.on(channels.setSettings, async (event, appSettings: IPrefs) => {
     const isSaved = await setAppSettings(app.getAppPath(), appSettings);
     event.reply(channels.setSettingsResp, isSaved);
 });

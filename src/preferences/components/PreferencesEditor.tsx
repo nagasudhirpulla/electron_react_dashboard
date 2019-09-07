@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { ISettings } from '../../appSettings'
+import { IPrefs } from '../../appSettings'
 import { ipcRenderer } from 'electron';
 import * as channels from '../../channelNames';
 import { FormikPrefsEditForm } from './PrefsEditForm'
 
 export interface PrefEditorProps {
-    prefs: ISettings
+    prefs: IPrefs
 }
 
 export interface PrefEditorState extends PrefEditorProps {
@@ -37,13 +37,13 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
     componentDidMount() {
         this.setState({ mounted: true } as PrefEditorState);
         ipcRenderer.send(channels.getSettings, 'ping');
-        ipcRenderer.on(channels.getSettingsResp, async (event, settings: ISettings) => {
+        ipcRenderer.on(channels.getSettingsResp, async (event, settings: IPrefs) => {
             // console.log(`App settings fetched at startup = ${JSON.stringify(settings)}`) // prints "pong"
             this.setState({ prefs: settings } as PrefEditorState);
         });
     }
 
-    onSetPrefs = (prefs: ISettings) => {
+    onSetPrefs = (prefs: IPrefs) => {
         console.log(JSON.stringify(prefs));
         ipcRenderer.send(channels.setSettings, prefs);
         // change prefs in the json file by calling the main thread
