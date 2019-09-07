@@ -8,6 +8,7 @@ import * as channels from './channelNames';
 
 let win: BrowserWindow;
 let pmuMeasPickerWin: BrowserWindow;
+let pickerPmuSeriesName = "";
 
 const createWindow = () => {
     win = new BrowserWindow({
@@ -63,7 +64,8 @@ ipcMain.on(channels.openFileInfo, (event, arg) => {
     event.reply(channels.openFileInfoResp, data)
 });
 
-ipcMain.on(channels.openPmuMeasPicker, (event, arg) => {
+ipcMain.on(channels.openPmuMeasPicker, (event, measName) => {
+    pickerPmuSeriesName = measName;
     loadPmuMeasPickerWindow();
 });
 
@@ -75,10 +77,10 @@ ipcMain.on(channels.getPmuMeasList, async (event, arg) => {
 
 ipcMain.on(channels.selectedMeas, (event, measObj: any) => {
     // console.log(`Obtained pmu meas from picker is ${JSON.stringify(measObj)}`) // prints "pong"
-    win.webContents.send(channels.selectedMeas, measObj);
+    win.webContents.send(channels.selectedMeas, { measInfo: measObj, measName: pickerPmuSeriesName });
 });
 
 ipcMain.on(channels.refreshPmuMeasList, async (event, arg: any) => {
     await refreshPmuMeasList(app.getAppPath());
-    loadPmuMeasPickerWindow();    
+    loadPmuMeasPickerWindow();
 });

@@ -141,10 +141,13 @@ export const PMUMeasEditFormComp = (props) => {
         setFieldTouched
     } = props;
     const onMeasPickerClick = () => {
-        ipcRenderer.send('openPmuMeasPicker', 'ping');
+        ipcRenderer.send('openPmuMeasPicker', name);
     };
 
-    ipcRenderer.on('selectedMeas', (event, measInfo) => {
+    ipcRenderer.on('selectedMeas', (event, {measInfo, measName}) => {
+        if(measName != name){
+            return;
+        }
         console.log(`Obtained pmu meas from picker is ${measInfo}`) // prints "pong"
         // set the measurement Id and measurement name
         setFieldValue(`${name}.meas_id`, measInfo[0]);
