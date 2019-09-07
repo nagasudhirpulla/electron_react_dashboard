@@ -3,6 +3,8 @@ import { IPrefs } from '../../appSettings'
 import { ipcRenderer } from 'electron';
 import * as channels from '../../channelNames';
 import { FormikPrefsEditForm } from './PrefsEditForm'
+import { getAppSettings } from '../../appSettings';
+
 
 export interface PrefEditorProps {
     prefs: IPrefs
@@ -34,13 +36,16 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
         mounted: false
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ mounted: true } as PrefEditorState);
-        ipcRenderer.send(channels.getSettings, 'ping');
-        ipcRenderer.on(channels.getSettingsResp, async (event, settings: IPrefs) => {
-            // console.log(`App settings fetched at startup = ${JSON.stringify(settings)}`) // prints "pong"
-            this.setState({ prefs: settings } as PrefEditorState);
-        });
+
+        const settings = await getAppSettings(require('electron').remote.app.getAppPath());
+        // ipcRenderer.send(channels.getSettings, 'ping');
+        // ipcRenderer.on(channels.getSettingsResp, async (event, settings: IPrefs) => {
+        //     // console.log(`App settings fetched at startup = ${JSON.stringify(settings)}`) // prints "pong"
+        //     this.setState({ prefs: settings } as PrefEditorState);
+        // });
+        this.setState({ prefs: settings } as PrefEditorState);
     }
 
     onSetPrefs = (prefs: IPrefs) => {
