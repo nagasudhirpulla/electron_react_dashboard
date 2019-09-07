@@ -34,6 +34,18 @@ export const PrefsEditFormComp = (props) => {
                     </td>
                 </tr>
                 <tr>
+                    <td><span>Path</span></td>
+                    <td>
+                        <input
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pmu.soap.path}
+                            name={`${name}.pmu.soap.path`}
+                        />
+                    </td>
+                </tr>
+                <tr>
                     <td><span>Port</span></td>
                     <td>
                         <input

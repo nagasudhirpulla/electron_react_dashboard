@@ -1,3 +1,5 @@
+import { IPrefs } from "./appSettings";
+
 let app_state: { [key: string]: {} } = {};
 
 export const registerAppState = (key: string, obj: {}) => {
@@ -13,3 +15,11 @@ export const getAppState = (key: string) => {
     }
     return app_state[key];
 }
+
+export const registerPrefsState = (obj: IPrefs) => {
+    registerAppState("prefs", obj);
+};
+
+export const getPrefsState = (): IPrefs => {
+    return getAppState("prefs") as IPrefs;
+};

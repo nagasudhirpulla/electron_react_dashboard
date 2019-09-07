@@ -4,12 +4,14 @@ import { initUtils } from './utils';
 import { writeFileAsync, readFileAsync } from './utils/fileUtils'
 import { PmuMeasFetcher, IPmuMeasItem } from './Fetchers/PmuMeasFetcher'
 import merge from 'deepmerge';
+import { registerPrefsState } from './appState';
 
 export interface IPrefs {
     pmu: {
         soap: {
             host: string,
             port: number,
+            path: string,
             username: string,
             password: string
         }
@@ -26,6 +28,7 @@ export const defaultPrefs: IPrefs = {
         soap: {
             host: 'hostname',
             port: 123,
+            path: '/etera/xyz',
             username: 'uname',
             password: 'pass'
         }
@@ -52,11 +55,18 @@ export const getAppSettings = async (appDirectory: string): Promise<IPrefs> => {
     return appSettingsObj;
 }
 
+export const initPrefsState = async (appDirectory: string) => {
+    registerPrefsState(await getAppSettings(appDirectory));
+};
+
 export const setAppSettings = async (appDirectory: string, settings: IPrefs): Promise<boolean> => {
     const settingsFilePath = join(appDirectory, appSettingsFilename);
     const isSaved = await writeFileAsync(settingsFilePath, JSON.stringify(settings));
     if (isSaved) {
         //console.log(`Successfully saved appSettings to ${settingsFilePath}`);
+        // todo explore if we can listen for changes in settings file  
+        // and call initPrefs for updating prefs state instead of updating prefs here
+        registerPrefsState(settings);
     } else {
         // console.log(`Could not save appSettings to ${settingsFilePath}`);
     }
@@ -91,7 +101,13 @@ const setPmuMeasList = async (appDirectory: string, measList: IPmuMeasItem[]): P
 
 export const refreshPmuMeasList = async (appDirectory: string): Promise<boolean> => {
     let fetcher = new PmuMeasFetcher();
-    // todo set fetcher params from app settings
+    // set fetcher params from app settings
+    const prefs = await getAppSettings(appDirectory);
+    fetcher.hostname = prefs.pmu.soap.host;
+    fetcher.port = prefs.pmu.soap.port;
+    fetcher.path = prefs.pmu.soap.path;
+    fetcher.username = prefs.pmu.soap.username;
+    fetcher.password = prefs.pmu.soap.password;
     const measList: IPmuMeasItem[] = await fetcher.getMeasIds();
     const isSaved = await setPmuMeasList(appDirectory, measList);
     return isSaved;

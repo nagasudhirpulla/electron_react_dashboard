@@ -21,12 +21,13 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
                 soap: {
                     host: 'host',
                     port: 123,
+                    path: "/etera/xyz",
                     username: 'uname',
                     password: 'pass'
                 }
             },
             wbes: {
-                host: 'ced.wrldc.in'
+                host: 'scheduling.wrldc.in'
             }
         }
     };
@@ -42,16 +43,21 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
     }
 
     async loadSettings() {
-        const settings = await getAppSettings(require('electron').remote.app.getAppPath());
-        const newState: PrefEditorState = merge(this.state, { prefs: settings, mounted: true }) as PrefEditorState;
-        this.setState({ ...newState });
+        // const settings = await getAppSettings(require('electron').remote.app.getAppPath());
+        // const newState: PrefEditorState = merge(this.state, { prefs: settings, mounted: true }) as PrefEditorState;
+        // this.setState({ ...newState });
+        ipcRenderer.send(channels.getSettings, 'ping');
+        ipcRenderer.on(channels.getSettingsResp, (event, prefs: IPrefs) => {
+            const newState: PrefEditorState = merge(this.state, { prefs: { ...prefs }, mounted: true }) as PrefEditorState;
+            this.setState({ ...newState });
+        });
     }
 
     onSetPrefs = (prefs: IPrefs) => {
         console.log(JSON.stringify(prefs));
         ipcRenderer.send(channels.setSettings, prefs);
         // change prefs in the json file by calling the main thread
-        ipcRenderer.on(channels.setSettingsResp, async (event, isSaved: boolean) => {
+        ipcRenderer.on(channels.setSettingsResp, (event, isSaved: boolean) => {
             if (isSaved) {
                 alert("Successfully saved user preferences!");
             } else {

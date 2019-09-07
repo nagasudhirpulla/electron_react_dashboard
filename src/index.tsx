@@ -3,7 +3,8 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
-import { getAppSettings, getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings } from './appSettings'
+import { getPrefsState } from './appState'
+import { getAppSettings, getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsState } from './appSettings'
 import * as channels from './channelNames';
 
 let win: BrowserWindow;
@@ -46,6 +47,7 @@ const loadPmuMeasPickerWindow = () => {
 
 const onAppReady = async () => {
     createWindow();
+    await initPrefsState(app.getAppPath());
 };
 
 const getOpenedFilePath = () => {
@@ -96,7 +98,7 @@ ipcMain.on(channels.openPrefsEditor, (event, arg) => {
 });
 
 ipcMain.on(channels.getSettings, async (event, arg) => {
-    const appSettings = await getAppSettings(app.getAppPath());
+    const appSettings = getPrefsState();
     event.reply(channels.getSettingsResp, appSettings);
 });
 
