@@ -3,11 +3,12 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
-import { getAppSettingsJSON, getPmuMeasList, refreshPmuMeasList } from './appSettings'
+import { getAppSettings, getPmuMeasList, refreshPmuMeasList, ISettings, setAppSettings } from './appSettings'
 import * as channels from './channelNames';
 
 let win: BrowserWindow;
 let pmuMeasPickerWin: BrowserWindow;
+let prefsEditorWin: BrowserWindow;
 let pickerPmuSeriesName = "";
 
 const createWindow = () => {
@@ -73,6 +74,35 @@ ipcMain.on(channels.getPmuMeasList, async (event, arg) => {
     // console.log(arg) // prints "ping"
     let data = await getPmuMeasList(app.getAppPath());
     event.reply(channels.getPmuMeasListResp, data)
+});
+
+ipcMain.on(channels.openPrefsEditor, (event, arg) => {
+    if (prefsEditorWin != null) {
+        prefsEditorWin.reload();
+        prefsEditorWin.focus();
+        return;
+    }
+    prefsEditorWin = new BrowserWindow({
+        width: 450,
+        height: 450,
+        webPreferences: {
+            nodeIntegration: true, webSecurity: false
+        }
+    });
+    prefsEditorWin.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'preferences.html')}`);
+    prefsEditorWin.on("closed", () => {
+        prefsEditorWin = null;
+    });
+});
+
+ipcMain.on(channels.getSettings, async (event, arg) => {
+    const appSettings = await getAppSettings(app.getAppPath());
+    event.reply(channels.getSettingsResp, appSettings);
+});
+
+ipcMain.on(channels.setSettings, async (event, appSettings: ISettings) => {
+    const isSaved = await setAppSettings(app.getAppPath(), appSettings);
+    event.reply(channels.setSettingsResp, isSaved);
 });
 
 ipcMain.on(channels.selectedPickerMeas, (event, measObj: any) => {

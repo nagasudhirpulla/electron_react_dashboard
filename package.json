@@ -117,10 +117,11 @@
   },
   "scripts": {
     "start": "electron dist/main.js",
-    "build": "npm run build-client && npm run build-server && npm run build-pmu-picker",
+    "build": "npm run build-client && npm run build-server && npm run build-pmu-picker && npm run build-prefs-editor",
     "build-server": "webpack --mode production --config webpack-server.config.js",
     "build-client": "webpack --mode production --config webpack-client.config.js",
     "build-pmu-picker": "webpack --mode production --config webpack-pmu-picker.config.js",
+    "build-prefs-editor": "webpack --mode production --config webpack-prefs-editor.config.js",
     "build-client-watch": "webpack --mode production --config webpack-client.config.js --watch",
     "pack": "rm -fr ./pack_dist && npm run electron-win-package",
     "electron-win-package": "electron-builder dist/main.js"

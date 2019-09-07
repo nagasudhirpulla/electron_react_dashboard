@@ -383,6 +383,10 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  onOpenPrefsEditor = () => {
+    ipcRenderer.send(channels.openPrefsEditor, 'ping');
+  }
+
   deriveLayouts = (): ILayoutDict => {
     let layouts: ILayoutDict = {};
     this.state.widgetProps.map((wp, wsIndex) => {
@@ -469,7 +473,8 @@ class App extends React.Component<AppProps, AppState> {
         </span> */}
 
         <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
-        <Modal modalProps={{ btnText: "Dashboard Settings", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
+        <Modal modalProps={{ btnText: "Dashboard Config", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
+        <button onClick={this.onOpenPrefsEditor}>Settings</button>
 
         <ResponsiveReactGridLayout
           {...this.props}
