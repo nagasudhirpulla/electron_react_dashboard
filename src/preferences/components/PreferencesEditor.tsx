@@ -54,7 +54,7 @@ class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
     }
 
     onSetPrefs = (prefs: IPrefs) => {
-        console.log(JSON.stringify(prefs));
+        // console.log(JSON.stringify(prefs));
         ipcRenderer.send(channels.setSettings, prefs);
         // change prefs in the json file by calling the main thread
         ipcRenderer.on(channels.setSettingsResp, (event, isSaved: boolean) => {

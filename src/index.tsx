@@ -3,9 +3,10 @@ import __basedir from './basepath';
 import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
-import { getPrefsState } from './appState'
-import { getAppSettings, getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsState } from './appSettings'
+import { getPrefsState, getPmuMeasListState } from './appState'
+import { getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsState } from './appSettings'
 import * as channels from './channelNames';
+import { initPmuMeasListState } from './appSettings';
 
 let win: BrowserWindow;
 let pmuMeasPickerWin: BrowserWindow;
@@ -48,6 +49,7 @@ const loadPmuMeasPickerWindow = () => {
 const onAppReady = async () => {
     createWindow();
     await initPrefsState(app.getAppPath());
+    await initPmuMeasListState(app.getAppPath());
 };
 
 const getOpenedFilePath = () => {
@@ -74,7 +76,8 @@ ipcMain.on(channels.openPmuMeasPicker, (event, measName) => {
 
 ipcMain.on(channels.getPmuMeasList, async (event, arg) => {
     // console.log(arg) // prints "ping"
-    let data = await getPmuMeasList(app.getAppPath());
+    // let data = await getPmuMeasList(app.getAppPath());
+    let data = getPmuMeasListState();
     event.reply(channels.getPmuMeasListResp, data)
 });
 

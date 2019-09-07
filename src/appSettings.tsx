@@ -4,7 +4,7 @@ import { initUtils } from './utils';
 import { writeFileAsync, readFileAsync } from './utils/fileUtils'
 import { PmuMeasFetcher, IPmuMeasItem } from './Fetchers/PmuMeasFetcher'
 import merge from 'deepmerge';
-import { registerPrefsState } from './appState';
+import { registerPrefsState, registerPmuMeasListState } from './appState';
 
 export interface IPrefs {
     pmu: {
@@ -88,11 +88,18 @@ export const getPmuMeasList = async (appDirectory: string): Promise<IPmuMeasItem
     return pmuMeasListArr;
 };
 
+export const initPmuMeasListState = async (appDirectory: string) => {
+    registerPmuMeasListState(await getPmuMeasList(appDirectory));
+};
+
 const setPmuMeasList = async (appDirectory: string, measList: IPmuMeasItem[]): Promise<boolean> => {
     const pmuMeasListFilePath = join(appDirectory, pmuMeasListFilename);
     const isSaved = await writeFileAsync(pmuMeasListFilePath, JSON.stringify(measList));
     if (isSaved) {
         console.log(`Successfully saved pmu meas list to ${pmuMeasListFilePath}`);
+        // todo explore if we can listen for changes in meas list file  
+        // and call initPmuMeasListState for updating meas list state instead of updating meas list here
+        registerPmuMeasListState(measList);
     } else {
         console.log(`Could not save pmu meas list to ${pmuMeasListFilePath}`);
     }

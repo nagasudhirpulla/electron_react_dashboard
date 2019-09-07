@@ -1,4 +1,5 @@
 import { IPrefs } from "./appSettings";
+import { IPmuMeasItem } from "./Fetchers/PmuMeasFetcher";
 
 let app_state: { [key: string]: {} } = {};
 
@@ -22,4 +23,12 @@ export const registerPrefsState = (obj: IPrefs) => {
 
 export const getPrefsState = (): IPrefs => {
     return getAppState("prefs") as IPrefs;
+};
+
+export const registerPmuMeasListState = (obj: IPmuMeasItem[]) => {
+    registerAppState("pmu_meas_list", obj);
+};
+
+export const getPmuMeasListState = (): IPmuMeasItem[] => {
+    return getAppState("pmu_meas_list") as IPmuMeasItem[];
 };
