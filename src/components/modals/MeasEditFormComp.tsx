@@ -146,6 +146,9 @@ export const PMUMeasEditFormComp = (props) => {
 
     ipcRenderer.on('selectedMeas', (event, measInfo) => {
         console.log(`Obtained pmu meas from picker is ${measInfo}`) // prints "pong"
+        // set the measurement Id and measurement name
+        setFieldValue(`${name}.meas_id`, measInfo[0]);
+        // todo change series name as `${measInfo[1]}.${measInfo[3]}`
     });
 
     return (
