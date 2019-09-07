@@ -62,7 +62,7 @@ const renderDataTable = (dataSet: IPmuMeasItem[]) => {
                 measInfo.push(idEl[infoIter].innerText);
             }
             console.log(`Selected meas is ${measInfo}`);
-            ipcRenderer.send(channelNames.selectedMeas, measInfo);
+            ipcRenderer.send(channelNames.selectedPickerMeas, measInfo);
         }
     });
 
