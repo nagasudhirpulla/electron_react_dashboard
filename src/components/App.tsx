@@ -34,6 +34,7 @@ import { ShowMessageBoxOptions } from 'electron';
 import { stripDataFromAppState } from '../utils/dashboardUtils';
 import { ipcRenderer } from 'electron';
 import * as channels from '../channelNames'
+import { IPrefs } from '../appSettings';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -47,7 +48,11 @@ class App extends React.Component<AppProps, AppState> {
     initialLayout: { lg: [] },
     appSettings: {
       scadaServerBase: "localhost",
+      scadaServerPath: "",
+      scadaServerPort: 62448,
       pmuServerBase: "172.16.184.35",
+      pmuServerPath: "/api/meas_data",
+      pmuServerPort: 50100,
       timerOn: false,
       timerPeriodicity: new TimePeriod()
     },
@@ -105,21 +110,43 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   toggleTimerClick = () => {
-    this.setState({ appSettings: { ...this.state.appSettings, timerOn: !this.state.appSettings.timerOn } } as AppState);
+    this.setState({ appSettings: { ...this.state.appSettings, timerOn: !this.state.appSettings.timerOn } } as unknown as AppState);
   }
 
   openAssociatedFile = () => {
     ipcRenderer.send(channels.openFileInfo, 'ping');
-    ipcRenderer.on(channels.openFileInfoResp, async (event, filePath) => {
-      console.log(`Opened file = ${filePath}`) // prints "pong"
-      await this.openDashboard(filePath);
-    });
   }
+
+  onIpcOpenAssociatedFile = async (event, filePath: string) => {
+    console.log(`Opened file = ${filePath}`)
+    await this.openDashboard(filePath);
+  }
+
+  getDashboardConfig = () => {
+    ipcRenderer.send(channels.getSettings, 'ping');
+  }
+
+  onIpcGetDashboardConfig = (event, prefs: IPrefs) => {
+    const newAppSettings = {
+      ...this.state.appSettings,
+      scadaServerBase: prefs.scada.api.host,
+      scadaServerPath: prefs.scada.api.path,
+      scadaServerPort: prefs.scada.api.port,
+      pmuServerBase: prefs.pmu.api.host,
+      pmuServerPort: prefs.pmu.api.port,
+      pmuServerPath: prefs.pmu.api.path
+    };
+    this.setState({ appSettings: { ...newAppSettings } } as unknown as AppState);
+  };
 
   componentDidMount() {
     initUtilsObj();
+    // register Ipc listeners
+    ipcRenderer.on(channels.getSettingsResp, this.onIpcGetDashboardConfig);
+    ipcRenderer.on(channels.openFileInfoResp, this.onIpcOpenAssociatedFile);
     this.setState({ mounted: true } as AppState);
     this.openAssociatedFile();
+    this.getDashboardConfig();
   }
 
   componentWillUnmount() {
@@ -336,6 +363,8 @@ class App extends React.Component<AppProps, AppState> {
     scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
     let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
     pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
+    pmuFetcher.serverPort = this.state.appSettings.pmuServerPort;
+    pmuFetcher.serverPath = this.state.appSettings.pmuServerPath;
     let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
     let wbesFetcher: ITslpDataFetcher = new WbesTslpFetcher();
     let wp = this.state.widgetProps[ind];
@@ -376,8 +405,6 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onRefreshAll = async () => {
-    let fetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
-    fetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
     for (let wpInd = 0; wpInd < this.state.widgetProps.length; wpInd++) {
       await this.onRefreshItem(wpInd);
     }

@@ -19,7 +19,11 @@ export interface AppProps {
     initialLayout: Layout,
     appSettings: {
         scadaServerBase: string,
+        scadaServerPath: string,
+        scadaServerPort: number,
         pmuServerBase: string,
+        pmuServerPort: number,
+        pmuServerPath: string,
         timerOn: boolean,
         timerPeriodicity: ITimePeriod
     },

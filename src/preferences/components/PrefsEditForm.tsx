@@ -5,7 +5,7 @@ import { IPrefs } from '../../appSettings';
 
 const ContentDivider = () => (<div className="widget_content_divider"></div>);
 
-export const PrefsEditFormComp = (props) => {
+export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any }) => {
     const {
         values,
         name,
@@ -78,6 +78,84 @@ export const PrefsEditFormComp = (props) => {
                             onBlur={handleBlur}
                             value={values.pmu.soap.password}
                             name={`${name}.pmu.soap.password`}
+                        />
+                    </td>
+                </tr>
+            </table>
+            <h4>PMU Web Api Configuration</h4>
+            <table>
+                <tr>
+                    <td><span>Host</span></td>
+                    <td>
+                        <input
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pmu.api.host}
+                            name={`${name}.pmu.api.host`}
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>Port</span></td>
+                    <td>
+                        <input
+                            type="number"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pmu.api.port}
+                            name={`${name}.pmu.api.port`}
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>API Path</span></td>
+                    <td>
+                        <input
+                            type="number"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pmu.api.path}
+                            name={`${name}.pmu.api.path`}
+                        />
+                    </td>
+                </tr>
+            </table>
+            <h4>SCADA Web Api Configuration</h4>
+            <table>
+                <tr>
+                    <td><span>Host</span></td>
+                    <td>
+                        <input
+                            type="text"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.scada.api.host}
+                            name={`${name}.scada.api.host`}
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>Port</span></td>
+                    <td>
+                        <input
+                            type="number"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.scada.api.port}
+                            name={`${name}.scada.api.port`}
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>API Path</span></td>
+                    <td>
+                        <input
+                            type="number"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.scada.api.path}
+                            name={`${name}.scada.api.path`}
                         />
                     </td>
                 </tr>

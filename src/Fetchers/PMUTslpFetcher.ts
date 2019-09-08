@@ -125,8 +125,8 @@ export const resampleData = (data: ITslpDataPoint[], sampling_strategy: Sampling
 
 export class PMUTslpFetcher implements ITslpDataFetcher {
     serverBaseAddress: string = '172.16.184.35';
-    serverPort: string = '50100';
-    apiPath: string = '/api/meas_data';
+    serverPort: number = 50100;
+    serverPath: string = '/api/meas_data';
     async fetchServerData(pnt: string | number, sampling_strategy: SamplingStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
         let serverBaseAddress: string = this.serverBaseAddress;
@@ -134,7 +134,7 @@ export class PMUTslpFetcher implements ITslpDataFetcher {
         var post_options = {
             host: serverBaseAddress,
             port: this.serverPort,
-            path: this.apiPath,
+            path: this.serverPath,
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         };

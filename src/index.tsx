@@ -27,6 +27,12 @@ const createWindow = () => {
     });
 };
 
+const onAppReady = async () => {
+    await initPrefsState(app.getAppPath());
+    createWindow();
+    await initPmuMeasListState(app.getAppPath());
+};
+
 const loadPmuMeasPickerWindow = () => {
     if (pmuMeasPickerWin != null) {
         pmuMeasPickerWin.reload();
@@ -44,12 +50,6 @@ const loadPmuMeasPickerWindow = () => {
     pmuMeasPickerWin.on("closed", () => {
         pmuMeasPickerWin = null;
     });
-};
-
-const onAppReady = async () => {
-    createWindow();
-    await initPrefsState(app.getAppPath());
-    await initPmuMeasListState(app.getAppPath());
 };
 
 const getOpenedFilePath = () => {
@@ -108,6 +108,8 @@ ipcMain.on(channels.getSettings, async (event, arg) => {
 ipcMain.on(channels.setSettings, async (event, appSettings: IPrefs) => {
     const isSaved = await setAppSettings(app.getAppPath(), appSettings);
     event.reply(channels.setSettingsResp, isSaved);
+    // send settings to the dashboard window
+    win.webContents.send(channels.getSettingsResp, appSettings);
 });
 
 ipcMain.on(channels.selectedPickerMeas, (event, measObj: any) => {

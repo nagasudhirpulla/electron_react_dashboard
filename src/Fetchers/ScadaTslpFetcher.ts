@@ -16,7 +16,9 @@ export interface IGetJSONResult {
 
 export class ScadaTslpFetcher implements ITslpDataFetcher {
     serverBaseAddress: string;
-    getJSON(options):Promise<IGetJSONResult> {
+    serverPath: string;
+    serverPort: number;
+    getJSON(options): Promise<IGetJSONResult> {
         return new Promise((resolve, reject) => {
             console.log('rest::getJSON');
             let output = '';
@@ -59,20 +61,21 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
         var secs = TimePeriod.getSeconds(periodicity);
         var url = "";
         // api/values/history?type=snap&pnt=something&strtime=30/11/2016/00:00:00&endtime=30/11/2016/23:59:00&secs=60
-        url = `/api/values/history?type=${fetch_strategy}&pnt=${pnt}&strtime=${fromTimeStr}&endtime=${toTimeStr}&secs=${secs}`;
+        url = `${this.serverPath}/api/values/history?type=${fetch_strategy}&pnt=${pnt}&strtime=${fromTimeStr}&endtime=${toTimeStr}&secs=${secs}`;
         return url;
     };
 
     async fetchServerData(pnt: string | number, fetch_strategy: SamplingStrategy, periodicity: Periodicity, fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
-        let serverBaseAddress: string = this.serverBaseAddress;
+        const serverBaseAddress: string = this.serverBaseAddress;
+        const serverPort: string = this.serverBaseAddress;
         const fromTime: Date = VarTime.getDateObj(fromVarTime);
         const toTime: Date = VarTime.getDateObj(toVarTime);
-        // do the api call to service
-        let fetchPath = this.createApiFetchPath(pnt, fetch_strategy, periodicity, fromTime, toTime);
+        // perform api call to service
+        const fetchPath = this.createApiFetchPath(pnt, fetch_strategy, periodicity, fromTime, toTime);
         const options = {
             hostname: serverBaseAddress,
-            port: 62448,
+            port: serverPort,
             path: fetchPath,
             method: 'GET',
             headers: {
@@ -82,7 +85,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
         try {
             let pointsArray = await this.getJSON(options);
             for (var i = 0; i < pointsArray['json'].length; i++) {
-                const fetchPnt:IScadaApiFetchPnt = pointsArray['json'][i] as IScadaApiFetchPnt
+                const fetchPnt: IScadaApiFetchPnt = pointsArray['json'][i] as IScadaApiFetchPnt
                 const val = fetchPnt.dval;
                 const timestamp = fetchPnt.timestamp;
                 const quality: string = fetchPnt.status;
@@ -102,7 +105,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
     };
 
     async fetchData(fromVarTime: VarTime, toVarTime: VarTime, scada_meas: IScadaMeasurement): Promise<ITslpDataPoint[]> {
-        let resultData: ITslpDataPoint[] = await this.fetchServerData(scada_meas.meas_id, scada_meas.sampling_strategy, scada_meas.periodicity, fromVarTime, toVarTime);
+        const resultData: ITslpDataPoint[] = await this.fetchServerData(scada_meas.meas_id, scada_meas.sampling_strategy, scada_meas.periodicity, fromVarTime, toVarTime);
         return resultData;
     }
 }

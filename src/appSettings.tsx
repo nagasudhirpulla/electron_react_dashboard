@@ -14,10 +14,22 @@ export interface IPrefs {
             path: string,
             username: string,
             password: string
+        },
+        api: {
+            host: string,
+            port: number,
+            path: string,
         }
     },
     wbes: {
         host: string
+    },
+    scada: {
+        api: {
+            host: string,
+            port: number,
+            path: string,
+        }
     }
 }
 
@@ -31,10 +43,22 @@ export const defaultPrefs: IPrefs = {
             path: '/etera/xyz',
             username: 'uname',
             password: 'pass'
+        },
+        api: {
+            host: "172.16.184.35",
+            port: 50100,
+            path: "/api/meas_data",
         }
     },
     wbes: {
         host: 'scheduling.wrldc.in'
+    },
+    scada: {
+        api: {
+            host: "localhost",
+            port: 62448,
+            path: "",
+        }
     }
 };
 
@@ -42,16 +66,22 @@ export const defaultPmuMeasList = [[2, "KOTRA_PG", "L", "400ATHN4KOTRA1", "VRM",
 
 export const getAppSettings = async (appDirectory: string): Promise<IPrefs> => {
     const settingsFilePath = join(appDirectory, appSettingsFilename);
-    if (!existsSync(settingsFilePath)) {
-        // create the file with default json
-        const isSaved = await writeFileAsync(settingsFilePath, JSON.stringify(defaultPrefs));
-        if (isSaved) {
-            console.log(`Successfully saved appSettings to ${settingsFilePath}`);
-        } else {
-            console.log(`Could not save appSettings to ${settingsFilePath}`);
+    let appSettingsObj = defaultPrefs;
+    try {
+        if (!existsSync(settingsFilePath)) {
+            // create the file with default json
+            const isSaved = await writeFileAsync(settingsFilePath, JSON.stringify(defaultPrefs));
+            if (isSaved) {
+                console.log(`Successfully saved appSettings to ${settingsFilePath}`);
+            } else {
+                console.log(`Could not save appSettings to ${settingsFilePath}`);
+            }
         }
+        appSettingsObj = merge(defaultPrefs, JSON.parse((await readFileAsync(settingsFilePath)).toString()));
     }
-    const appSettingsObj = merge(defaultPrefs, JSON.parse((await readFileAsync(settingsFilePath)).toString()));
+    catch{
+        appSettingsObj = defaultPrefs;
+    }
     return appSettingsObj;
 }
 

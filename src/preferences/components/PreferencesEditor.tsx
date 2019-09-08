@@ -15,19 +15,31 @@ export interface PrefEditorState extends PrefEditorProps {
 }
 
 class PreferencesEditor extends Component<PrefEditorProps, PrefEditorState> {
-    static defaultProps = {
+    static defaultProps: PrefEditorProps = {
         prefs: {
             pmu: {
                 soap: {
-                    host: 'host',
+                    host: 'hostname',
                     port: 123,
-                    path: "/etera/xyz",
+                    path: '/etera/xyz',
                     username: 'uname',
                     password: 'pass'
+                },
+                api: {
+                    host: "172.16.184.35",
+                    port: 50100,
+                    path: "/api/meas_data",
                 }
             },
             wbes: {
                 host: 'scheduling.wrldc.in'
+            },
+            scada: {
+                api: {
+                    host: "localhost",
+                    port: 62448,
+                    path: "",
+                }
             }
         }
     };
