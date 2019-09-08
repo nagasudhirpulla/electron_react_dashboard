@@ -19,7 +19,7 @@ export const AppSettingsEditFormComp = (props) => {
 
     return (
         <>
-            <span>Scada API host -{" "}</span>
+            {/* <span>Scada API host -{" "}</span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -39,7 +39,7 @@ export const AppSettingsEditFormComp = (props) => {
                 name={`${name}.pmuServerBase`}
             />
 
-            <WidgetContentDivider />
+            <WidgetContentDivider /> */}
 
             <span>Periodic Fetch -{" "}</span>
             <input
