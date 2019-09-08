@@ -129,10 +129,8 @@ export class PMUTslpFetcher implements ITslpDataFetcher {
     serverPath: string = '/api/meas_data';
     async fetchServerData(pnt: string | number, sampling_strategy: SamplingStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
-        let serverBaseAddress: string = this.serverBaseAddress;
-
-        var post_options = {
-            host: serverBaseAddress,
+        const post_options = {
+            host: this.serverBaseAddress,
             port: this.serverPort,
             path: this.serverPath,
             method: 'POST',

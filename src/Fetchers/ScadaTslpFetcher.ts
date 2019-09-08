@@ -68,7 +68,7 @@ export class ScadaTslpFetcher implements ITslpDataFetcher {
     async fetchServerData(pnt: string | number, fetch_strategy: SamplingStrategy, periodicity: Periodicity, fromVarTime: VarTime, toVarTime: VarTime): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
         const serverBaseAddress: string = this.serverBaseAddress;
-        const serverPort: string = this.serverBaseAddress;
+        const serverPort: number = this.serverPort;
         const fromTime: Date = VarTime.getDateObj(fromVarTime);
         const toTime: Date = VarTime.getDateObj(toVarTime);
         // perform api call to service

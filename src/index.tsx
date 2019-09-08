@@ -15,7 +15,7 @@ let pickerPmuSeriesName = "";
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 600,
+        width: 800,
         height: 800,
         webPreferences: {
             nodeIntegration: true, webSecurity: false
@@ -89,7 +89,7 @@ ipcMain.on(channels.openPrefsEditor, (event, arg) => {
     }
     prefsEditorWin = new BrowserWindow({
         width: 450,
-        height: 450,
+        height: 500,
         webPreferences: {
             nodeIntegration: true, webSecurity: false
         }

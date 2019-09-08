@@ -485,14 +485,13 @@ class App extends React.Component<AppProps, AppState> {
     const layoutsDict = this.deriveLayouts();
     return (
       <div>
-
+        <button onClick={this.onOpenDashboard}>Open Dashboard</button>
+        <button onClick={this.onSaveDashboard}>Save Dashboard</button>
+        <button onClick={this.onOpenPrefsEditor}>Settings</button>
         <button onClick={this.onNewLayout}>Reset Layout</button>
         <button onClick={this.onCompactTypeChange}>
           {this.state.compactType || "No"}{` Compaction`}
         </button>
-        <button onClick={this.onSaveDashboard}>Save Dashboard</button>
-        <button onClick={this.onOpenDashboard}>Open Dashboard</button>
-        <button onClick={this.onRefreshAll}>Refresh</button>
         <button onClick={this.toggleTimerClick}>{this.state.timer.isOn ? "Stop AutoFetch" : "Start AutoFetch"}</button>
         {/* <span>
           Current Breakpoint: {this.state.currentBreakpoint} ({
@@ -501,9 +500,9 @@ class App extends React.Component<AppProps, AppState> {
           columns)
         </span> */}
 
-        <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
         <Modal modalProps={{ btnText: "Dashboard Config", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
-        <button onClick={this.onOpenPrefsEditor}>Settings</button>
+        <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
+        <button onClick={this.onRefreshAll}>Refresh</button>
 
         <ResponsiveReactGridLayout
           {...this.props}
