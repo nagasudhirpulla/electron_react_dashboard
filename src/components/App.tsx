@@ -361,6 +361,8 @@ class App extends React.Component<AppProps, AppState> {
   onRefreshItem = async (ind: number) => {
     let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
     scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+    scadaFetcher.serverPath = this.state.appSettings.scadaServerPath;
+    scadaFetcher.serverPort = this.state.appSettings.scadaServerPort;
     let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
     pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
     pmuFetcher.serverPort = this.state.appSettings.pmuServerPort;

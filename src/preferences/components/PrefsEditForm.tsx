@@ -112,7 +112,7 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                     <td><span>API Path</span></td>
                     <td>
                         <input
-                            type="number"
+                            type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.pmu.api.path}
@@ -151,7 +151,7 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                     <td><span>API Path</span></td>
                     <td>
                         <input
-                            type="number"
+                            type="text"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.scada.api.path}
