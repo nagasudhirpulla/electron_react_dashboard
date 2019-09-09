@@ -18,6 +18,7 @@ import { ILayoutDict } from '../IDictionary';
 import Modal from './modals/Modal';
 import { WidgetAddForm } from './modals/WidgetAddForm';
 import { PMUTslpFetcher } from '../Fetchers/PMUTslpFetcher';
+import { PMUSoapTslpFetcher } from '../Fetchers/PMUSoapTslpFetcher';
 import { PMUMeasurement, IPMUMeasurement } from '../measurements/PMUMeasurement';
 import { FormikTslpEditForm } from './modals/TslpEditForm';
 import { IDashWidgetContentProps } from './IDashWidgetContent';
@@ -53,13 +54,18 @@ class App extends React.Component<AppProps, AppState> {
       pmuServerBase: "172.16.184.35",
       pmuServerPath: "/api/meas_data",
       pmuServerPort: 50100,
+      pmuSoapHost: "",
+      pmuSoapPort: -1,
+      pmuSoapPath: "",
+      pmuSoapUsername: "",
+      pmuSoapPassword: "",
       timerOn: false,
       timerPeriodicity: new TimePeriod()
     },
     widgetProps: generateWidgetProps()
   };
 
-  state = {
+  state: AppState = {
     currentBreakpoint: "lg",
     compactType: null,
     mounted: false,
@@ -69,8 +75,7 @@ class App extends React.Component<AppProps, AppState> {
       busy: false
     },
     widgetProps: this.props.widgetProps,
-    appSettings: this.props.appSettings,
-    showWidgetAddModal: true
+    appSettings: this.props.appSettings
   };
 
   timer: NodeJS.Timer;
@@ -134,9 +139,14 @@ class App extends React.Component<AppProps, AppState> {
       scadaServerPort: prefs.scada.api.port,
       pmuServerBase: prefs.pmu.api.host,
       pmuServerPort: prefs.pmu.api.port,
-      pmuServerPath: prefs.pmu.api.path
+      pmuServerPath: prefs.pmu.api.path,
+      pmuSoapHost: prefs.pmu.soap.host,
+      pmuSoapPort: prefs.pmu.soap.port,
+      pmuSoapPath: prefs.pmu.soap.path,
+      pmuSoapUsername: prefs.pmu.soap.username,
+      pmuSoapPassword: prefs.pmu.soap.password
     };
-    this.setState({ appSettings: { ...newAppSettings } } as unknown as AppState);
+    this.setState({ appSettings: { ...newAppSettings } } as AppState);
   };
 
   componentDidMount() {
@@ -363,10 +373,16 @@ class App extends React.Component<AppProps, AppState> {
     scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
     scadaFetcher.serverPath = this.state.appSettings.scadaServerPath;
     scadaFetcher.serverPort = this.state.appSettings.scadaServerPort;
-    let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
-    pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
-    pmuFetcher.serverPort = this.state.appSettings.pmuServerPort;
-    pmuFetcher.serverPath = this.state.appSettings.pmuServerPath;
+    // let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
+    // pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
+    // pmuFetcher.serverPort = this.state.appSettings.pmuServerPort;
+    // pmuFetcher.serverPath = this.state.appSettings.pmuServerPath;
+    let pmuFetcher: PMUSoapTslpFetcher = new PMUSoapTslpFetcher();
+    pmuFetcher.host = this.state.appSettings.pmuSoapHost;
+    pmuFetcher.port = this.state.appSettings.pmuSoapPort;
+    pmuFetcher.path = this.state.appSettings.pmuSoapPath;
+    pmuFetcher.username = this.state.appSettings.pmuSoapUsername;
+    pmuFetcher.password = this.state.appSettings.pmuSoapPassword;
     let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
     let wbesFetcher: ITslpDataFetcher = new WbesTslpFetcher();
     let wp = this.state.widgetProps[ind];

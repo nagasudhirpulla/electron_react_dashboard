@@ -24,6 +24,11 @@ export interface AppProps {
         pmuServerBase: string,
         pmuServerPort: number,
         pmuServerPath: string,
+        pmuSoapHost: string,
+        pmuSoapPort: number,
+        pmuSoapPath: string,
+        pmuSoapUsername: string,
+        pmuSoapPassword: string,
         timerOn: boolean,
         timerPeriodicity: ITimePeriod
     },
@@ -41,7 +46,16 @@ export interface AppState {
     },
     appSettings: {
         scadaServerBase: string,
+        scadaServerPath: string,
+        scadaServerPort: number,
         pmuServerBase: string,
+        pmuServerPort: number,
+        pmuServerPath: string,
+        pmuSoapHost: string,
+        pmuSoapPort: number,
+        pmuSoapPath: string,
+        pmuSoapUsername: string,
+        pmuSoapPassword: string,
         timerOn: boolean,
         timerPeriodicity: ITimePeriod
     },
