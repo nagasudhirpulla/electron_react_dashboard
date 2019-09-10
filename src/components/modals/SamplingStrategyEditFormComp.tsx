@@ -4,6 +4,7 @@ import { SamplingStrategy } from '../../measurements/ScadaMeasurement';
 export const SamplingStrategyEditFormComp = (props) => {
     const {
         values,
+        name,
         handleChange,
         handleBlur,
     } = props;

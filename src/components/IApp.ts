@@ -29,6 +29,7 @@ export interface AppProps {
         pmuSoapPath: string,
         pmuSoapUsername: string,
         pmuSoapPassword: string,
+        pmuSoapRefMeasId: number,
         timerOn: boolean,
         timerPeriodicity: ITimePeriod
     },
@@ -56,6 +57,7 @@ export interface AppState {
         pmuSoapPath: string,
         pmuSoapUsername: string,
         pmuSoapPassword: string,
+        pmuSoapRefMeasId: number,
         timerOn: boolean,
         timerPeriodicity: ITimePeriod
     },

@@ -13,7 +13,8 @@ export interface IPrefs {
             port: number,
             path: string,
             username: string,
-            password: string
+            password: string,
+            refMeasId: number
         },
         api: {
             host: string,
@@ -42,7 +43,8 @@ export const defaultPrefs: IPrefs = {
             port: 123,
             path: '/etera/xyz',
             username: 'uname',
-            password: 'pass'
+            password: 'pass',
+            refMeasId: 2127
         },
         api: {
             host: "172.16.184.35",

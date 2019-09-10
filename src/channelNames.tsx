@@ -12,3 +12,5 @@ export const openPmuMeasPicker = 'openPmuMeasPicker';
 export const refreshPmuMeasList = 'refreshPmuMeasList';
 export const refreshPmuMeasListResp = 'refreshPmuMeasListResp';
 export const openPrefsEditor = 'openPrefsEditor';
+export const getExeData = 'getExeData';
+export const getExeDataResp = 'getExeDataResp';

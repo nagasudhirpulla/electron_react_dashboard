@@ -4,6 +4,8 @@ import { SamplingStrategy, Periodicity } from "../measurements/ScadaMeasurement"
 import { ITslpDataFetcher } from "./IFetcher";
 import { IPMUMeasurement } from "../measurements/PMUMeasurement";
 import { spawn, ChildProcess } from "child_process";
+import { ipcRenderer } from "electron";
+import * as channels from '../channelNames';
 
 /**
  * Assumptions
@@ -85,24 +87,11 @@ export class PMUSoapTslpFetcher implements ITslpDataFetcher {
         return `${yr}_${mon}_${day}_${hr}_${mins}_${secs}`;
     };
 
-    getIpcRespAsync = (ipc: ChildProcess): Promise<string> => {
+    getExeRespAsync = (exeName: string, cmdParams: string[]): Promise<string> => {
         return new Promise((resolve, reject) => {
-            let res = "";
-
-            ipc.stderr.once('data', function (data) {
-                // console.log(data.toString());
-                reject(data.toString());
-            });
-
-            ipc.stdout.on('data', function (data) {
-                // console.log(data.toString());
-                // resolve(`result=` + data.toString());
-                res += data.toString();
-            });
-
-            ipc.once('close', (code: number) => {
-                resolve(res);
-                // console.log(`Ipc exe to exit with code: ${code}`);
+            ipcRenderer.send(channels.getExeData, { exeName: exeName, cmdParams: cmdParams });
+            ipcRenderer.once(channels.getExeDataResp, (event, resp: string) => {
+                resolve(resp);
             });
         });
     }
@@ -110,19 +99,19 @@ export class PMUSoapTslpFetcher implements ITslpDataFetcher {
     fetchDataFromIpc = async (fromTime: Date, toTime: Date, measId: string): Promise<[number, number][]> => {
         const fromTimeStr = this.convertTimeToInpStr(fromTime);
         const toTimeStr = this.convertTimeToInpStr(toTime);
+        const cmdParams: string[] = [
+            "--meas_id", measId, "--from_time", fromTimeStr, "--to_time", toTimeStr,
+            "--host", this.host, "--port", this.port + '', "--path", this.path,
+            "--username", this.username, "--password", this.password, "--ref_meas_id", this.refMeasId + ''
+        ];
+        const exeName = `CSharp_node_adapter.exe`;
         // meas_id, from_time, to_time, host, port, path, username, password, ref_meas_id
-        const ipc = spawn(`./CSharp_node_adapter.exe`,
-            [
-                "--meas_id", measId, "--from_time", fromTimeStr, "--to_time", toTimeStr,
-                "--host", this.host, "--port", this.port + '', "--path", this.path,
-                "--username", this.username, "--password", this.password, "--ref_meas_id", this.refMeasId + ''
-            ]
-        );
-        let resp = '';
         let data: [number, number][] = [];
         try {
-            resp = await this.getIpcRespAsync(ipc);
-            data = JSON.parse(resp);
+            const resp = await this.getExeRespAsync(exeName, cmdParams);
+            if (resp != null && resp != "") {
+                data = JSON.parse(resp);
+            }
         }
         catch (e) {
             data = [];

@@ -157,10 +157,11 @@ export const PMUMeasEditFormComp = (props) => {
     return (
         <>
             <button type="button" onClick={onMeasPickerClick}>...</button>
-            <span><b>Periodicity</b></span>
-            <TimePeriodEditFormComp
-                name={`${name}.periodicity`}
-                values={values.periodicity}
+            <br/>            
+            <span><b>Sampling Strategy</b> -</span>
+            <SamplingStrategyEditFormComp
+                name={`${name}.sampling_strategy`}
+                values={values.sampling_strategy}
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}
@@ -168,10 +169,10 @@ export const PMUMeasEditFormComp = (props) => {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
             <br />
-            <span><b>Sampling Strategy</b> -</span>
-            <SamplingStrategyEditFormComp
-                name={`${name}.sampling_strategy`}
-                values={values.sampling_strategy}
+            <span><b>Periodicity</b></span>
+            <TimePeriodEditFormComp
+                name={`${name}.periodicity`}
+                values={values.periodicity}
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}

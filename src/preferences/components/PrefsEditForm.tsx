@@ -81,6 +81,18 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                         />
                     </td>
                 </tr>
+                <tr>
+                    <td><span>Angle Ref Meas Id</span></td>
+                    <td>
+                        <input
+                            type="number"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.pmu.soap.refMeasId}
+                            name={`${name}.pmu.soap.refMeasId`}
+                        />
+                    </td>
+                </tr>
             </table>
             <h4>PMU Web Api Configuration</h4>
             <table>

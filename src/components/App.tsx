@@ -59,6 +59,7 @@ class App extends React.Component<AppProps, AppState> {
       pmuSoapPath: "",
       pmuSoapUsername: "",
       pmuSoapPassword: "",
+      pmuSoapRefMeasId: 2127,
       timerOn: false,
       timerPeriodicity: new TimePeriod()
     },
@@ -67,7 +68,7 @@ class App extends React.Component<AppProps, AppState> {
 
   state: AppState = {
     currentBreakpoint: "lg",
-    compactType: null,
+    compactType: "vertical",
     mounted: false,
     timer: {
       isOn: false,
@@ -144,7 +145,8 @@ class App extends React.Component<AppProps, AppState> {
       pmuSoapPort: prefs.pmu.soap.port,
       pmuSoapPath: prefs.pmu.soap.path,
       pmuSoapUsername: prefs.pmu.soap.username,
-      pmuSoapPassword: prefs.pmu.soap.password
+      pmuSoapPassword: prefs.pmu.soap.password,
+      pmuSoapRefMeasId: prefs.pmu.soap.refMeasId
     };
     this.setState({ appSettings: { ...newAppSettings } } as AppState);
   };
@@ -383,6 +385,7 @@ class App extends React.Component<AppProps, AppState> {
     pmuFetcher.path = this.state.appSettings.pmuSoapPath;
     pmuFetcher.username = this.state.appSettings.pmuSoapUsername;
     pmuFetcher.password = this.state.appSettings.pmuSoapPassword;
+    pmuFetcher.refMeasId = this.state.appSettings.pmuSoapRefMeasId;
     let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
     let wbesFetcher: ITslpDataFetcher = new WbesTslpFetcher();
     let wp = this.state.widgetProps[ind];
