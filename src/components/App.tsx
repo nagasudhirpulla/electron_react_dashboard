@@ -303,6 +303,7 @@ class App extends React.Component<AppProps, AppState> {
   onSaveDashboard = async () => {
     const dialogRes = await showSaveDialog({
       filters: [
+        { name: 'E-Dash', extensions: ['edash'] },
         { name: 'JSON', extensions: ['json'] },
         { name: 'All Files', extensions: ['*'] }
       ],

@@ -1,6 +1,6 @@
 {
   "name": "electron_react_dashboard",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "private": false,
   "author": "Nagasudhir",
   "description": "electron_react_dashboard",
@@ -112,6 +112,13 @@
         "description": "Electron Dashboard JSON Config file",
         "ext": [
           "json"
+        ]
+      },
+      {
+        "name": "E-Dash File",
+        "description": "Electron Dashboard E-Dash File",
+        "ext": [
+          "edash"
         ]
       }
     ]
