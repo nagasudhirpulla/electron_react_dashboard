@@ -94,7 +94,7 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                     </td>
                 </tr>
             </table>
-            <h4>PMU Web Api Configuration</h4>
+            {/* <h4>PMU Web Api Configuration</h4>
             <table>
                 <tr>
                     <td><span>Host</span></td>
@@ -132,7 +132,7 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                         />
                     </td>
                 </tr>
-            </table>
+            </table> */}
             <h4>SCADA Web Api Configuration</h4>
             <table>
                 <tr>
