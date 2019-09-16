@@ -1,7 +1,7 @@
 import React from 'react';
 import { TslpSeriesEditFormComp } from './TslpSeriesEditFormComp';
 import { Formik, withFormik, FormikBag } from 'formik';
-import { ITslpProps, TslpSeriesProps, ITslpSeriesProps } from '../ITimeSeriesLinePlot';
+import { ITslpProps, TslpSeriesProps, ITslpSeriesProps, PlotlyRenderStrategy } from '../ITimeSeriesLinePlot';
 import { IDashWidgetContentProps } from '../IDashWidgetContent';
 import { PMUMeasurement } from '../../measurements/PMUMeasurement';
 import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
@@ -100,6 +100,7 @@ export const TslpEditForm = (props) => {
         if (values.newMeasType == ScadaMeasurement.typename) {
             seriesProps.meas = new ScadaMeasurement();
         } else if (values.newMeasType == PMUMeasurement.typename) {
+            seriesProps.renderStrategy = PlotlyRenderStrategy.scattergl;
             seriesProps.meas = new PMUMeasurement();
         } else if (values.newMeasType == DummyMeasurement.typename) {
             seriesProps.meas = new DummyMeasurement();
