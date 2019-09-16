@@ -36,6 +36,10 @@ import { stripDataFromAppState } from '../utils/dashboardUtils';
 import { ipcRenderer } from 'electron';
 import * as channels from '../channelNames'
 import { IPrefs } from '../appSettings';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+library.add(faPen);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -467,7 +471,7 @@ class App extends React.Component<AppProps, AppState> {
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{" "}</div>
-            <Modal modalProps={{ btnText: "/", btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
+            <Modal modalProps={{ btnText: () => <FontAwesomeIcon icon="pen" />, btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
             <span
               className="copyWidBtn"
               onClick={this.onDuplicateWidget.bind(this, ind)}
