@@ -7,6 +7,9 @@
   "main": "./dist/main.js",
   "homepage": "https://github.com/nagasudhirpulla/electron_react_dashboard",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.22",
+    "@fortawesome/free-solid-svg-icons": "^5.10.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "bootstrap": "^4.3.1",
     "datatables.net": "^1.10.19",
     "jquery": "^3.4.1",
