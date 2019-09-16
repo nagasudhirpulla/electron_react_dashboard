@@ -169,7 +169,7 @@ export const TslpEditForm = (props) => {
                     <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
                 </select>
-                <button type="button" onClick={onAddSeriesClick}>Add Series</button>
+                <button type="button" onClick={onAddSeriesClick} className='duplicate_series_btn'>Add Series</button>
             </div>
             <div>
                 <TslpEditFormComp

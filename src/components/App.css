@@ -133,8 +133,10 @@ li b {
   right: 15px;
   top: 0;
   cursor: pointer;
-  color: rgb(224, 169, 28);
-  font-size: 0.5em;
+  background-color: rgb(0, 122, 204);
+  border: none;
+  color: white;
+  text-decoration: none;
 }
 
 .refreshBtn {
@@ -153,7 +155,7 @@ li b {
   color: white;
 }
 
-.copyWidBtn{
+.copyWidBtn {
   position: absolute;
   right: 75px;
   top: 0;
@@ -195,21 +197,26 @@ li b {
   padding: 8px
 }
 
-.delete_series_btn, .duplicate_series_btn {
+.delete_series_btn, .duplicate_series_btn, .time_overwrite_series_btn {
   margin-left: 8px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .delete_series_btn {
-  background-color: orangered;
+  background-color: #f44336;
   color: white;
 }
 
 .duplicate_series_btn {
-  background-color: greenyellow;
-  color: gray;
+  background-color: #4CAF50;
+  color: white;
 }
 
-.time_overwrite_series_btn{
-  background-color: blueviolet;
-  color: whitesmoke;
+.time_overwrite_series_btn {
+  background-color: #008CBA;
+  color: white;
 }

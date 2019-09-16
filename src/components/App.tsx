@@ -37,9 +37,9 @@ import { ipcRenderer } from 'electron';
 import * as channels from '../channelNames'
 import { IPrefs } from '../appSettings';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSyncAlt, faTimesCircle, faCopy, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-library.add(faPen);
+library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -471,23 +471,23 @@ class App extends React.Component<AppProps, AppState> {
         <div key={l.i} className={l.static ? "static" : ""}>
           <div className="dragHandle">
             <div style={{ textAlign: 'center' }}>{" "}</div>
-            <Modal modalProps={{ btnText: () => <FontAwesomeIcon icon="pen" />, btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
+            <Modal modalProps={{ btnText: <FontAwesomeIcon icon="pen" color='black' size='xs' />, btnClass: "editItemBtn" }} modalContent={this.EditWidgetModalContent(ind)} />
             <span
               className="copyWidBtn"
               onClick={this.onDuplicateWidget.bind(this, ind)}
-            >[]</span>
+            ><FontAwesomeIcon icon="copy" color='white' size='xs' /></span>
             <span
               className="exportBtn"
               onClick={this.onExportItem.bind(this, ind)}
-            >v</span>
+            ><FontAwesomeIcon icon="download" color='#4CAF50' size='xs' /></span>
             <span
               className="refreshBtn"
               onClick={this.onRefreshItem.bind(this, ind)}
-            >()</span>
+            ><FontAwesomeIcon icon="sync-alt" color='gold' size='xs' /></span>
             <span
               className="removeBtn"
               onClick={this.onRemoveItem.bind(this, ind)}
-            >x</span>
+            ><FontAwesomeIcon icon="times-circle" color='red' size='xs'/></span>
           </div>
           {content}
         </div>
