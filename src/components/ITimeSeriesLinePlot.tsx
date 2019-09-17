@@ -6,7 +6,8 @@ import { ScadaMeasurement } from "../measurements/ScadaMeasurement";
 
 export interface ITslpProps extends IDashWidgetContentProps {
     seriesList: ITslpSeriesProps[],
-    backgroundColor?: Color,
+    backgroundColor: Color,
+    titleColor: Color,
     title: string
 }
 
@@ -14,13 +15,15 @@ export class TslpProps implements ITslpProps {
     static typename: string = 'TslpProps';
     discriminator: string = TslpProps.typename;
     seriesList: ITslpSeriesProps[] = [];
-    backgroundColor?: Color;
+    backgroundColor: Color = "white";
+    titleColor: Color = "black";
     title: string = "Timeseries Plot";
 }
 
 export interface ITslpState extends IDashWidgetContentState {
     seriesList: ITslpSeriesState[],
-    backgroundColor?: Color,
+    backgroundColor: Color,
+    titleColor: Color,
     title: string,
     mounted: boolean
 }

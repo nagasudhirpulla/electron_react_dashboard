@@ -65,7 +65,8 @@ class App extends React.Component<AppProps, AppState> {
       pmuSoapPassword: "",
       pmuSoapRefMeasId: 2127,
       timerOn: false,
-      timerPeriodicity: new TimePeriod()
+      timerPeriodicity: new TimePeriod(),
+      backgroundColor: "white"
     },
     widgetProps: generateWidgetProps()
   };
@@ -487,7 +488,7 @@ class App extends React.Component<AppProps, AppState> {
             <span
               className="removeBtn"
               onClick={this.onRemoveItem.bind(this, ind)}
-            ><FontAwesomeIcon icon="times-circle" color='red' size='xs'/></span>
+            ><FontAwesomeIcon icon="times-circle" color='red' size='xs' /></span>
           </div>
           {content}
         </div>
@@ -507,6 +508,10 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     const layoutsDict = this.deriveLayouts();
+    const divStyle = {
+      backgroundColor: this.state.appSettings.backgroundColor
+    };
+    
     return (
       <div>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
@@ -541,6 +546,7 @@ class App extends React.Component<AppProps, AppState> {
           compactType={this.state.compactType}
           preventCollision={!this.state.compactType}
           draggableHandle='.dragHandle'
+          style={divStyle}
         >
           {this.generateDOM()}
         </ResponsiveReactGridLayout>

@@ -63,19 +63,25 @@ export const TslpEditFormComp = (props) => {
 
             <WidgetContentDivider />
 
-            {
-                values.backgroundColor &&
-                <>< input
-                    type="text"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    name={`${name}.backgroundColor`}
-                    value={values.backgroundColor}
+            <span>Background Color{" "}</span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                name={`${name}.backgroundColor`}
+                value={values.backgroundColor}
+            />
+            <WidgetContentDivider />
 
-                />
-                    <WidgetContentDivider />
-                </>
-            }
+            <span>Title Color{" "}</span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                name={`${name}.titleColor`}
+                value={values.titleColor}
+            />
+            <WidgetContentDivider />
 
             {TslpSeriesFormComps}
         </>

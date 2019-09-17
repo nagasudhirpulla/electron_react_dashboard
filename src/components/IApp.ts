@@ -31,7 +31,8 @@ export interface AppProps {
         pmuSoapPassword: string,
         pmuSoapRefMeasId: number,
         timerOn: boolean,
-        timerPeriodicity: ITimePeriod
+        timerPeriodicity: ITimePeriod,
+        backgroundColor: string
     },
     widgetProps: IDashWidgetProps[]
 }
@@ -59,7 +60,8 @@ export interface AppState {
         pmuSoapPassword: string,
         pmuSoapRefMeasId: number,
         timerOn: boolean,
-        timerPeriodicity: ITimePeriod
+        timerPeriodicity: ITimePeriod,
+        backgroundColor: string
     },
     widgetProps: IDashWidgetProps[]
 }

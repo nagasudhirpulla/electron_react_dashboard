@@ -41,13 +41,24 @@ export const AppSettingsEditFormComp = (props) => {
 
             <WidgetContentDivider /> */}
 
-            <span>Periodic Fetch -{" "}</span>
+            <span>Periodic Fetch{" "}</span>
             <input
                 type="checkbox"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 checked={values.timerOn}
                 name={`${name}.timerOn`}
+            />
+
+            <WidgetContentDivider />
+
+            <span>Background Color{" "}</span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.backgroundColor}
+                name={`${name}.backgroundColor`}
             />
 
             <WidgetContentDivider />

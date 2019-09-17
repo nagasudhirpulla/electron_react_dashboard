@@ -12,12 +12,16 @@ import { IDashWidgetContent } from './IDashWidgetContent';
 class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
     static defaultProps: ITslpProps = {
         discriminator: TslpProps.typename,
+        backgroundColor: 'white',
+        titleColor: 'black',
         seriesList: [],
         title: 'Default Title',
     };
 
     state = {
+        backgroundColor: this.props.backgroundColor,
         seriesList: this.props.seriesList,
+        titleColor: this.props.titleColor,
         mounted: false,
         title: this.props.title,
     };
@@ -63,10 +67,17 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         // this.fetchAndSetPntData();
         let plot_data: Data[] = this.generatePlotData();
         let plot_layout: Partial<Layout> = {
-            title: this.state.title,
             autosize: true,
+            paper_bgcolor: this.state.backgroundColor,
+            plot_bgcolor: this.state.backgroundColor,
             legend: {
                 orientation: "h"
+            },
+            title: {
+                text: this.state.title,
+                font: {
+                    color: this.state.titleColor
+                }
             }
         };
         let plot_frames: IFrame[] = [];
