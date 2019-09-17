@@ -15,7 +15,7 @@ export class TslpProps implements ITslpProps {
     discriminator: string = TslpProps.typename;
     seriesList: ITslpSeriesProps[] = [];
     backgroundColor?: Color;
-    title: string = "Default Title";
+    title: string = "Timeseries Plot";
 }
 
 export interface ITslpState extends IDashWidgetContentState {

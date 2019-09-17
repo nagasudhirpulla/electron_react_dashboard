@@ -554,21 +554,21 @@ export default App;
 function generateWidgetProps(): IDashWidgetProps[] {
   return [0].map(function (i, ind) {
     let layKey: string = uuid();
-    let fromVarTime = new VarTime();
-    fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
+    // let fromVarTime = new VarTime();
+    // fromVarTime.absoluteTime = (new Date().getTime()) - 2 * 60 * 60 * 1000;
 
-    let seriesProps: ITslpSeriesProps = {
-      title: `Series ${ind + 1}`,
-      renderStrategy: PlotlyRenderStrategy.scatter,
-      color: "blue",
-      meas: new ScadaMeasurement(),
-      fromVarTime: fromVarTime,
-      toVarTime: new VarTime(),
-      displayTimeShift: new DisplayTimeShift(),
-      points: []
-    }
+    // let seriesProps: ITslpSeriesProps = {
+    //   title: `Series ${ind + 1}`,
+    //   renderStrategy: PlotlyRenderStrategy.scatter,
+    //   color: "blue",
+    //   meas: new ScadaMeasurement(),
+    //   fromVarTime: fromVarTime,
+    //   toVarTime: new VarTime(),
+    //   displayTimeShift: new DisplayTimeShift(),
+    //   points: []
+    // }
     let contentProps: TslpProps = new TslpProps();
-    contentProps.seriesList = [seriesProps];
+    contentProps.seriesList = [];
     contentProps.title = `Plot ${ind + 1}`;
 
     let widgetProps: IDashWidgetProps = {

@@ -29,28 +29,30 @@ export const TslpEditFormComp = (props) => {
     let TslpSeriesFormComps = [];
     for (let seriesIter = 0; seriesIter < values.seriesList.length; seriesIter++) {
         TslpSeriesFormComps.push(
-            <div key={`tslpSeriesEditFormComp_${seriesIter}`} className="series_edit_item">
-                <TslpSeriesEditFormComp
-                    name={`${name}.seriesList.${seriesIter}`}
-                    values={{ ...values.seriesList[seriesIter], points: [] }}
-                    touched={touched}
-                    errors={errors}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    setFieldValue={setFieldValue}
-                    setFieldTouched={setFieldTouched}
-                    onDeleteClick={onDeleteSeriesClick(seriesIter)}
-                    onDuplicateClick={onDuplicateSeriesClick(seriesIter)}
-                    onTimeOverwriteClick={onTimeOverwriteSeriesClick(seriesIter)}
-                />
+            <>
+                <div key={`tslpSeriesEditFormComp_${seriesIter}`} className="series_edit_item">
+                    <TslpSeriesEditFormComp
+                        name={`${name}.seriesList.${seriesIter}`}
+                        values={{ ...values.seriesList[seriesIter], points: [] }}
+                        touched={touched}
+                        errors={errors}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        onDeleteClick={onDeleteSeriesClick(seriesIter)}
+                        onDuplicateClick={onDuplicateSeriesClick(seriesIter)}
+                        onTimeOverwriteClick={onTimeOverwriteSeriesClick(seriesIter)}
+                    />
+                </div>
                 <WidgetContentDivider />
-            </div>
+            </>
         );
     }
 
     return (
         <>
-            <span>Title</span>
+            <span>Title{" "}</span>
             <input
                 type="text"
                 onChange={handleChange}

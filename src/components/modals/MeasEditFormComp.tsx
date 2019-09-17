@@ -23,6 +23,7 @@ export const MeasEditFormComp = (props) => {
     } = props;
     return (
         <>
+            {/* avoiding text input in case of WBES to accommodate meas combobox */}
             {values.discriminator &&
                 values.discriminator != WbesMeasurement.typename &&
                 <input
@@ -33,7 +34,12 @@ export const MeasEditFormComp = (props) => {
                     name={`${name}.meas_id`}
                 />
             }
-            <br />
+
+            {/* avoiding new line in case of PMU to accommodate measurement picker */}
+            {values.discriminator &&
+                values.discriminator != PMUMeasurement.typename &&
+                <br />
+            }
 
             {values.discriminator &&
                 values.discriminator == ScadaMeasurement.typename &&
@@ -115,7 +121,7 @@ export const ScadaMeasEditFormComp = (props) => {
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
             <br />
-            <span><b>Sampling Strategy</b> -</span>
+            <span><b>Sampling Strategy</b>{" "}</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -144,8 +150,8 @@ export const PMUMeasEditFormComp = (props) => {
         ipcRenderer.send('openPmuMeasPicker', name);
     };
 
-    ipcRenderer.on('selectedMeas', (event, {measInfo, measName}) => {
-        if(measName != name){
+    ipcRenderer.on('selectedMeas', (event, { measInfo, measName }) => {
+        if (measName != name) {
             return;
         }
         console.log(`Obtained pmu meas from picker is ${measInfo}`) // prints "pong"
@@ -157,8 +163,8 @@ export const PMUMeasEditFormComp = (props) => {
     return (
         <>
             <button type="button" onClick={onMeasPickerClick}>...</button>
-            <br/>            
-            <span><b>Sampling Strategy</b> -</span>
+            <br />
+            <span><b>Sampling Strategy</b>{" "}</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}
@@ -234,7 +240,7 @@ export const WbesMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span><b>Utility</b> -</span>
+            <span><b>Utility</b>{" "}</span>
             <select
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -247,7 +253,7 @@ export const WbesMeasEditFormComp = (props) => {
             </select>
             <br />
 
-            <span><b>Schedule Type</b> -</span>
+            <span><b>Schedule Type</b>{" "}</span>
             <select
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -280,7 +286,7 @@ export const WbesMeasEditFormComp = (props) => {
                 setFieldTouched={setFieldTouched} />
             <br />
 
-            <span><b>Sampling Strategy</b> -</span>
+            <span><b>Sampling Strategy</b>{" "}</span>
             <SamplingStrategyEditFormComp
                 name={`${name}.sampling_strategy`}
                 values={values.sampling_strategy}

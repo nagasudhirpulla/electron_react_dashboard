@@ -22,7 +22,7 @@ export const TslpSeriesEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span><b>Series Title</b></span>
+            <span><b>Series Title{" "}</b></span>
             <input
                 type="text"
                 onChange={handleChange}
@@ -36,8 +36,19 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
+            <span><b>Series Color{" "}</b></span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.color}
+                name={`${name}.color`}
+            />
+
+            <SeriesCompDivider />
+
             <div>
-                <span><b>Measurement</b>{` (${values.meas.discriminator})`}</span>
+                <span><b>Measurement</b>{` (${values.meas.discriminator}) `}</span>
                 <MeasEditFormComp
                     name={`${name}.meas`}
                     values={values.meas}
@@ -49,30 +60,6 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldTouched={setFieldTouched}
                 />
             </div>
-
-            <SeriesCompDivider />
-
-            <span><b>Plotly Render Strategy</b></span>
-            <select
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.renderStrategy}
-                name={`${name}.renderStrategy`}
-            >
-                <option value={PlotlyRenderStrategy.scatter}>No GPU</option>
-                <option value={PlotlyRenderStrategy.scattergl}>Use GPU</option>
-            </select>
-
-            <SeriesCompDivider />
-
-            <span><b>Series Color</b></span>
-            <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.color}
-                name={`${name}.color`}
-            />
 
             <SeriesCompDivider />
 
@@ -119,6 +106,18 @@ export const TslpSeriesEditFormComp = (props) => {
                     setFieldTouched={setFieldTouched} />
             </div>
 
+            <SeriesCompDivider />
+
+            <span><b>Plotly Render Strategy{" "}</b></span>
+            <select
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.renderStrategy}
+                name={`${name}.renderStrategy`}
+            >
+                <option value={PlotlyRenderStrategy.scatter}>No GPU</option>
+                <option value={PlotlyRenderStrategy.scattergl}>Use GPU</option>
+            </select>
         </>
     )
 };
