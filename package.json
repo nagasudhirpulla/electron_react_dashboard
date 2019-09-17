@@ -107,7 +107,7 @@
     },
     "win": {
       "target": "NSIS",
-      "icon": "assets/img/posoco_logo.png"
+      "icon": "assets/img/app_logo.png"
     },
     "fileAssociations": [
       {
