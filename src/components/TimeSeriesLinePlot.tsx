@@ -78,6 +78,16 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
                 font: {
                     color: this.state.titleColor
                 }
+            },
+            xaxis: {
+                tickfont: {
+                    color: this.state.titleColor
+                }
+            },
+            yaxis: {
+                tickfont: {
+                    color: this.state.titleColor
+                }
             }
         };
         let plot_frames: IFrame[] = [];

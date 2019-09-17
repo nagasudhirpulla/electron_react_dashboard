@@ -73,7 +73,7 @@ export const TslpEditFormComp = (props) => {
             />
             <WidgetContentDivider />
 
-            <span>Title Color{" "}</span>
+            <span>Text Color{" "}</span>
             <input
                 type="text"
                 onChange={handleChange}
