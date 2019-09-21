@@ -73,7 +73,7 @@ export const PrefsEditFormComp = (props: { values: IPrefs, [key: string]: any })
                     <td><span>Password</span></td>
                     <td>
                         <input
-                            type="text"
+                            type="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.pmu.soap.password}
