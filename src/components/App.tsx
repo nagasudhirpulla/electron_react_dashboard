@@ -511,9 +511,9 @@ class App extends React.Component<AppProps, AppState> {
     const divStyle = {
       backgroundColor: this.state.appSettings.backgroundColor
     };
-    
+
     return (
-      <div>
+      <div style={{ backgroundColor: this.state.appSettings.backgroundColor, minHeight: '100vh' }}>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenPrefsEditor}>Settings</button>

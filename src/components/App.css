@@ -4,11 +4,6 @@ body {
   overflow: scroll;
 }
 
-/*for full body height*/
-div#root {
-  min-height: 100vh; /* real browsers */
-}
-
 #content {
   width: 100%;
 }
