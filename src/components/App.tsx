@@ -219,6 +219,9 @@ class App extends React.Component<AppProps, AppState> {
     if (widType == TslpProps.typename) {
       // create a timeseries widget
       newWidgetProps.contentProps = new TslpProps();
+    } else if (widType == TsscProps.typename) {
+      // create a timeseries widget
+      newWidgetProps.contentProps = new TsscProps();
     }
     this.setState({
       widgetProps: [...this.state.widgetProps, newWidgetProps]
@@ -518,7 +521,7 @@ class App extends React.Component<AppProps, AppState> {
           <TimeSeriesLinePlot {...wp.contentProps}></TimeSeriesLinePlot>
         </div>;
       } else if (wp.contentProps.discriminator == TsscProps.typename) {
-        content = <div className="cellContent" key={l.i + '_timeseries'}>
+        content = <div className="cellContent" key={l.i + '_scatter'}>
           <TimeSeriesScatterPlot {...wp.contentProps}></TimeSeriesScatterPlot>
         </div>;
       }
