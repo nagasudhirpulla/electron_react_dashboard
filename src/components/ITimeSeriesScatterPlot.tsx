@@ -50,7 +50,7 @@ export class TsscSeriesProps implements ITsscSeriesProps {
     renderStrategy = PlotlyRenderStrategy.scatter;
     title: string = "Series Name";
     color: Color = "blue";
-    size: number = 1;
+    size: number = 3;
     meas1: IMeasurement = new ScadaMeasurement()
     meas2: IMeasurement = new ScadaMeasurement()
     fromVarTime: VarTime = new VarTime();

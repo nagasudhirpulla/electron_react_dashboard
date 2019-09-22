@@ -109,6 +109,17 @@ export const TsscSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
+            <span><b>Marker Size{" "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.size}
+                name={`${name}.size`}
+            />
+
+            <SeriesCompDivider />
+
             <div>
                 <span><b>Display Time Shift</b></span>
                 <TimePeriodEditFormComp
