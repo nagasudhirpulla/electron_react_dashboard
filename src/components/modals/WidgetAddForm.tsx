@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik';
 import { TslpProps } from '../ITimeSeriesLinePlot';
+import { TsscProps } from '../ITimeSeriesScatterPlot';
 
 //https://programmingwithmosh.com/javascript/create-modal-using-react/
 interface WidgetAddFormProps {
@@ -50,6 +51,7 @@ export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
                                 placeholder="Select Widget Type">
                                 <option value={null}>Select Widget Type</option>
                                 <option value={TslpProps.typename}>Timeseries</option>
+                                <option value={TsscProps.typename}>Scatter</option>
                                 <option value="Blank">Blank</option>
                             </Field>
                             <ErrorMessage name="widgetType" />

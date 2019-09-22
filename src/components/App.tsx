@@ -39,6 +39,9 @@ import { IPrefs } from '../appSettings';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPen, faSyncAlt, faTimesCircle, faCopy, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TsscProps, ITsscProps, ITsscDataPoint } from './ITimeSeriesScatterPlot';
+import TimeSeriesScatterPlot from './TimeSeriesScatterPlot';
+import { FormikTsscEditForm } from './modals/TsscEditForm';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -264,6 +267,10 @@ class App extends React.Component<AppProps, AppState> {
           this.state.widgetProps[ind].contentProps.discriminator == TslpProps.typename &&
           <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, onFormSubmit: this.editWidget }} />
         }
+        {
+          this.state.widgetProps[ind].contentProps.discriminator == TsscProps.typename &&
+          <FormikTsscEditForm {...{ ind: ind, tsscProps: this.state.widgetProps[ind].contentProps as ITsscProps, onFormSubmit: this.editWidget }} />
+        }
       </>
     );
   };
@@ -418,6 +425,49 @@ class App extends React.Component<AppProps, AppState> {
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
       }
+    } else if (wp.contentProps.discriminator == TsscProps.typename) {
+      const tsscProps: ITsscProps = wp.contentProps as ITsscProps;
+      for (let seriesIter = 0; seriesIter < tsscProps.seriesList.length; seriesIter++) {
+        let series = tsscProps.seriesList[seriesIter];
+        let pntsX: ITslpDataPoint[] = [];
+        let pntsY: ITslpDataPoint[] = [];
+        let pnts: ITsscDataPoint[] = [];
+
+        // get X points
+        if (series.meas1.discriminator == DummyMeasurement.typename) {
+          pntsX = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IDummyMeasurement);
+        } else if (series.meas1.discriminator == PMUMeasurement.typename) {
+          pntsX = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IPMUMeasurement);
+        }
+        else if (series.meas1.discriminator == DummyMeasurement.typename) {
+          pntsX = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IDummyMeasurement);
+        }
+        else if (series.meas1.discriminator == WbesMeasurement.typename) {
+          pntsX = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IWbesMeasurement);
+        }
+
+        // get Y points
+        if (series.meas2.discriminator == DummyMeasurement.typename) {
+          pntsY = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IDummyMeasurement);
+        } else if (series.meas2.discriminator == PMUMeasurement.typename) {
+          pntsY = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IPMUMeasurement);
+        }
+        else if (series.meas2.discriminator == DummyMeasurement.typename) {
+          pntsY = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IDummyMeasurement);
+        }
+        else if (series.meas2.discriminator == WbesMeasurement.typename) {
+          pntsY = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IWbesMeasurement);
+        }
+
+        // here we assume that we get the same timestamps for both measurements meas1 and meas2
+        // todo do time alignment for pntsX and pntsY
+        for (let pntInd = 0; pntInd < Math.min(pntsX.length, pntsY.length); pntInd++) {
+          const newPnt: ITsscDataPoint = { timestamp: pntsX[pntInd].timestamp, value1: pntsX[pntInd].value, value2: pntsY[pntInd].value };
+          pnts.push(newPnt);
+        }
+        // fetch the timeseries data
+        (wp.contentProps as TsscProps).seriesList[seriesIter].points = pnts;
+      }
     }
 
     const newState = {
@@ -466,6 +516,10 @@ class App extends React.Component<AppProps, AppState> {
       if (wp.contentProps.discriminator == TslpProps.typename) {
         content = <div className="cellContent" key={l.i + '_timeseries'}>
           <TimeSeriesLinePlot {...wp.contentProps}></TimeSeriesLinePlot>
+        </div>;
+      } else if (wp.contentProps.discriminator == TsscProps.typename) {
+        content = <div className="cellContent" key={l.i + '_timeseries'}>
+          <TimeSeriesScatterPlot {...wp.contentProps}></TimeSeriesScatterPlot>
         </div>;
       }
       return (
