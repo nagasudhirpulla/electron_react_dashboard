@@ -108,6 +108,17 @@ export const TslpSeriesEditFormComp = (props) => {
 
             <SeriesCompDivider />
 
+            <span><b>Line Width{" "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.size}
+                name={`${name}.size`}
+            />
+
+            <SeriesCompDivider />
+
             <span><b>Plotly Render Strategy{" "}</b></span>
             <select
                 onChange={handleChange}

@@ -35,6 +35,7 @@ export interface ITslpSeriesState extends ITslpSeriesProps {
 export interface ITslpSeriesProps {
     title: string,
     color: Color,
+    size: number,
     meas: IMeasurement,
     fromVarTime: VarTime,
     toVarTime: VarTime,
@@ -47,6 +48,7 @@ export class TslpSeriesProps implements ITslpSeriesProps {
     renderStrategy = PlotlyRenderStrategy.scatter;
     title: string = "Series Name";
     color: Color = "blue";
+    size: number = 2;
     meas: IMeasurement = new ScadaMeasurement()
     fromVarTime: VarTime = new VarTime();
     toVarTime: VarTime = new VarTime();
