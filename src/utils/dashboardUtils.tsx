@@ -1,5 +1,6 @@
 import { AppState } from "../components/IApp";
 import { TslpProps } from "../components/ITimeSeriesLinePlot";
+import { TsscProps } from "../components/ITimeSeriesScatterPlot";
 
 export const stripDataFromAppState = (inpSt: AppState): AppState => {
     let st = JSON.parse(JSON.stringify(inpSt)) as AppState;
@@ -9,6 +10,10 @@ export const stripDataFromAppState = (inpSt: AppState): AppState => {
         if (contType == TslpProps.typename) {
             for (let seriesIter = 0; seriesIter < (st.widgetProps[widIter].contentProps as TslpProps).seriesList.length; seriesIter++) {
                 (st.widgetProps[widIter].contentProps as TslpProps).seriesList[seriesIter].points = [];
+            }
+        } else if (contType == TsscProps.typename) {
+            for (let seriesIter = 0; seriesIter < (st.widgetProps[widIter].contentProps as TslpProps).seriesList.length; seriesIter++) {
+                (st.widgetProps[widIter].contentProps as TsscProps).seriesList[seriesIter].points = [];
             }
         }
     }

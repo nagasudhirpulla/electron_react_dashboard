@@ -213,6 +213,25 @@ export const DummyMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
+            <span><b>Value 1{" "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.value1}
+                name={`${name}.value1`}
+            />
+
+            <span><b>{"    Value2 "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.value2}
+                name={`${name}.value2`}
+            />
+            <br /><br />
+
             <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
