@@ -437,9 +437,11 @@ class App extends React.Component<AppProps, AppState> {
         let pnts: ITsscDataPoint[] = [];
 
         // get X points
-        if (series.meas1.discriminator == DummyMeasurement.typename) {
-          pntsX = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IDummyMeasurement);
-        } else if (series.meas1.discriminator == PMUMeasurement.typename) {
+        if (series.meas1.discriminator == ScadaMeasurement.typename) {
+          series.meas1 = series.meas1 as IScadaMeasurement;
+          pntsX = await scadaFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IScadaMeasurement);
+        }
+        else if (series.meas1.discriminator == PMUMeasurement.typename) {
           pntsX = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IPMUMeasurement);
         }
         else if (series.meas1.discriminator == DummyMeasurement.typename) {
@@ -450,9 +452,11 @@ class App extends React.Component<AppProps, AppState> {
         }
 
         // get Y points
-        if (series.meas2.discriminator == DummyMeasurement.typename) {
-          pntsY = await dummyFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IDummyMeasurement);
-        } else if (series.meas2.discriminator == PMUMeasurement.typename) {
+        if (series.meas2.discriminator == ScadaMeasurement.typename) {
+          series.meas2 = series.meas2 as IScadaMeasurement;
+          pntsY = await scadaFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IScadaMeasurement);
+        }
+        else if (series.meas2.discriminator == PMUMeasurement.typename) {
           pntsY = await pmuFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IPMUMeasurement);
         }
         else if (series.meas2.discriminator == DummyMeasurement.typename) {
