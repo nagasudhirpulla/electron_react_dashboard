@@ -366,6 +366,24 @@ class App extends React.Component<AppProps, AppState> {
         }
       }
       await saveExcelAsync(wb);
+    } else if (contentProps.discriminator == TsscProps.typename) {
+      let wb = new Excel.Workbook();
+      // Add Worksheets to the workbook
+      let ws = wb.addWorksheet('Sheet 1');
+      // construct a data array for csv export
+      for (let seriesIter = 0; seriesIter < (contentProps as TsscProps).seriesList.length; seriesIter++) {
+        const seriesTitle = (contentProps as TsscProps).seriesList[seriesIter].title;
+        ws.getRow(1).getCell(3 * seriesIter + 1).value = `Time_${seriesTitle}`;
+        ws.getRow(1).getCell(3 * seriesIter + 2).value = `X_${seriesTitle}`;
+        ws.getRow(1).getCell(3 * seriesIter + 3).value = `Y_${seriesTitle}`;
+        for (let pntIter = 0; pntIter < (contentProps as TsscProps).seriesList[seriesIter].points.length; pntIter++) {
+          const pnt = (contentProps as TsscProps).seriesList[seriesIter].points[pntIter];
+          ws.getRow(pntIter + 2).getCell(3 * seriesIter + 1).value = new Date(pnt.timestamp + 5.5 * 60 * 60 * 1000);
+          ws.getRow(pntIter + 2).getCell(3 * seriesIter + 2).value = pnt.value1;
+          ws.getRow(pntIter + 2).getCell(3 * seriesIter + 3).value = pnt.value2;
+        }
+      }
+      await saveExcelAsync(wb);
     }
   };
 

@@ -22,7 +22,7 @@ export class WidgetAddForm extends React.Component<WidgetAddFormProps, {}> {
         // call parent function to return
         onFormSubmit(values.widgetType);
 
-        setSubmitting(true);
+        setSubmitting(false);
         return;
     }
 
