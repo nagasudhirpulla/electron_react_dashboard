@@ -42,6 +42,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TsscProps, ITsscProps, ITsscDataPoint } from './ITimeSeriesScatterPlot';
 import TimeSeriesScatterPlot from './TimeSeriesScatterPlot';
 import { FormikTsscEditForm } from './modals/TsscEditForm';
+import { EdnaTslpFetcher } from '../Fetchers/EdnaTslpFetcher';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -405,10 +406,12 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onRefreshItem = async (ind: number) => {
-    let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
-    scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
-    scadaFetcher.serverPath = this.state.appSettings.scadaServerPath;
-    scadaFetcher.serverPort = this.state.appSettings.scadaServerPort;
+    // let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
+    // scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
+    // scadaFetcher.serverPath = this.state.appSettings.scadaServerPath;
+    // scadaFetcher.serverPort = this.state.appSettings.scadaServerPort;
+    let scadaFetcher: EdnaTslpFetcher = new EdnaTslpFetcher();
+
     // let pmuFetcher: PMUTslpFetcher = new PMUTslpFetcher();
     // pmuFetcher.serverBaseAddress = this.state.appSettings.pmuServerBase;
     // pmuFetcher.serverPort = this.state.appSettings.pmuServerPort;

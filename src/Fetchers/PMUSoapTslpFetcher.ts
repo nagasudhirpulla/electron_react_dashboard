@@ -63,11 +63,11 @@ export const resampleData = (data: ITslpDataPoint[], sampling_strategy: Sampling
 
 
 export class PMUSoapTslpFetcher implements ITslpDataFetcher {
-    host: string = '172.16.183.131';
-    port: number = 24721;
-    path: string = '/eterra-ws/HistoricalDataProvider';
-    username: string = 'pdcAdmin';
-    password: string = 'p@ssw0rd';
+    host: string = 'host';
+    port: number = 123;
+    path: string = '/path1/path2';
+    username: string = 'uname';
+    password: string = 'pass';
     refMeasId: number = 2127;
 
     make2Digits = (num: number): string => {
