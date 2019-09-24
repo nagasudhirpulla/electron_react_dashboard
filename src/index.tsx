@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import __basedir from './basepath';
-import url from "url";
+// import url from "url";
 import path from "path";
 import { ipcMain } from 'electron';
 import { getPrefsState, getPmuMeasListState } from './appState'
@@ -8,7 +8,7 @@ import { getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsSt
 import * as channels from './channelNames';
 import { initPmuMeasListState } from './appSettings';
 import { spawn, ChildProcess } from "child_process";
-import { join } from 'path';
+// import { join } from 'path';
 
 let win: BrowserWindow;
 let pmuMeasPickerWin: BrowserWindow;
@@ -154,4 +154,41 @@ ipcMain.on(channels.getExeData, async (event, args: { exeName: string, cmdParams
     try { resp = await getIpcRespAsync(ipc); }
     catch (ex) { resp = null; }
     event.reply(channels.getExeDataResp, resp);
+});
+
+const fetchExeData = async (exeName: string, cmdParams: string[]): Promise<string> => {
+    const getIpcRespAsync = (ipc: ChildProcess): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            let res = "";
+
+            ipc.stderr.once('data', function (data) {
+                // console.log(data.toString());
+                reject(data.toString());
+            });
+
+            ipc.stdout.on('data', function (data) {
+                // console.log(data.toString());
+                // resolve(`result=` + data.toString());
+                res += data.toString();
+            });
+
+            ipc.once('close', (code: number) => {
+                resolve(res);
+                // console.log(`Ipc exe to exit with code: ${code}`);
+            });
+        });
+    }
+    const exePath = path.resolve(path.dirname(process.mainModule.filename), 'exes', exeName);
+    const ipc = spawn(exePath, cmdParams);
+    let resp: string = null;
+    try { resp = await getIpcRespAsync(ipc); }
+    catch (ex) { resp = null; }
+    return resp;
+};
+
+ipcMain.on(channels.openScadaMeasPicker, async (event, measName) => {
+    const exeName = 'ScadaCsharpNodeAdapter.exe';
+    const cmdParams: string[] = ["--request_type", "pick_meas"];
+    const resp = await fetchExeData(exeName, cmdParams);
+    event.reply(channels.selectedMeas, { measInfo: [resp], measName: measName });
 });

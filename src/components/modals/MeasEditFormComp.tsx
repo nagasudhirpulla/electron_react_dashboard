@@ -8,6 +8,7 @@ import { SchType } from '../../measurements/WbesMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { getUtilsInfoAppState } from '../../utils/wbesUtils';
 import { ipcRenderer } from 'electron';
+import { openScadaMeasPicker, selectedMeas } from '../../channelNames';
 //import * as channels from '../../channelNames';
 
 export const MeasEditFormComp = (props) => {
@@ -38,6 +39,7 @@ export const MeasEditFormComp = (props) => {
             {/* avoiding new line in case of PMU to accommodate measurement picker */}
             {values.discriminator &&
                 values.discriminator != PMUMeasurement.typename &&
+                values.discriminator != ScadaMeasurement.typename &&
                 <br />
             }
 
@@ -108,8 +110,24 @@ export const ScadaMeasEditFormComp = (props) => {
         setFieldValue,
         setFieldTouched
     } = props;
+
+    const onMeasPickerClick = () => {
+        ipcRenderer.send(openScadaMeasPicker, name);
+    };
+
+    ipcRenderer.on(selectedMeas, (event, { measInfo, measName }) => {
+        if (measName != name) {
+            return;
+        }
+        console.log(`Obtained scada meas from picker is ${measInfo}`) // prints "pong"
+        // set the measurement Id and measurement name
+        setFieldValue(`${name}.meas_id`, measInfo[0]);
+    });
+
     return (
         <>
+            <button type="button" onClick={onMeasPickerClick}>...</button>
+            <br />
             <span><b>Periodicity</b></span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}

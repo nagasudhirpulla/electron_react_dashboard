@@ -14,3 +14,4 @@ export const refreshPmuMeasListResp = 'refreshPmuMeasListResp';
 export const openPrefsEditor = 'openPrefsEditor';
 export const getExeData = 'getExeData';
 export const getExeDataResp = 'getExeDataResp';
+export const openScadaMeasPicker = 'openScadaMeasPicker';
