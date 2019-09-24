@@ -17,8 +17,8 @@ let pickerPmuSeriesName = "";
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 800,
-        height: 800,
+        width: 1340,
+        height: 750,
         webPreferences: {
             nodeIntegration: true, webSecurity: false
         }
@@ -42,8 +42,8 @@ const loadPmuMeasPickerWindow = () => {
         return;
     }
     pmuMeasPickerWin = new BrowserWindow({
-        width: 450,
-        height: 450,
+        width: 1150,
+        height: 580,
         webPreferences: {
             nodeIntegration: true, webSecurity: false
         }
@@ -117,6 +117,8 @@ ipcMain.on(channels.setSettings, async (event, appSettings: IPrefs) => {
 ipcMain.on(channels.selectedPickerMeas, (event, measObj: any) => {
     // console.log(`Obtained pmu meas from picker is ${JSON.stringify(measObj)}`) // prints "pong"
     win.webContents.send(channels.selectedMeas, { measInfo: measObj, measName: pickerPmuSeriesName });
+    // close pmu picker picker window
+    pmuMeasPickerWin.close();
 });
 
 ipcMain.on(channels.refreshPmuMeasList, async (event, arg: any) => {
