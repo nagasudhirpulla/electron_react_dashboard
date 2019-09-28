@@ -15,3 +15,5 @@ export const openPrefsEditor = 'openPrefsEditor';
 export const getExeData = 'getExeData';
 export const getExeDataResp = 'getExeDataResp';
 export const openScadaMeasPicker = 'openScadaMeasPicker';
+export const getAdaptersList = 'getAdaptersList';
+export const getAdaptersListResp = 'getAdaptersListResp';
