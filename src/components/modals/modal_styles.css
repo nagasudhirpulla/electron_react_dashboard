@@ -91,6 +91,6 @@ p.lorem-text {
 }
 
 .scroll-lock {
-    overflow: hidden;
-    margin-right: 17px;
+    /* overflow: hidden;
+    margin-right: 17px; */
 }
