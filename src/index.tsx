@@ -219,7 +219,7 @@ ipcMain.on(channels.openDataAdaptersEditor, (event, arg) => {
 
 ipcMain.on(channels.getAdaptersList, (event, inpObj) => {
     const adapters: AdapterManifest[] = Object.values(getAdapters());
-    event.reply(channels.getAdaptersListResp, { adapters: [adapters] });
+    event.reply(channels.getAdaptersListResp, { adapters: adapters });
 });
 
 ipcMain.on(channels.addDataAdapter, async (event, inpObj) => {
@@ -233,6 +233,6 @@ ipcMain.on(channels.deleteDataAdapter, async (event, adapterId: string) => {
 });
 
 ipcMain.on(channels.updateDataAdapter, async (event, adapterId: string) => {
-    const isSuccess = await updatePlugin(adapterId);
-    event.reply(channels.updateDataAdapterResp, { isSuccess: isSuccess });
+    const updatedAdapter: AdapterManifest = await updatePlugin(adapterId);
+    event.reply(channels.updateDataAdapterResp, { adapter: updatedAdapter });
 });
