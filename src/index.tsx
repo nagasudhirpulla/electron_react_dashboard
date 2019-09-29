@@ -8,11 +8,15 @@ import { getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsSt
 import * as channels from './channelNames';
 import { initPmuMeasListState } from './appSettings';
 import { spawn, ChildProcess } from "child_process";
+import { initAdapters, getAdapters } from "./adapters/adapter_state";
+import { registerPlugin, unRegisterPlugin, updatePlugin } from "./adapters/adapter_server";
 // import { join } from 'path';
+import { AdapterManifest } from './adapters/def_manifest';
 
 let win: BrowserWindow;
 let pmuMeasPickerWin: BrowserWindow;
 let prefsEditorWin: BrowserWindow;
+let dataAdaptersEditorWin: BrowserWindow;
 let pickerPmuSeriesName = "";
 
 const createWindow = () => {
@@ -33,6 +37,7 @@ const onAppReady = async () => {
     await initPrefsState(app.getAppPath());
     createWindow();
     await initPmuMeasListState(app.getAppPath());
+    await initAdapters();
 };
 
 const loadPmuMeasPickerWindow = () => {
@@ -191,4 +196,43 @@ ipcMain.on(channels.openScadaMeasPicker, async (event, measName) => {
     const cmdParams: string[] = ["--request_type", "pick_meas"];
     const resp = await fetchExeData(exeName, cmdParams);
     event.reply(channels.selectedMeas, { measInfo: [resp], measName: measName });
+});
+
+ipcMain.on(channels.openDataAdaptersEditor, (event, arg) => {
+    if (dataAdaptersEditorWin != null) {
+        dataAdaptersEditorWin.reload();
+        dataAdaptersEditorWin.focus();
+        return;
+    }
+    dataAdaptersEditorWin = new BrowserWindow({
+        width: 450,
+        height: 500,
+        webPreferences: {
+            nodeIntegration: true, webSecurity: false
+        }
+    });
+    dataAdaptersEditorWin.loadURL(`file://${path.resolve(path.dirname(process.mainModule.filename), 'adapters.html')}`);
+    dataAdaptersEditorWin.on("closed", () => {
+        dataAdaptersEditorWin = null;
+    });
+});
+
+ipcMain.on(channels.getAdaptersList, (event, inpObj) => {
+    const adapters: AdapterManifest[] = Object.values(getAdapters());
+    event.reply(channels.getAdaptersListResp, { adapters: [adapters] });
+});
+
+ipcMain.on(channels.addDataAdapter, async (event, inpObj) => {
+    const newAdapter = await registerPlugin();
+    event.reply(channels.addDataAdapterResp, { newAdapter: newAdapter });
+});
+
+ipcMain.on(channels.deleteDataAdapter, async (event, adapterId: string) => {
+    const isSuccess = await unRegisterPlugin(adapterId);
+    event.reply(channels.deleteDataAdapterResp, { isSuccess: isSuccess });
+});
+
+ipcMain.on(channels.updateDataAdapter, async (event, adapterId: string) => {
+    const isSuccess = await updatePlugin(adapterId);
+    event.reply(channels.updateDataAdapterResp, { isSuccess: isSuccess });
 });

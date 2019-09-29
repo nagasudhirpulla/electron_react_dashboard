@@ -515,6 +515,10 @@ class App extends React.Component<AppProps, AppState> {
     }
   };
 
+  onDataAdaptersEditClick = async () => {
+    ipcRenderer.send(channels.openDataAdaptersEditor, 'ping');
+  };
+
   onOpenPrefsEditor = () => {
     ipcRenderer.send(channels.openPrefsEditor, 'ping');
   }
@@ -611,6 +615,7 @@ class App extends React.Component<AppProps, AppState> {
           columns)
         </span> */}
 
+        <button onClick={this.onDataAdaptersEditClick}>Data Adapters</button>
         <Modal modalProps={{ btnText: "Dashboard Config", btnClass: "add_widget_btn" }} modalContent={this.AppSettingsModalContent()} />
         <Modal modalProps={{ btnText: "Add Widget", btnClass: "add_widget_btn" }} modalContent={this.AddWidgetModalContent()} />
         <button onClick={this.onRefreshAll}>Refresh</button>

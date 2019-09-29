@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import * as channels from '../../channelNames';
 import merge from 'deepmerge';
+import { AdapterManifest } from './../def_manifest';
 
 export interface AdaptersListItem {
     name: string,
@@ -31,19 +32,69 @@ class AdaptersList extends Component<AdaptersListProps, AdaptersListState> {
         this.loadAdapters();
     }
 
-    async loadAdapters() {
+    loadAdapters = async () => {
         ipcRenderer.send(channels.getAdaptersList, 'ping');
-        ipcRenderer.on(channels.getAdaptersListResp, (event, adapters: AdaptersListItem[]) => {
-            const newState: AdaptersListState = merge(this.state, { adapters: [...adapters], mounted: true });
+        ipcRenderer.once(channels.getAdaptersListResp, (event, adapters: AdapterManifest[]) => {
+            const newState: AdaptersListState = { adapters: [...adapters.map(a => { return { 'name': a.name, 'adapter_id': a.app_id } })], mounted: true };
             this.setState({ ...newState });
         });
-    }    
+    }
+
+    onAddAdapterClick = () => {
+        ipcRenderer.send(channels.addDataAdapter, 'ping');
+        ipcRenderer.once(channels.addDataAdapterResp, (event, newAdapter: AdapterManifest) => {
+            this.loadAdapters();
+        });
+    }
+
+    onDelAdapterClick = async (adapterItem: AdaptersListItem) => {
+        ipcRenderer.send(channels.deleteDataAdapter, adapterItem.adapter_id);
+        ipcRenderer.once(channels.deleteDataAdapterResp, (event, isSuccess: boolean) => {
+            this.loadAdapters();
+        });
+    }
+
+    onUpdAdapterClick = async (adapterItem: AdaptersListItem) => {
+        ipcRenderer.send(channels.updateDataAdapter, adapterItem.adapter_id);
+        ipcRenderer.once(channels.updateDataAdapterResp, (event, isSuccess: boolean) => {
+            if (isSuccess != true) {
+                alert(`Update of adapter with id = ${adapterItem.adapter_id}, name=${adapterItem.name} failed...`);
+            } else {
+                alert(`Update of adapter with id = ${adapterItem.adapter_id}, name=${adapterItem.name} is success!`);
+            }
+            this.loadAdapters();
+        });
+    }
 
     render() {
+        let adapterComps = [];
+        for (let ad_ind = 0; ad_ind < this.state.adapters.length; ad_ind++) {
+            const adapterComp = (<tr>
+                <td>{this.state.adapters[ad_ind].name}</td>
+                <td>{this.state.adapters[ad_ind].adapter_id}</td>
+                <td>
+                    <button onClick={this.onDelAdapterClick.bind(this, this.state.adapters[ad_ind])}>Delete Adapter</button>
+                    <button onClick={this.onUpdAdapterClick.bind(this, this.state.adapters[ad_ind])}>Update Adapter</button>
+                </td>
+            </tr>);
+            adapterComps.push(adapterComp);
+        }
+
         return (
             <>
+                <table>
+                    <tr>
+                        <td>Adapter Name</td>
+                        <td>Adapter Id</td>
+                        <td>Actions</td>
+                    </tr>
+                    {adapterComps}
+                </table>
+                <button onClick={this.onAddAdapterClick}>Add Adapter</button>
             </>
         );
     }
+
+
 }
 export default AdaptersList;
