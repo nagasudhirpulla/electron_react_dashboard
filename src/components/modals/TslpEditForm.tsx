@@ -8,6 +8,7 @@ import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { ShowMessageBoxOptions } from 'electron';
+import { AdaptersListItem } from '../../adapters/components/AdaptersList';
 const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
@@ -162,7 +163,11 @@ export const TslpEditForm = (props) => {
             setFieldValue(`${nameStr}.seriesList`, newSeriesList);
         }
     };
-
+    let measOptionEls = [];
+    for (let measTypeInd = 0; measTypeInd < values.adapters.length; measTypeInd++) {
+        const optEl = <option value={values.adapters[measTypeInd].adapter_id}>{values.adapters[measTypeInd].name}</option>;
+        measOptionEls.push(optEl);
+    }
     return (
         <form className="form_div" onSubmit={handleSubmit}>
             <div>
@@ -176,6 +181,7 @@ export const TslpEditForm = (props) => {
                     <option value={PMUMeasurement.typename}>PMU</option>
                     <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
+                    {measOptionEls}
                 </select>
                 <button type="button" onClick={onAddSeriesClick} className='duplicate_series_btn'>Add Series</button>
             </div>
@@ -203,10 +209,11 @@ export const TslpEditForm = (props) => {
 };
 
 
-export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: ITslpProps, onFormSubmit }, { tslpProps: ITslpProps }, { tslpProps: ITslpProps, newMeasType: string }>({
+export const FormikTslpEditForm = withFormik<{ ind: number, tslpProps: ITslpProps, adapters: AdaptersListItem[], onFormSubmit }, { tslpProps: ITslpProps }, { tslpProps: ITslpProps, newMeasType: string, adapters: AdaptersListItem[] }>({
     mapPropsToValues: (props) => ({
         tslpProps: JSON.parse(JSON.stringify(props.tslpProps)),
-        newMeasType: ScadaMeasurement.typename
+        newMeasType: ScadaMeasurement.typename,
+        adapters: props.adapters
     }),
 
     validate: values => {

@@ -1,5 +1,6 @@
 import { IDashWidgetProps } from './dash_widget/IDashWidgetState';
 import { ITimePeriod } from './ITimeSeriesLinePlot';
+import { AdaptersListItem } from '../adapters/components/AdaptersList';
 export interface LayoutItem {
     x: number,
     y: number,
@@ -63,5 +64,6 @@ export interface AppState {
         timerPeriodicity: ITimePeriod,
         backgroundColor: string
     },
-    widgetProps: IDashWidgetProps[]
+    widgetProps: IDashWidgetProps[],
+    adapters: AdaptersListItem[]
 }

@@ -9,6 +9,7 @@ import { ScadaMeasurement } from '../../measurements/ScadaMeasurement';
 import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { ShowMessageBoxOptions } from 'electron';
+import { AdaptersListItem } from '../../adapters/components/AdaptersList';
 const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
@@ -226,11 +227,12 @@ export const TsscEditForm = (props) => {
 };
 
 
-export const FormikTsscEditForm = withFormik<{ ind: number, tsscProps: ITsscProps, onFormSubmit }, { tsscProps: ITsscProps }, { tsscProps: ITsscProps, newMeas1Type: string, newMeas2Type: string }>({
+export const FormikTsscEditForm = withFormik<{ ind: number, tsscProps: ITsscProps, adapters: AdaptersListItem[], onFormSubmit }, { tsscProps: ITsscProps }, { tsscProps: ITsscProps, newMeas1Type: string, newMeas2Type: string, adapters: AdaptersListItem[] }>({
     mapPropsToValues: (props) => ({
         tsscProps: JSON.parse(JSON.stringify(props.tsscProps)),
         newMeas1Type: ScadaMeasurement.typename,
-        newMeas2Type: ScadaMeasurement.typename
+        newMeas2Type: ScadaMeasurement.typename,
+        adapters: props.adapters
     }),
 
     validate: values => {

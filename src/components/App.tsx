@@ -43,6 +43,8 @@ import { TsscProps, ITsscProps, ITsscDataPoint } from './ITimeSeriesScatterPlot'
 import TimeSeriesScatterPlot from './TimeSeriesScatterPlot';
 import { FormikTsscEditForm } from './modals/TsscEditForm';
 import { EdnaTslpFetcher } from '../Fetchers/EdnaTslpFetcher';
+import { AdapterManifest } from '../adapters/def_manifest';
+import { AdaptersListItem } from '../adapters/components/AdaptersList';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -85,7 +87,8 @@ class App extends React.Component<AppProps, AppState> {
       busy: false
     },
     widgetProps: this.props.widgetProps,
-    appSettings: this.props.appSettings
+    appSettings: this.props.appSettings,
+    adapters: []
   };
 
   timer: NodeJS.Timer;
@@ -141,6 +144,17 @@ class App extends React.Component<AppProps, AppState> {
     ipcRenderer.send(channels.getSettings, 'ping');
   }
 
+  getDataAdapters = () => {
+    ipcRenderer.send(channels.getAdaptersList, 'ping');
+    ipcRenderer.once(channels.getAdaptersListResp, (event, obj: { adapters: AdapterManifest[] }) => {
+      let adaptersList: AdaptersListItem[] = []
+      for (let adInd = 0; adInd < obj.adapters.length; adInd++) {
+        adaptersList.push({ 'name': obj.adapters[adInd].name, 'adapter_id': obj.adapters[adInd].app_id });
+      }
+      this.setState({ adapters: [...adaptersList] } as AppState);
+    });
+  }
+
   onIpcGetDashboardConfig = (event, prefs: IPrefs) => {
     const newAppSettings = {
       ...this.state.appSettings,
@@ -168,6 +182,7 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ mounted: true } as AppState);
     this.openAssociatedFile();
     this.getDashboardConfig();
+    this.getDataAdapters();
   }
 
   componentWillUnmount() {
@@ -269,11 +284,11 @@ class App extends React.Component<AppProps, AppState> {
       <>
         {
           this.state.widgetProps[ind].contentProps.discriminator == TslpProps.typename &&
-          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, onFormSubmit: this.editWidget }} />
+          <FormikTslpEditForm {...{ ind: ind, tslpProps: this.state.widgetProps[ind].contentProps as ITslpProps, adapters: this.state.adapters, onFormSubmit: this.editWidget }} />
         }
         {
           this.state.widgetProps[ind].contentProps.discriminator == TsscProps.typename &&
-          <FormikTsscEditForm {...{ ind: ind, tsscProps: this.state.widgetProps[ind].contentProps as ITsscProps, onFormSubmit: this.editWidget }} />
+          <FormikTsscEditForm {...{ ind: ind, tsscProps: this.state.widgetProps[ind].contentProps as ITsscProps, adapters: this.state.adapters, onFormSubmit: this.editWidget }} />
         }
       </>
     );
