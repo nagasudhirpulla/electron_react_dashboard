@@ -176,6 +176,12 @@ export const TsscEditForm = (props) => {
         }
     };
 
+    let measOptionEls = [];
+    for (let measTypeInd = 0; measTypeInd < values.adapters.length; measTypeInd++) {
+        const optEl = <option value={values.adapters[measTypeInd].adapter_id}>{values.adapters[measTypeInd].name}</option>;
+        measOptionEls.push(optEl);
+    }
+
     return (
         <form className="form_div" onSubmit={handleSubmit}>
             <div>
@@ -189,6 +195,7 @@ export const TsscEditForm = (props) => {
                     <option value={PMUMeasurement.typename}>PMU</option>
                     <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
+                    {measOptionEls}
                 </select>
                 <select
                     name="newMeas2Type"
@@ -200,6 +207,7 @@ export const TsscEditForm = (props) => {
                     <option value={PMUMeasurement.typename}>PMU</option>
                     <option value={WbesMeasurement.typename}>WBES</option>
                     <option value={DummyMeasurement.typename}>Random</option>
+                    {measOptionEls}
                 </select>
                 <button type="button" onClick={onAddSeriesClick} className='duplicate_series_btn'>Add Series</button>
             </div>
