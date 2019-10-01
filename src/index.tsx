@@ -9,7 +9,7 @@ import * as channels from './channelNames';
 import { initPmuMeasListState } from './appSettings';
 import { spawn, ChildProcess } from "child_process";
 import { initAdapters, getAdapters } from "./adapters/adapter_state";
-import { registerPlugin, unRegisterPlugin, updatePlugin } from "./adapters/adapter_server";
+import { registerPlugin, unRegisterPlugin, updatePlugin, fetchFromAdapter } from "./adapters/adapter_server";
 // import { join } from 'path';
 import { AdapterManifest } from './adapters/def_manifest';
 
@@ -235,4 +235,9 @@ ipcMain.on(channels.deleteDataAdapter, async (event, adapterId: string) => {
 ipcMain.on(channels.updateDataAdapter, async (event, adapterId: string) => {
     const updatedAdapter: AdapterManifest = await updatePlugin(adapterId);
     event.reply(channels.updateDataAdapterResp, { adapter: updatedAdapter });
+});
+
+ipcMain.on(channels.getAdapterData, async (event, args: { adapterId: string, cmdParams: string[] }) => {
+    const resp = await fetchFromAdapter(args.adapterId, args.cmdParams);
+    event.reply(channels.getAdapterDataResp, resp);
 });

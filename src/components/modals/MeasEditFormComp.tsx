@@ -8,7 +8,8 @@ import { SchType } from '../../measurements/WbesMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { getUtilsInfoAppState } from '../../utils/wbesUtils';
 import { ipcRenderer } from 'electron';
-import { openScadaMeasPicker, selectedMeas } from '../../channelNames';
+import { openScadaMeasPicker, selectedMeas, openAdapterMeasPicker } from '../../channelNames';
+import { AdapterMeasurement } from '../../measurements/AdapterMeasurement';
 //import * as channels from '../../channelNames';
 
 export const MeasEditFormComp = (props) => {
@@ -40,6 +41,7 @@ export const MeasEditFormComp = (props) => {
             {values.discriminator &&
                 values.discriminator != PMUMeasurement.typename &&
                 values.discriminator != ScadaMeasurement.typename &&
+                values.discriminator != AdapterMeasurement.typename &&
                 <br />
             }
 
@@ -94,6 +96,20 @@ export const MeasEditFormComp = (props) => {
                     handleChange={handleChange}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched} />
+            }
+
+            {values.discriminator &&
+                values.discriminator == AdapterMeasurement.typename &&
+                <AdapterMeasEditFormComp
+                    name={name}
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleBlur={handleBlur}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                />
             }
         </>
     )
@@ -333,6 +349,39 @@ export const WbesMeasEditFormComp = (props) => {
                 handleChange={handleChange}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched} />
+        </>
+    )
+};
+
+export const AdapterMeasEditFormComp = (props) => {
+    const {
+        values,
+        name,
+        touched,
+        handleChange,
+        handleBlur,
+        errors,
+        setFieldValue,
+        setFieldTouched
+    } = props;
+
+    const onMeasPickerClick = () => {
+        ipcRenderer.send(openAdapterMeasPicker, { name: name, adapterId: values.adapter_id });
+    };
+
+    ipcRenderer.on(selectedMeas, (event, { measInfo, measName }) => {
+        if (measName != name) {
+            return;
+        }
+        console.log(`Obtained adapter meas from picker is ${measInfo}`) // prints "pong"
+        // set the measurement Id and measurement name
+        setFieldValue(`${name}.meas_id`, measInfo[0]);
+    });
+    //todo keep picker as conditional based on manifest
+    return (
+        <>
+            <button type="button" onClick={onMeasPickerClick}>...</button>
+            <br />
         </>
     )
 };

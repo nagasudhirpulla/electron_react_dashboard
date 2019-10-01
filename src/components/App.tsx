@@ -45,6 +45,8 @@ import { FormikTsscEditForm } from './modals/TsscEditForm';
 import { EdnaTslpFetcher } from '../Fetchers/EdnaTslpFetcher';
 import { AdapterManifest } from '../adapters/def_manifest';
 import { AdaptersListItem } from '../adapters/components/AdaptersList';
+import { AdapterMeasurement, IAdapterMeasurement } from '../measurements/AdapterMeasurement';
+import { DataAdapterTslpFetcher } from '../Fetchers/DataAdapterTslpFetcher';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -440,6 +442,7 @@ class App extends React.Component<AppProps, AppState> {
     pmuFetcher.refMeasId = this.state.appSettings.pmuSoapRefMeasId;
     let dummyFetcher: ITslpDataFetcher = new DummyTslpFetcher();
     let wbesFetcher: ITslpDataFetcher = new WbesTslpFetcher();
+    let adapterFetcher: ITslpDataFetcher = new DataAdapterTslpFetcher();
     let wp = this.state.widgetProps[ind];
 
     if (wp.contentProps.discriminator == TslpProps.typename) {
@@ -460,6 +463,9 @@ class App extends React.Component<AppProps, AppState> {
         }
         else if (series.meas.discriminator == WbesMeasurement.typename) {
           pnts = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IWbesMeasurement);
+        }
+        else if (series.meas.discriminator == AdapterMeasurement.typename) {
+          pnts = await adapterFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IAdapterMeasurement);
         }
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;

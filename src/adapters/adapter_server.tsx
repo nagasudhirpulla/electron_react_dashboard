@@ -4,6 +4,7 @@ import { AdapterManifest } from './def_manifest';
 import { readFileAsync, ensureFolderAsync, copyFolderAsync, removeFolderAsync } from '../utils/fileUtils';
 import { existsSync, mkdirSync } from 'fs';
 import { registerAdapter, getAdapter, getAdapters, initAdapters, unRegisterAdapter } from './adapter_state';
+import { ChildProcess, spawn } from 'child_process';
 
 const getExesFolder = (): string => {
     return path.resolve(path.dirname(process.mainModule.filename), 'adapters')
@@ -135,7 +136,7 @@ export const updatePlugin = async (adapterId): Promise<AdapterManifest> => {
     if (manifestJson == null) {
         return null;
     }
-    
+
     // abort update if adapter id does not match
     if (adapterId != manifestJson.app_id) {
         console.log(`Looks like you are not updating the adapter with id ${adapterId}`);
@@ -173,4 +174,49 @@ export const unRegisterPlugin = async (adapterId: string): Promise<boolean> => {
     const isSuccess = await removeFolderAsync(pluginFolderPath);
     console.log(`successfully uninstalled plugin ${adapterId}`);
     return isSuccess;
+};
+
+const fetchExeData = async (exePath, cmdParams: string[]): Promise<string> => {
+    const getIpcRespAsync = (ipc: ChildProcess): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            let res = "";
+
+            ipc.stderr.once('data', function (data) {
+                // console.log(data.toString());
+                reject(data.toString());
+            });
+
+            ipc.stdout.on('data', function (data) {
+                // console.log(data.toString());
+                // resolve(`result=` + data.toString());
+                res += data.toString();
+            });
+
+            ipc.once('close', (code: number) => {
+                resolve(res);
+                // console.log(`Ipc exe to exit with code: ${code}`);
+            });
+        });
+    }
+    // cmdParams.unshift('/c', exePath);
+    // console.log(exePath);
+    // console.log(cmdParams);
+    // const ipc = spawn('cmd.exe', cmdParams);
+    const ipc = spawn(exePath, cmdParams);
+    let resp: string = null;
+    try { resp = await getIpcRespAsync(ipc); }
+    catch (ex) {
+        console.log(ex);
+        resp = null;
+    }
+    return resp;
+};
+
+export const fetchFromAdapter = async (adapterId: string, cmdParams: string[]) => {
+    const adapter: AdapterManifest = getAdapter(adapterId);
+    // get the exe path of adapter
+    const exePath = path.join(getExesFolder(), adapter.app_id, adapter.entry)
+    const resp = await fetchExeData(exePath, cmdParams);
+    // console.log(resp);
+    return resp;
 };

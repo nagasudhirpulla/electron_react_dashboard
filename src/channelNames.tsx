@@ -24,3 +24,6 @@ export const deleteDataAdapterResp = 'deleteDataAdapterResp';
 export const updateDataAdapter = 'updateDataAdapter';
 export const updateDataAdapterResp = 'updateDataAdapterResp';
 export const openDataAdaptersEditor = 'openDataAdaptersEditor';
+export const getAdapterData = 'getAdapterData';
+export const getAdapterDataResp = 'getAdapterDataResp';
+export const openAdapterMeasPicker = 'openAdapterMeasPicker';

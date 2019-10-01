@@ -9,6 +9,7 @@ import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { ShowMessageBoxOptions } from 'electron';
 import { AdaptersListItem } from '../../adapters/components/AdaptersList';
+import { AdapterMeasurement } from '../../measurements/AdapterMeasurement';
 const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
@@ -115,6 +116,10 @@ export const TslpEditForm = (props) => {
             seriesProps.meas = new DummyMeasurement();
         } else if (values.newMeasType == WbesMeasurement.typename) {
             seriesProps.meas = new WbesMeasurement();
+        } else {
+            // We assume that it is Data Adapter
+            seriesProps.meas = new AdapterMeasurement();
+            (seriesProps.meas as AdapterMeasurement).adapter_id = values.newMeasType;
         }
         setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
     };

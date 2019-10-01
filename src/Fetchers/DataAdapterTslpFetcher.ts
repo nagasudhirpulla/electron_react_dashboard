@@ -1,9 +1,9 @@
 import { VarTime } from "../variable_time/VariableTime";
 import { ITslpDataPoint, TimePeriod } from "../components/ITimeSeriesLinePlot";
-import { SamplingStrategy, Periodicity, IScadaMeasurement } from "../measurements/ScadaMeasurement";
 import { ITslpDataFetcher } from "./IFetcher";
 import { ipcRenderer } from "electron";
 import * as channels from '../channelNames';
+import { IAdapterMeasurement } from "../measurements/AdapterMeasurement";
 
 export class DataAdapterTslpFetcher implements ITslpDataFetcher {
     exeName: string = 'ScadaCsharpNodeAdapter.exe';
@@ -19,28 +19,25 @@ export class DataAdapterTslpFetcher implements ITslpDataFetcher {
         return `${time.getTime()}`;
     };
 
-    getExeRespAsync = (exeName: string, cmdParams: string[]): Promise<string> => {
+    getAdapterRespAsync = (adapterId: string, cmdParams: string[]): Promise<string> => {
         return new Promise((resolve, reject) => {
-            ipcRenderer.send(channels.getExeData, { exeName: exeName, cmdParams: cmdParams });
-            ipcRenderer.once(channels.getExeDataResp, (event, resp: string) => {
+            ipcRenderer.send(channels.getAdapterData, { adapterId: adapterId, cmdParams: cmdParams });
+            ipcRenderer.once(channels.getAdapterDataResp, (event, resp: string) => {
                 resolve(resp);
             });
         });
     }
 
-    fetchDataFromIpc = async (fromTime: Date, toTime: Date, measId: string, sampling_strategy: SamplingStrategy, periodicity: Periodicity): Promise<number[]> => {
+    fetchDataFromIpc = async (fromTime: Date, toTime: Date, measId: string, adapterId: string): Promise<number[]> => {
         const fromTimeStr = this.convertTimeToInpStr(fromTime);
         const toTimeStr = this.convertTimeToInpStr(toTime);
         const cmdParams: string[] = [
-            "--meas_id", measId, "--from_time", fromTimeStr, "--to_time", toTimeStr,
-            "--periodicity", TimePeriod.getSeconds(periodicity) + "", "--request_type", "history",
-            "--sampling_strategy", sampling_strategy
+            "--meas_id", measId, "--from_time", fromTimeStr, "--to_time", toTimeStr
         ];
-        const exeName = this.exeName;
         // meas_id, from_time, to_time, host, port, path, username, password, ref_meas_id
         let data: number[] = [];
         try {
-            const resp = await this.getExeRespAsync(exeName, cmdParams);
+            const resp = await this.getAdapterRespAsync(adapterId, cmdParams);
             if (resp != null && resp != "") {
                 data = resp.split(',').map((num) => { return +num; });
             }
@@ -52,10 +49,13 @@ export class DataAdapterTslpFetcher implements ITslpDataFetcher {
         return data;
     }
 
-    async fetchEdnaData(pnt: string | number, sampling_strategy: SamplingStrategy, periodicity: Periodicity, fromTime: Date, toTime: Date): Promise<ITslpDataPoint[]> {
+    async fetchAdapterData(pnt: IAdapterMeasurement, fromTime: Date, toTime: Date): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = [];
+        if (pnt.adapter_id == null || pnt.adapter_id == "") {
+            return resultData;
+        }
         try {
-            let resVals: number[] = await this.fetchDataFromIpc(fromTime, toTime, `${pnt}`, sampling_strategy, periodicity);
+            let resVals: number[] = await this.fetchDataFromIpc(fromTime, toTime, pnt.meas_id, pnt.adapter_id);
 
             for (var i = 0; i < resVals.length / 2; i++) {
                 let pntInd = i * 2;
@@ -70,7 +70,7 @@ export class DataAdapterTslpFetcher implements ITslpDataFetcher {
         return resultData;
     };
 
-    async fetchData(fromVarTime: VarTime, toVarTime: VarTime, edna_meas: IScadaMeasurement): Promise<ITslpDataPoint[]> {
+    async fetchData(fromVarTime: VarTime, toVarTime: VarTime, adap_meas: IAdapterMeasurement): Promise<ITslpDataPoint[]> {
         let resultData: ITslpDataPoint[] = []
         const fromTime = VarTime.getDateObj(fromVarTime);
         const toTime = VarTime.getDateObj(toVarTime);
@@ -79,7 +79,7 @@ export class DataAdapterTslpFetcher implements ITslpDataFetcher {
             return resultData;
         }
 
-        resultData = await this.fetchEdnaData(edna_meas.meas_id, edna_meas.sampling_strategy, edna_meas.periodicity, fromTime, toTime);
+        resultData = await this.fetchAdapterData(adap_meas, fromTime, toTime);
         return resultData;
     }
 }
