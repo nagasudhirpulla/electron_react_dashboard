@@ -248,7 +248,7 @@ ipcMain.on(channels.openAdapterMeasPicker, async (event, args: { adapterId: stri
     event.reply(channels.selectedMeas, { measInfo: JSON.parse(resp), measName: args.measName });
 });
 
-ipcMain.on(channels.openAdapterConfigWindow, async (event, args: { adapterId: string, measName: string }) => {
+ipcMain.on(channels.openAdapterConfigWindow, async (event, adapterId: string) => {
     const cmdParams: string[] = ["--config_adapter"];
-    const resp = await fetchFromAdapter(args.adapterId, cmdParams);
+    const resp = await fetchFromAdapter(adapterId, cmdParams);
 });
