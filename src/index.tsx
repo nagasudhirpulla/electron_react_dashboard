@@ -241,3 +241,14 @@ ipcMain.on(channels.getAdapterData, async (event, args: { adapterId: string, cmd
     const resp = await fetchFromAdapter(args.adapterId, args.cmdParams);
     event.reply(channels.getAdapterDataResp, resp);
 });
+
+ipcMain.on(channels.openAdapterMeasPicker, async (event, args: { adapterId: string, measName: string }) => {
+    const cmdParams: string[] = ["--show_meas_picker"];
+    const resp = await fetchFromAdapter(args.adapterId, cmdParams);
+    event.reply(channels.selectedMeas, { measInfo: JSON.parse(resp), measName: args.measName });
+});
+
+ipcMain.on(channels.openAdapterConfigWindow, async (event, args: { adapterId: string, measName: string }) => {
+    const cmdParams: string[] = ["--config_adapter"];
+    const resp = await fetchFromAdapter(args.adapterId, cmdParams);
+});

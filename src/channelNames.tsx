@@ -27,3 +27,4 @@ export const openDataAdaptersEditor = 'openDataAdaptersEditor';
 export const getAdapterData = 'getAdapterData';
 export const getAdapterDataResp = 'getAdapterDataResp';
 export const openAdapterMeasPicker = 'openAdapterMeasPicker';
+export const openAdapterConfigWindow = 'openAdapterConfigWindow';

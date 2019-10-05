@@ -366,7 +366,7 @@ export const AdapterMeasEditFormComp = (props) => {
     } = props;
 
     const onMeasPickerClick = () => {
-        ipcRenderer.send(openAdapterMeasPicker, { name: name, adapterId: values.adapter_id });
+        ipcRenderer.send(openAdapterMeasPicker, { measName: name, adapterId: values.adapter_id });
     };
 
     ipcRenderer.on(selectedMeas, (event, { measInfo, measName }) => {

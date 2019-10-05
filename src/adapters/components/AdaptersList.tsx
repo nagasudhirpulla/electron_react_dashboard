@@ -70,6 +70,10 @@ class AdaptersList extends Component<AdaptersListProps, AdaptersListState> {
         });
     }
 
+    onConfigAdapterClick = async (adapterItem: AdaptersListItem) => {
+        ipcRenderer.send(channels.openAdapterConfigWindow, adapterItem.adapter_id);
+    }
+
     render() {
         let adapterComps = [];
         for (let ad_ind = 0; ad_ind < this.state.adapters.length; ad_ind++) {
@@ -79,6 +83,7 @@ class AdaptersList extends Component<AdaptersListProps, AdaptersListState> {
                 <td>
                     <button onClick={this.onDelAdapterClick.bind(this, this.state.adapters[ad_ind])}>Delete Adapter</button>
                     <button onClick={this.onUpdAdapterClick.bind(this, this.state.adapters[ad_ind])}>Update Adapter</button>
+                    <button onClick={this.onConfigAdapterClick.bind(this, this.state.adapters[ad_ind])}>Configure Adapter</button>
                 </td>
             </tr>);
             adapterComps.push(adapterComp);
@@ -98,7 +103,5 @@ class AdaptersList extends Component<AdaptersListProps, AdaptersListState> {
             </>
         );
     }
-
-
 }
 export default AdaptersList;
