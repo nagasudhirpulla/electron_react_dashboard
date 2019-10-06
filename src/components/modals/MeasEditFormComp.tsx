@@ -369,18 +369,19 @@ export const AdapterMeasEditFormComp = (props) => {
         ipcRenderer.send(openAdapterMeasPicker, { measName: name, adapterId: values.adapter_id });
     };
 
-    ipcRenderer.on(selectedMeas, (event, resp: { err?: string, measInfo: string[], measName: string }) => {
+    ipcRenderer.once(selectedMeas, (event, resp: { err?: string, measInfo: string[], measName: string }) => {
         if (resp.measName != name) {
             return;
         }
         if (resp.err != undefined) {
-            alert(resp.err);
+            console.log(resp.err);
             return;
         }
         console.log(`Obtained adapter meas from picker is ${resp.measInfo}`) // prints "pong"
         // set the measurement Id and measurement name
         setFieldValue(`${name}.meas_id`, resp.measInfo[0]);
     });
+
     return (
         <>
             <button type="button" onClick={onMeasPickerClick}>...</button>
