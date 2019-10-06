@@ -72,6 +72,12 @@ class AdaptersList extends Component<AdaptersListProps, AdaptersListState> {
 
     onConfigAdapterClick = async (adapterItem: AdaptersListItem) => {
         ipcRenderer.send(channels.openAdapterConfigWindow, adapterItem.adapter_id);
+        ipcRenderer.once(channels.openAdapterConfigWindowResp, (event, resp: { err?: string }) => {
+            if (resp.err != undefined) {
+                alert(resp.err);
+                return;
+            }
+        });
     }
 
     render() {

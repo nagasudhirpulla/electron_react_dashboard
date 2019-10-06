@@ -8,7 +8,7 @@ import { getPmuMeasList, refreshPmuMeasList, IPrefs, setAppSettings, initPrefsSt
 import * as channels from './channelNames';
 import { initPmuMeasListState } from './appSettings';
 import { spawn, ChildProcess } from "child_process";
-import { initAdapters, getAdapters } from "./adapters/adapter_state";
+import { initAdapters, getAdapters, getAdapter } from "./adapters/adapter_state";
 import { registerPlugin, unRegisterPlugin, updatePlugin, fetchFromAdapter } from "./adapters/adapter_server";
 // import { join } from 'path';
 import { AdapterManifest } from './adapters/def_manifest';
@@ -243,12 +243,31 @@ ipcMain.on(channels.getAdapterData, async (event, args: { adapterId: string, cmd
 });
 
 ipcMain.on(channels.openAdapterMeasPicker, async (event, args: { adapterId: string, measName: string }) => {
+    const adapter: AdapterManifest = getAdapter(args.adapterId);
+    if (adapter == undefined || adapter == null) {
+        event.reply(channels.selectedMeas, { err: "This data adapter is not present. Please reload or check adapters list...", measName: args.measName });
+        return;
+    }
+    else if (adapter.is_meas_picker_present == false) {
+        event.reply(channels.selectedMeas, { err: "Measurement picker is not supported in this adapter...", measName: args.measName });
+        return;
+    }
     const cmdParams: string[] = ["--show_meas_picker"];
     const resp = await fetchFromAdapter(args.adapterId, cmdParams);
     event.reply(channels.selectedMeas, { measInfo: JSON.parse(resp), measName: args.measName });
 });
 
 ipcMain.on(channels.openAdapterConfigWindow, async (event, adapterId: string) => {
+    const adapter: AdapterManifest = getAdapter(adapterId);
+    if (adapter == undefined || adapter == null) {
+        event.reply(channels.openAdapterConfigWindowResp, { err: "This data adapter is not present. Please reload or check adapters list..." });
+        return;
+    }
+    else if (adapter.is_meas_picker_present == false) {
+        event.reply(channels.openAdapterConfigWindowResp, { err: "Adapter Configuration window is not supported in this adapter..." });
+        return;
+    }
     const cmdParams: string[] = ["--config_adapter"];
     const resp = await fetchFromAdapter(adapterId, cmdParams);
+    event.reply(channels.openAdapterConfigWindowResp, {});
 });

@@ -28,3 +28,4 @@ export const getAdapterData = 'getAdapterData';
 export const getAdapterDataResp = 'getAdapterDataResp';
 export const openAdapterMeasPicker = 'openAdapterMeasPicker';
 export const openAdapterConfigWindow = 'openAdapterConfigWindow';
+export const openAdapterConfigWindowResp = 'openAdapterConfigWindowResp';

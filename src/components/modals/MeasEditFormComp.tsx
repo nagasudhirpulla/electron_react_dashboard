@@ -369,15 +369,18 @@ export const AdapterMeasEditFormComp = (props) => {
         ipcRenderer.send(openAdapterMeasPicker, { measName: name, adapterId: values.adapter_id });
     };
 
-    ipcRenderer.on(selectedMeas, (event, { measInfo, measName }) => {
-        if (measName != name) {
+    ipcRenderer.on(selectedMeas, (event, resp: { err?: string, measInfo: string[], measName: string }) => {
+        if (resp.measName != name) {
             return;
         }
-        console.log(`Obtained adapter meas from picker is ${measInfo}`) // prints "pong"
+        if (resp.err != undefined) {
+            alert(resp.err);
+            return;
+        }
+        console.log(`Obtained adapter meas from picker is ${resp.measInfo}`) // prints "pong"
         // set the measurement Id and measurement name
-        setFieldValue(`${name}.meas_id`, measInfo[0]);
+        setFieldValue(`${name}.meas_id`, resp.measInfo[0]);
     });
-    //todo keep picker as conditional based on manifest
     return (
         <>
             <button type="button" onClick={onMeasPickerClick}>...</button>
