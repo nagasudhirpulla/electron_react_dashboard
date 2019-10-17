@@ -10,6 +10,7 @@ import { DummyMeasurement } from '../../measurements/DummyMeasurement';
 import { WbesMeasurement } from './../../measurements/WbesMeasurement';
 import { ShowMessageBoxOptions } from 'electron';
 import { AdaptersListItem } from '../../adapters/components/AdaptersList';
+import { AdapterMeasurement } from '../../measurements/AdapterMeasurement';
 const showConfirmationDialog = require('electron').remote.dialog.showMessageBox;
 
 const WidgetContentDivider = () => (<div className="widget_content_divider"></div>);
@@ -116,6 +117,9 @@ export const TsscEditForm = (props) => {
             seriesProps.meas1 = new DummyMeasurement();
         } else if (values.newMeas1Type == WbesMeasurement.typename) {
             seriesProps.meas1 = new WbesMeasurement();
+        } else {
+            seriesProps.meas1 = new AdapterMeasurement();
+            (seriesProps.meas1 as AdapterMeasurement).adapter_id = values.newMeas1Type;
         }
 
         if (values.newMeas2Type == ScadaMeasurement.typename) {
@@ -127,6 +131,9 @@ export const TsscEditForm = (props) => {
             seriesProps.meas2 = new DummyMeasurement();
         } else if (values.newMeas2Type == WbesMeasurement.typename) {
             seriesProps.meas2 = new WbesMeasurement();
+        } else {
+            seriesProps.meas2 = new AdapterMeasurement();
+            (seriesProps.meas2 as AdapterMeasurement).adapter_id = values.newMeas2Type;
         }
         setFieldValue(`${nameStr}.seriesList`, [...values[nameStr].seriesList, seriesProps]);
     };

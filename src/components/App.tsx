@@ -492,7 +492,9 @@ class App extends React.Component<AppProps, AppState> {
         else if (series.meas1.discriminator == WbesMeasurement.typename) {
           pntsX = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IWbesMeasurement);
         }
-
+        else if (series.meas1.discriminator == AdapterMeasurement.typename) {
+          pntsX = await adapterFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas1 as IAdapterMeasurement);
+        }
         // get Y points
         if (series.meas2.discriminator == ScadaMeasurement.typename) {
           series.meas2 = series.meas2 as IScadaMeasurement;
@@ -506,6 +508,9 @@ class App extends React.Component<AppProps, AppState> {
         }
         else if (series.meas2.discriminator == WbesMeasurement.typename) {
           pntsY = await wbesFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IWbesMeasurement);
+        }
+        else if (series.meas2.discriminator == AdapterMeasurement.typename) {
+          pntsY = await adapterFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas2 as IAdapterMeasurement);
         }
 
         // here we assume that we get the same timestamps for both measurements meas1 and meas2
