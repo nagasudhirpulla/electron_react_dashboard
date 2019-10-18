@@ -300,6 +300,7 @@ class App extends React.Component<AppProps, AppState> {
     const dialogRes = await showOpenDialog({
       properties: ['openFile'],
       filters: [
+        { name: 'E-Dash', extensions: ['edash'] },
         { name: 'JSON', extensions: ['json'] },
         { name: 'All Files', extensions: ['*'] }
       ],
