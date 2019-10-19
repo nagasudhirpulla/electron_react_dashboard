@@ -35,17 +35,22 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         let seriesData: Data = { ...series_data_template };
         seriesData.line.color = this.state.seriesList[seriesIter].color;
         seriesData.line.width = this.state.seriesList[seriesIter].size;
-        
+
         // determine series data display time shift
         let shiftMillis: number = 0;
-        if (this.state.seriesList[seriesIter].seriesStyle != TslpSeriesStyle.duration) {
+        const seriesStyle = this.state.seriesList[seriesIter].seriesStyle;
+        if (seriesStyle != TslpSeriesStyle.duration) {
             shiftMillis = 1000 * TimePeriod.getSeconds(this.state.seriesList[seriesIter].displayTimeShift);
         }
 
         // get points from measurement
         for (let pntIter = 0; pntIter < this.state.seriesList[seriesIter].points.length; pntIter++) {
             const dataPnt = this.state.seriesList[seriesIter].points[pntIter];
-            (seriesData.x as Datum[]).push(new Date(dataPnt.timestamp + shiftMillis));
+            let xVal: Datum = dataPnt.timestamp;
+            if (seriesStyle != TslpSeriesStyle.duration) {
+                xVal = new Date(dataPnt.timestamp + shiftMillis);
+            }
+            (seriesData.x as Datum[]).push(xVal);
             (seriesData.y as Datum[]).push(dataPnt.value);
         }
         return seriesData;

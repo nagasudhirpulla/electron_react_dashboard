@@ -14,14 +14,30 @@ export const convertToDurationPnts = (pnts: ITslpDataPoint[]): ITslpDataPoint[] 
     return durationPnts;
 };
 
+const getMinMaxLenFromArray = (vals: number[]): { min: number, max: number, len: number } => {
+    let minVal = Infinity;
+    let maxVal = -Infinity;
+    const len = vals.length;
+    for (let valIter = 0; valIter < len; valIter++) {
+        const val = vals[valIter];
+        if (val < minVal) {
+            minVal = val;
+        }
+        if (val > maxVal) {
+            maxVal = val;
+        }
+    }
+    return { min: minVal, max: maxVal, len: len };
+}
 export const getDurationData = (vals: number[], resol: number): ITslpDataPoint[] => {
-    const minVal = Math.min(...vals);
-    const maxVal = Math.max(...vals);
-    const numVals = vals.length;
+    const valsStats = getMinMaxLenFromArray(vals);
+    const minVal = valsStats.min;
+    const maxVal = valsStats.max;
+    const numVals = valsStats.len;
 
     // determine bins resolution if not provided
     let valsResol = resol;
-    const defResolDivider = 1000;
+    const defResolDivider = Math.min(1000, numVals);
     if (resol == null) {
         valsResol = (maxVal - minVal) / defResolDivider;
     }
