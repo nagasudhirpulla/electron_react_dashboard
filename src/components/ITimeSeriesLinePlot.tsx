@@ -79,7 +79,8 @@ export enum PlotlyRenderStrategy {
 
 export enum TslpSeriesStyle {
     line = "line",
-    duration = "duration"
+    duration = "duration",
+    boxplot = "boxplot",
 }
 export interface ITimePeriod {
     years: number,

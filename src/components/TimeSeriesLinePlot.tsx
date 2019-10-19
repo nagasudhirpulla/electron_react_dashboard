@@ -33,13 +33,27 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
 
     generateSeriesData(seriesIter: number): Data {
         let series_data_template: Data = { name: this.state.seriesList[seriesIter].title, x: [], y: [], type: this.state.seriesList[seriesIter].renderStrategy, mode: 'lines', line: { color: 'red' as Color, width: 2 } }
+        const seriesStyle = this.state.seriesList[seriesIter].seriesStyle;
         let seriesData: Data = { ...series_data_template };
-        seriesData.line.color = this.state.seriesList[seriesIter].color;
-        seriesData.line.width = this.state.seriesList[seriesIter].size;
+
+        // use different series template for boxplot
+        if (seriesStyle == TslpSeriesStyle.boxplot) {
+            seriesData = {
+                name: this.state.seriesList[seriesIter].title,
+                y: [],
+                type: 'box',
+                marker: {
+                    color: this.state.seriesList[seriesIter].color
+                }
+            };
+        } else {
+            // set line color and width
+            seriesData.line.color = this.state.seriesList[seriesIter].color;
+            seriesData.line.width = this.state.seriesList[seriesIter].size;
+        }
 
         // determine series data display time shift
         let shiftMillis: number = 0;
-        const seriesStyle = this.state.seriesList[seriesIter].seriesStyle;
         if (seriesStyle != TslpSeriesStyle.duration) {
             shiftMillis = 1000 * TimePeriod.getSeconds(this.state.seriesList[seriesIter].displayTimeShift);
         }
@@ -48,10 +62,12 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         for (let pntIter = 0; pntIter < this.state.seriesList[seriesIter].points.length; pntIter++) {
             const dataPnt = this.state.seriesList[seriesIter].points[pntIter];
             let xVal: Datum = dataPnt.timestamp;
-            if (seriesStyle != TslpSeriesStyle.duration) {
+            if (seriesStyle == TslpSeriesStyle.line) {
                 xVal = new Date(dataPnt.timestamp + shiftMillis);
             }
-            (seriesData.x as Datum[]).push(xVal);
+            if (seriesStyle != TslpSeriesStyle.boxplot) {
+                (seriesData.x as Datum[]).push(xVal);
+            }
             (seriesData.y as Datum[]).push(dataPnt.value);
         }
         return seriesData;

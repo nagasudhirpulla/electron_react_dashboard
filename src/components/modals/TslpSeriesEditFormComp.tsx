@@ -128,6 +128,7 @@ export const TslpSeriesEditFormComp = (props) => {
             >
                 <option value={TslpSeriesStyle.line}>Normal Timeseries</option>
                 <option value={TslpSeriesStyle.duration}>Duration Curve</option>
+                <option value={TslpSeriesStyle.boxplot}>Box Plot</option>
             </select>
 
             <SeriesCompDivider />
