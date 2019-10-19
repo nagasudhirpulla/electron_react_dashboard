@@ -474,7 +474,7 @@ class App extends React.Component<AppProps, AppState> {
         if (series.seriesStyle == TslpSeriesStyle.duration) {
           pnts = convertToDurationPnts(pnts);
         }
-        
+
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
       }
@@ -578,13 +578,14 @@ class App extends React.Component<AppProps, AppState> {
   generateDOM = () => {
     return this.state.widgetProps.map((wp: IDashWidgetProps, ind) => {
       let l: LayoutItem = wp.layouts[this.state.currentBreakpoint];
-      let content = <div className="cellContent"></div>;
+      const contentStyle: React.CSSProperties = { border: wp.contentProps.border }
+      let content = <div className="cellContent" style={contentStyle}></div>;
       if (wp.contentProps.discriminator == TslpProps.typename) {
-        content = <div className="cellContent" key={l.i + '_timeseries'}>
+        content = <div className="cellContent" key={l.i + '_timeseries'} style={contentStyle}>
           <TimeSeriesLinePlot {...wp.contentProps}></TimeSeriesLinePlot>
         </div>;
       } else if (wp.contentProps.discriminator == TsscProps.typename) {
-        content = <div className="cellContent" key={l.i + '_scatter'}>
+        content = <div className="cellContent" key={l.i + '_scatter'} style={contentStyle}>
           <TimeSeriesScatterPlot {...wp.contentProps}></TimeSeriesScatterPlot>
         </div>;
       }

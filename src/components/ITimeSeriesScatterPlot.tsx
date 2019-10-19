@@ -15,6 +15,7 @@ export interface ITsscProps extends IDashWidgetContentProps {
 export class TsscProps implements ITsscProps {
     static typename: string = 'TsscProps';
     discriminator: string = TsscProps.typename;
+    border: string = "1px solid lightgray"
     seriesList: ITsscSeriesProps[] = [];
     backgroundColor: Color = "white";
     titleColor: Color = "black";

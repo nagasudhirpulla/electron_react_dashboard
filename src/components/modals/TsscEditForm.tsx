@@ -86,6 +86,16 @@ export const TsscEditFormComp = (props) => {
             />
             <WidgetContentDivider />
 
+            <span>Border{" "}</span>
+            <input
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                name={`${name}.border`}
+                value={values.border}
+            />
+            <WidgetContentDivider />
+
             {TsscSeriesFormComps}
         </>
     )
