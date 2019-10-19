@@ -27,12 +27,12 @@ body {
 
 .react-grid-item {
   box-sizing: border-box;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
 }
 
 .react-grid-item:not(.react-grid-placeholder) {
-  background: #ccc;
-  border: 1px solid lightgray;
+  /* background: #ccc; 
+  border: 1px solid lightgray;*/
 }
 
 .react-grid-item.resizing {
@@ -108,8 +108,8 @@ li b {
   left: 0;
   right: 0;
   height: 20px;
-  /* z-index: 10; */
-  /* display: none; */
+  z-index: 1;
+  display: none;
   cursor: move;
   /* fallback if grab cursor is unsupported */
   cursor: grab;
@@ -117,9 +117,9 @@ li b {
   cursor: -webkit-grab;
 }
 
-/* .react-grid-item:hover .dragHandle {
+.react-grid-item:hover .dragHandle {
   display: block;
-} */
+}
 
 .removeBtn {
   position: absolute;
@@ -168,9 +168,10 @@ li b {
   position: absolute;
   left: 0;
   right: 0;
-  top: 20px;
+  top: 0;
+  padding-top: 20px;
   bottom: 0;
-  background-color: cadetblue;
+  background-color: transparent;
 }
 
 .black_border {
