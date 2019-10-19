@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { ITslpProps, ITslpState, ITslpDataPoint, IFrame, TslpProps, TimePeriod } from "./ITimeSeriesLinePlot";
+import { ITslpProps, ITslpState, ITslpDataPoint, IFrame, TslpProps, TimePeriod, TslpSeriesStyle } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
@@ -35,7 +35,13 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         let seriesData: Data = { ...series_data_template };
         seriesData.line.color = this.state.seriesList[seriesIter].color;
         seriesData.line.width = this.state.seriesList[seriesIter].size;
-        const shiftMillis: number = 1000 * TimePeriod.getSeconds(this.state.seriesList[seriesIter].displayTimeShift);
+        
+        // determine series data display time shift
+        let shiftMillis: number = 0;
+        if (this.state.seriesList[seriesIter].seriesStyle != TslpSeriesStyle.duration) {
+            shiftMillis = 1000 * TimePeriod.getSeconds(this.state.seriesList[seriesIter].displayTimeShift);
+        }
+
         // get points from measurement
         for (let pntIter = 0; pntIter < this.state.seriesList[seriesIter].points.length; pntIter++) {
             const dataPnt = this.state.seriesList[seriesIter].points[pntIter];

@@ -6,7 +6,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy, TimePeriod } from './ITimeSeriesLinePlot';
+import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy, TimePeriod, TslpSeriesStyle } from './ITimeSeriesLinePlot';
 import { VarTime } from './../variable_time/VariableTime';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
@@ -47,6 +47,7 @@ import { AdapterManifest } from '../adapters/def_manifest';
 import { AdaptersListItem } from '../adapters/components/AdaptersList';
 import { AdapterMeasurement, IAdapterMeasurement } from '../measurements/AdapterMeasurement';
 import { DataAdapterTslpFetcher } from '../Fetchers/DataAdapterTslpFetcher';
+import { convertToDurationPnts } from '../utils/duration_plot_utils';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -468,6 +469,12 @@ class App extends React.Component<AppProps, AppState> {
         else if (series.meas.discriminator == AdapterMeasurement.typename) {
           pnts = await adapterFetcher.fetchData(series.fromVarTime, series.toVarTime, series.meas as IAdapterMeasurement);
         }
+
+        // convert to duration plot if required
+        if (series.seriesStyle == TslpSeriesStyle.duration) {
+          pnts = convertToDurationPnts(pnts);
+        }
+        
         // fetch the timeseries data
         (wp.contentProps as TslpProps).seriesList[seriesIter].points = pnts;
       }

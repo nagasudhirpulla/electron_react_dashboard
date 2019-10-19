@@ -41,10 +41,12 @@ export interface ITslpSeriesProps {
     toVarTime: VarTime,
     displayTimeShift: ITimePeriod,
     renderStrategy: PlotlyRenderStrategy,
+    seriesStyle: TslpSeriesStyle,
     points: ITslpDataPoint[]
 }
 
 export class TslpSeriesProps implements ITslpSeriesProps {
+    seriesStyle: TslpSeriesStyle = TslpSeriesStyle.line;
     renderStrategy = PlotlyRenderStrategy.scatter;
     title: string = "Series Name";
     color: Color = "blue";
@@ -74,6 +76,10 @@ export enum PlotlyRenderStrategy {
     scattergl = "scattergl"
 }
 
+export enum TslpSeriesStyle {
+    line = "line",
+    duration = "duration"
+}
 export interface ITimePeriod {
     years: number,
     months: number,

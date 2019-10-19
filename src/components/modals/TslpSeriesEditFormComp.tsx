@@ -2,7 +2,7 @@ import React from 'react';
 import { VarTimeEditFormComp } from '../../variable_time/VarTimeEditFormComp';
 import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 import { MeasEditFormComp } from './MeasEditFormComp';
-import { PlotlyRenderStrategy } from '../ITimeSeriesLinePlot';
+import { PlotlyRenderStrategy, TslpSeriesStyle } from '../ITimeSeriesLinePlot';
 
 const SeriesCompDivider = () => (<div className="series_divider"><hr /></div>);
 
@@ -116,6 +116,19 @@ export const TslpSeriesEditFormComp = (props) => {
                 value={values.size}
                 name={`${name}.size`}
             />
+
+            <SeriesCompDivider />
+
+            <span><b>Visualization{" "}</b></span>
+            <select
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.seriesStyle}
+                name={`${name}.seriesStyle`}
+            >
+                <option value={TslpSeriesStyle.line}>Normal Timeseries</option>
+                <option value={TslpSeriesStyle.duration}>Duration Curve</option>
+            </select>
 
             <SeriesCompDivider />
 
