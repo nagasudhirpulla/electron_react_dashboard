@@ -13,6 +13,7 @@ import { IFrame } from './ITimeSeriesLinePlot';
 class TimeSeriesScatterPlot extends Component<ITsscProps, ITsscState> implements IDashWidgetContent {
     static defaultProps: ITsscProps = {
         discriminator: TsscProps.typename,
+        border: '1px solid lightgray',
         backgroundColor: 'white',
         titleColor: 'black',
         seriesList: [],

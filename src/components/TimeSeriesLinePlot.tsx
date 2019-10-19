@@ -12,6 +12,7 @@ import { IDashWidgetContent } from './IDashWidgetContent';
 class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements IDashWidgetContent {
     static defaultProps: ITslpProps = {
         discriminator: TslpProps.typename,
+        border: '1px solid lightgray',
         backgroundColor: 'white',
         titleColor: 'black',
         seriesList: [],

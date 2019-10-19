@@ -10,7 +10,7 @@ export interface IDashWidgetProps {
 }
 
 export class DashWidgetProps implements IDashWidgetProps {
-    contentProps: IDashWidgetContentProps = { discriminator: 'Blank' };
+    contentProps: IDashWidgetContentProps = { discriminator: 'Blank', border: '1px solid lightgray' };
     layouts: ILayoutItemDict = {
         lg: {
             x: 0, y: 0, w: 2, h: 2, i: uuid(), static: false
