@@ -121,6 +121,16 @@ li b {
   display: block;
 }
 
+.react-grid-item>.react-resizable-handle::after {
+  border-right: none;
+  border-bottom: none;
+}
+
+.react-grid-item:hover>.react-resizable-handle::after {
+  border-right: 2px solid rgba(0, 0, 0, 0.4);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+}
+
 .removeBtn {
   position: absolute;
   right: 2px;
