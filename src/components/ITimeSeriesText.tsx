@@ -4,6 +4,7 @@ import { VarTime } from './../variable_time/VariableTime';
 import { IDashWidgetContentState, IDashWidgetContentProps } from "./IDashWidgetContent";
 import { FontStyleProperty, FontWeightProperty, FontFamilyProperty } from "csstype";
 import { DummyMeasurement } from "../measurements/DummyMeasurement";
+import { CSSProperties } from 'react';
 
 interface baseProps {
     meas: IMeasurement,
@@ -12,13 +13,14 @@ interface baseProps {
     textComputationStrategy: TextComputationStrategy,
     prefixText: string,
     suffixText: string,
-    fontcolor: Color,
+    fontColor: Color,
     backgroundColor: Color,
     fontStyle: FontStyleProperty,
-    fontWeight: FontWeightProperty,
+    fontWeight: CSSProperties["fontWeight"],
     fontFamily: FontFamilyProperty,
     fontSize: number,
-    val: number
+    val: number,
+    decimalPrecision: number
 }
 
 export interface ITsTextProps extends IDashWidgetContentProps, baseProps {
@@ -30,7 +32,6 @@ export interface ITsTextState extends baseProps, IDashWidgetContentState {
 }
 
 export class TsTextProps implements ITsTextProps {
-    val: number = 0;
     static typename: string = 'TsTextProps';
     discriminator: string = TsTextProps.typename;
     border: string = "1px solid lightgray";
@@ -40,12 +41,14 @@ export class TsTextProps implements ITsTextProps {
     textComputationStrategy: TextComputationStrategy = TextComputationStrategy.firstSample;
     prefixText: string = "";
     suffixText: string = "";
-    fontcolor: Color = "black";
+    fontColor: Color = "black";
     backgroundColor: Color = "transparent";
     fontStyle: FontStyleProperty = "normal";
-    fontWeight: FontWeightProperty = "normal";
+    fontWeight: CSSProperties["fontWeight"] = "normal";
     fontFamily: FontFamilyProperty = "sans-serif";
     fontSize: number = 1;
+    val: number = 0;
+    decimalPrecision: number = 2;
 }
 
 export enum TextComputationStrategy {
@@ -54,5 +57,6 @@ export enum TextComputationStrategy {
     average = "average",
     max = "max",
     min = "min",
-    percentile = "percentile"
+    percentile = "percentile",
+    noData = "noData"
 }
