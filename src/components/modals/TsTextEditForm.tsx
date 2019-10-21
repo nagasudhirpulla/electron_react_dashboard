@@ -144,23 +144,38 @@ export const TsTextEditFormComp = (props) => {
             <WidgetContentDivider />
 
             <span>Font Style{" "}</span>
-            <input
-                type="text"
+            <select
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.fontStyle}
                 name={`${name}.fontStyle`}
-            />
+            >
+                <option value="normal">normal</option>
+                <option value="italic">italic</option>
+            </select>
             <WidgetContentDivider />
 
             <span>Font Weight{" "}</span>
-            <input
-                type="text"
+            <select
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.fontWeight}
                 name={`${name}.fontWeight`}
-            />
+            >
+                <option value="normal">normal</option>
+                <option value="bold">bold</option>
+                <option value="bolder">bolder</option>
+                <option value="lighter">lighter</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="400">400</option>
+                <option value="500">500</option>
+                <option value="600">600</option>
+                <option value="700">700</option>
+                <option value="800">800</option>
+                <option value="900">900</option>
+            </select>
             <WidgetContentDivider />
 
             <span>Font Family{" "}</span>
