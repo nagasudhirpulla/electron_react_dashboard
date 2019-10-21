@@ -104,6 +104,7 @@ export const TsTextEditFormComp = (props) => {
                 <option value={TextComputationStrategy.max}>Maximum</option>
                 <option value={TextComputationStrategy.min}>Minimum</option>
                 <option value={TextComputationStrategy.percentile}>Percentile</option>
+                <option value={TextComputationStrategy.sum}>Sum</option>
                 <option value={TextComputationStrategy.noData}>No Data</option>
             </select>
             <WidgetContentDivider />

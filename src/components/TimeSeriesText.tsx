@@ -66,10 +66,16 @@ class TimeSeriesText extends Component<ITsTextProps, ITsTextState> implements ID
             fontFamily: this.state.fontFamily,
             fontSize: this.state.fontSize + "em"
         };
-        const decimalDivider = Math.pow(10, this.state.decimalPrecision);
-        const value = Math.round(this.state.val * decimalDivider) / decimalDivider;
+
+        let valText: string = "";
+        
+        if (this.state.textComputationStrategy != TextComputationStrategy.noData) {
+            const decimalDivider = Math.pow(10, this.state.decimalPrecision);
+            valText = "" + (Math.round(this.state.val * decimalDivider) / decimalDivider);
+        }
+
         return (
-            <span style={textStyle}>{this.state.prefixText}{value}{this.state.suffixText}</span>
+            <span style={textStyle}>{this.state.prefixText}{valText}{this.state.suffixText}</span>
         );
     }
 }

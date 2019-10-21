@@ -60,5 +60,6 @@ export enum TextComputationStrategy {
     max = "max",
     min = "min",
     percentile = "percentile",
+    sum = "sum",
     noData = "noData"
 }

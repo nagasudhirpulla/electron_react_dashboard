@@ -50,6 +50,7 @@ import { convertToDurationPnts } from '../utils/duration_plot_utils';
 import { TsTextProps, ITsTextProps } from './ITimeSeriesText';
 import { FormikTsTextEditForm } from './modals/TsTextEditForm';
 import TimeSeriesText from './TimeSeriesText';
+import { AppFetcher } from './../Fetchers/AppFetcher';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -434,6 +435,22 @@ class App extends React.Component<AppProps, AppState> {
   };
 
   onRefreshItem = async (ind: number) => {
+    let fetcher = new AppFetcher();
+    fetcher.setAppSettings(this.state.appSettings);
+    let wp = fetcher.refreshWidgetData(this.state.widgetProps[ind]);
+    const newState = {
+      ...this.state,
+      widgetProps: [
+        ...this.state.widgetProps.slice(0, ind),
+        { ...wp },
+        ...this.state.widgetProps.slice(ind + 1),
+      ]
+    }
+    this.setState({ ...newState } as AppState);
+  };
+
+  // todo remove this once onRefreshItem works well
+  onRefreshItemOld = async (ind: number) => {
     // let scadaFetcher: ScadaTslpFetcher = new ScadaTslpFetcher();
     // scadaFetcher.serverBaseAddress = this.state.appSettings.scadaServerBase;
     // scadaFetcher.serverPath = this.state.appSettings.scadaServerPath;
