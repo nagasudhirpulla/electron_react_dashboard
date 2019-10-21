@@ -339,7 +339,8 @@ class App extends React.Component<AppProps, AppState> {
     console.log(`Opening file ${openFilename}`);
     const fileContents: string = await readFileAsync(openFilename) as string;
     // console.log(`${fileContents}`);
-    const stateObj = JSON.parse(fileContents) as AppState;
+    let stateObj = JSON.parse(fileContents) as AppState;
+    stateObj = { ...stateObj, appSettings: this.state.appSettings, adapters: this.state.adapters };
     console.log(stateObj);
     this.setState({ widgetProps: [] } as AppState);
     this.setState(stateObj);
