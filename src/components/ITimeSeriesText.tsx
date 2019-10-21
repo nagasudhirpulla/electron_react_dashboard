@@ -11,6 +11,7 @@ interface baseProps {
     fromVarTime: VarTime,
     toVarTime: VarTime,
     textComputationStrategy: TextComputationStrategy,
+    percentile: number,
     prefixText: string,
     suffixText: string,
     fontColor: Color,
@@ -39,6 +40,7 @@ export class TsTextProps implements ITsTextProps {
     fromVarTime: VarTime = new VarTime();
     toVarTime: VarTime = new VarTime();
     textComputationStrategy: TextComputationStrategy = TextComputationStrategy.firstSample;
+    percentile: number = 50;
     prefixText: string = "";
     suffixText: string = "";
     fontColor: Color = "black";
