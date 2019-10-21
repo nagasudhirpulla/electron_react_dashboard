@@ -6,8 +6,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { AppProps, AppState, LayoutItem, Layout } from "./IApp";
 import { v4 as uuid } from 'uuid';
 import { IDashWidgetProps, DashWidgetProps } from './dash_widget/IDashWidgetState';
-import { ITslpSeriesProps, DisplayTimeShift, TslpProps, ITslpProps, ITslpDataPoint, TslpSeriesProps, PlotlyRenderStrategy, TimePeriod, TslpSeriesStyle } from './ITimeSeriesLinePlot';
-import { VarTime } from './../variable_time/VariableTime';
+import { TslpProps, ITslpProps, ITslpDataPoint, TimePeriod, TslpSeriesStyle } from './ITimeSeriesLinePlot';
 import TimeSeriesLinePlot from './TimeSeriesLinePlot';
 import { ScadaMeasurement, IScadaMeasurement } from '../measurements/ScadaMeasurement';
 const showOpenDialog = require('electron').remote.dialog.showOpenDialog;
@@ -48,6 +47,7 @@ import { AdaptersListItem } from '../adapters/components/AdaptersList';
 import { AdapterMeasurement, IAdapterMeasurement } from '../measurements/AdapterMeasurement';
 import { DataAdapterTslpFetcher } from '../Fetchers/DataAdapterTslpFetcher';
 import { convertToDurationPnts } from '../utils/duration_plot_utils';
+import { TsTextProps } from './ITimeSeriesText';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -241,6 +241,9 @@ class App extends React.Component<AppProps, AppState> {
     } else if (widType == TsscProps.typename) {
       // create a timeseries widget
       newWidgetProps.contentProps = new TsscProps();
+    } else if (widType == TsTextProps.typename) {
+      // create a timeseries widget
+      newWidgetProps.contentProps = new TsTextProps();
     }
     this.setState({
       widgetProps: [...this.state.widgetProps, newWidgetProps]
