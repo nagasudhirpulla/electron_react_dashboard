@@ -437,7 +437,7 @@ class App extends React.Component<AppProps, AppState> {
   onRefreshItem = async (ind: number) => {
     let fetcher = new AppFetcher();
     fetcher.setAppSettings(this.state.appSettings);
-    let wp = fetcher.refreshWidgetData(this.state.widgetProps[ind]);
+    let wp: IDashWidgetProps = await fetcher.refreshWidgetData(this.state.widgetProps[ind]);
     const newState = {
       ...this.state,
       widgetProps: [

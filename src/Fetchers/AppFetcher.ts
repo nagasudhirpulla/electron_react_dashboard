@@ -132,7 +132,7 @@ export class AppFetcher {
                     val = getPercentileFromArray(vals, tsTextProps.percentile);
                 }
             }
-            (wp.contentProps as TsTextProps).val = 0;
+            (wp.contentProps as TsTextProps).val = val;
         }
         return wp;
     }
