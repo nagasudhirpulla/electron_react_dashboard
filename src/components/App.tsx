@@ -437,7 +437,7 @@ class App extends React.Component<AppProps, AppState> {
   onRefreshItem = async (ind: number) => {
     let fetcher = new AppFetcher();
     fetcher.setAppSettings(this.state.appSettings);
-    let wp: IDashWidgetProps = await fetcher.refreshWidgetData(this.state.widgetProps[ind]);
+    const wp: IDashWidgetProps = await fetcher.refreshWidgetData(this.state.widgetProps[ind]);
     const newState = {
       ...this.state,
       widgetProps: [
@@ -445,8 +445,9 @@ class App extends React.Component<AppProps, AppState> {
         { ...wp },
         ...this.state.widgetProps.slice(ind + 1),
       ]
-    }
-    this.setState({ ...newState } as AppState);
+    };
+    this.setState({ ...this.state, widgetProps: [] });
+    this.setState({ ...newState });
   };
 
   // todo remove this once onRefreshItem works well

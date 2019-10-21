@@ -58,7 +58,8 @@ export class AppFetcher {
         return pnts;
     }
 
-    refreshWidgetData = async (wp: IDashWidgetProps): Promise<IDashWidgetProps> => {
+    refreshWidgetData = async (inpWp: IDashWidgetProps): Promise<IDashWidgetProps> => {
+        let wp = { ...inpWp };
         if (wp.contentProps.discriminator == TslpProps.typename) {
             const tslpProps: ITslpProps = wp.contentProps as ITslpProps;
             for (let seriesIter = 0; seriesIter < tslpProps.seriesList.length; seriesIter++) {

@@ -68,14 +68,14 @@ class TimeSeriesText extends Component<ITsTextProps, ITsTextState> implements ID
         };
 
         let valText: string = "";
-        
+
         if (this.state.textComputationStrategy != TextComputationStrategy.noData) {
             const decimalDivider = Math.pow(10, this.state.decimalPrecision);
             valText = "" + (Math.round(this.state.val * decimalDivider) / decimalDivider);
         }
 
         return (
-            <span style={textStyle}>{this.state.prefixText}{valText}{this.state.suffixText}</span>
+            <div style={textStyle}>{this.state.prefixText + valText + this.state.suffixText}</div>
         );
     }
 }
