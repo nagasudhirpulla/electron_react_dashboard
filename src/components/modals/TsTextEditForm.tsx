@@ -110,7 +110,7 @@ export const TsTextEditFormComp = (props) => {
 
             {values.textComputationStrategy == TextComputationStrategy.percentile &&
                 <>
-                    <span><b>Percentile{" "}</b></span>
+                    <span>Percentile{" "}</span>
                     <input
                         type="number"
                         onChange={handleChange}
@@ -172,7 +172,7 @@ export const TsTextEditFormComp = (props) => {
             />
             <WidgetContentDivider />
 
-            <span><b>Font Size{" "}</b></span>
+            <span>Font Size{" "}</span>
             <input
                 type="number"
                 onChange={handleChange}
@@ -182,7 +182,7 @@ export const TsTextEditFormComp = (props) => {
             />
             <WidgetContentDivider />
 
-            <span><b>Max Decimal Places{" "}</b></span>
+            <span>Max Decimal Places{" "}</span>
             <input
                 type="number"
                 onChange={handleChange}
@@ -232,7 +232,7 @@ export const TsTextEditForm = (props) => {
             meas = new AdapterMeasurement();
             (meas as AdapterMeasurement).adapter_id = values.newMeasType;
         }
-        setFieldValue(`${nameStr}.seriesList.meas`, meas);
+        setFieldValue(`${nameStr}.meas`, { ...meas });
     };
 
     let measOptionEls = [];

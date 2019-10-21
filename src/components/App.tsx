@@ -47,7 +47,9 @@ import { AdaptersListItem } from '../adapters/components/AdaptersList';
 import { AdapterMeasurement, IAdapterMeasurement } from '../measurements/AdapterMeasurement';
 import { DataAdapterTslpFetcher } from '../Fetchers/DataAdapterTslpFetcher';
 import { convertToDurationPnts } from '../utils/duration_plot_utils';
-import { TsTextProps } from './ITimeSeriesText';
+import { TsTextProps, ITsTextProps } from './ITimeSeriesText';
+import { FormikTsTextEditForm } from './modals/TsTextEditForm';
+import TimeSeriesText from './TimeSeriesText';
 library.add(faPen, faSyncAlt, faTimesCircle, faCopy, faDownload);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -295,6 +297,10 @@ class App extends React.Component<AppProps, AppState> {
         {
           this.state.widgetProps[ind].contentProps.discriminator == TsscProps.typename &&
           <FormikTsscEditForm {...{ ind: ind, tsscProps: this.state.widgetProps[ind].contentProps as ITsscProps, adapters: this.state.adapters, onFormSubmit: this.editWidget }} />
+        }
+        {
+          this.state.widgetProps[ind].contentProps.discriminator == TsTextProps.typename &&
+          <FormikTsTextEditForm {...{ ind: ind, tsTextProps: this.state.widgetProps[ind].contentProps as ITsTextProps, adapters: this.state.adapters, onFormSubmit: this.editWidget }} />
         }
       </>
     );
@@ -590,6 +596,10 @@ class App extends React.Component<AppProps, AppState> {
       } else if (wp.contentProps.discriminator == TsscProps.typename) {
         content = <div className="cellContent" key={l.i + '_scatter'} style={contentStyle}>
           <TimeSeriesScatterPlot {...wp.contentProps}></TimeSeriesScatterPlot>
+        </div>;
+      } else if (wp.contentProps.discriminator == TsTextProps.typename) {
+        content = <div className="cellContent" key={l.i + '_text'} style={contentStyle}>
+          <TimeSeriesText {...wp.contentProps}></TimeSeriesText>
         </div>;
       }
       return (

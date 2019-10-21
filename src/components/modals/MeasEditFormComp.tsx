@@ -247,7 +247,7 @@ export const DummyMeasEditFormComp = (props) => {
     } = props;
     return (
         <>
-            <span><b>Value 1{" "}</b></span>
+            <span>{"Value 1 "}</span>
             <input
                 type="number"
                 onChange={handleChange}
@@ -256,7 +256,7 @@ export const DummyMeasEditFormComp = (props) => {
                 name={`${name}.value1`}
             />
 
-            <span><b>{"    Value2 "}</b></span>
+            <span>{"    Value 2 "}</span>
             <input
                 type="number"
                 onChange={handleChange}
@@ -266,7 +266,7 @@ export const DummyMeasEditFormComp = (props) => {
             />
             <br /><br />
 
-            <span><b>Periodicity</b></span>
+            <span>Periodicity</span>
             <TimePeriodEditFormComp
                 name={`${name}.periodicity`}
                 values={values.periodicity}
