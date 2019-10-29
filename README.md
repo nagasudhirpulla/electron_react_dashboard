@@ -46,3 +46,13 @@
 * The difference between Electron React Dashboard and Grafana is that Grafana is browser based and Electron React Dashboard is standalone application.
 We can create child windows for scenarios like measurement pickers etc.
 * The difference between Electron React Dashboard and Tableu is that we can't customize it and can't create custom data sources and behaviors.
+
+## Open source frameworks and tools used
+This project was not possible without these tools and frameworks
+* [React-grid-layout](https://github.com/STRML/react-grid-layout)
+* [React](https://github.com/facebook/react)
+* [TypeScript](https://github.com/Microsoft/TypeScript)
+* [Formik](https://github.com/jaredpalmer/formik)
+
+## Download
+You can download the software for windows [here](https://drive.google.com/file/d/139DxtNcYZkFw9LLvxiW1bIIi8wMZ1y82/view?usp=sharing)
