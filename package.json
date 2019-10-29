@@ -83,7 +83,7 @@
       "dist/**"
     ],
     "directories": {
-      "output": "pack_dist"
+      "output": "electron_dashboard_pack"
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true,

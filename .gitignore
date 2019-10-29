@@ -10,6 +10,7 @@
 # production
 # /build
 /pack_dist
+/electron_dashboard_pack
 /dist
 
 # misc
