@@ -33,6 +33,8 @@
 ## New Data sources via Data Adapters
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/data_adapters_screen.png" /></kbd>
 
+Know more about creating and understanding Data adapters [here](https://github.com/nagasudhirpulla/electron_react_dashboard/wiki/Data-Adapters)
+
 ## Widget editing screen
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/widget_edit_screen.png" /></kbd>
 
