@@ -15,7 +15,7 @@ export const AppSettingsEditFormComp = (props) => {
         errors,
         setFieldValue,
         setFieldTouched
-    } = props;
+    }: { values: { appSettings: AppState["appSettings"], timerSettings: AppState["timerSettings"], boardSettings: AppState["boardSettings"] }, [key: string]: any } = props;
 
     return (
         <>
@@ -46,8 +46,8 @@ export const AppSettingsEditFormComp = (props) => {
                 type="checkbox"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                checked={values.timerOn}
-                name={`${name}.timerOn`}
+                checked={values.timerSettings.timerOn}
+                name={`${name}.timerSettings.timerOn`}
             />
 
             <WidgetContentDivider />
@@ -57,16 +57,16 @@ export const AppSettingsEditFormComp = (props) => {
                 type="text"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.backgroundColor}
-                name={`${name}.backgroundColor`}
+                value={values.boardSettings.backgroundColor}
+                name={`${name}.boardSettings.backgroundColor`}
             />
 
             <WidgetContentDivider />
 
             <span>Fetch Periodicity -{" "}</span>
             <TimePeriodEditFormComp
-                name={`${name}.timerPeriodicity`}
-                values={values.timerPeriodicity}
+                name={`${name}.timerSettings.timerPeriodicity`}
+                values={values.timerSettings.timerPeriodicity}
                 errors={errors}
                 touched={touched}
                 handleBlur={handleBlur}
@@ -91,7 +91,7 @@ export const AppSettingsEditForm = (props) => {
         setFieldTouched,
         isSubmitting
     } = props;
-    let nameStr = 'appSettings';
+    let nameStr = 'settings';
 
     return (
         <div className="form_div black_border">
@@ -116,9 +116,13 @@ export const AppSettingsEditForm = (props) => {
 };
 
 
-export const FormikAppSettingsEditForm = withFormik<{ appSettings: AppState["appSettings"], onFormSubmit }, { appSettings: AppState["appSettings"] }, { appSettings: AppState["appSettings"] }>({
+export const FormikAppSettingsEditForm = withFormik<{ appSettings: AppState["appSettings"], timerSettings: AppState["timerSettings"], boardSettings: AppState["boardSettings"], onFormSubmit }, { settings: { appSettings: AppState["appSettings"], timerSettings: AppState["timerSettings"], boardSettings: AppState["boardSettings"] } }, { appSettings: AppState["appSettings"], timerSettings: AppState["timerSettings"], boardSettings: AppState["boardSettings"] }>({
     mapPropsToValues: (props) => ({
-        appSettings: { ...props.appSettings }
+        settings: {
+            appSettings: { ...props.appSettings },
+            timerSettings: { ...props.timerSettings },
+            boardSettings: { ...props.boardSettings }
+        }
     }),
 
     validate: values => {
@@ -128,7 +132,7 @@ export const FormikAppSettingsEditForm = withFormik<{ appSettings: AppState["app
 
     handleSubmit: (values, { props, setSubmitting }) => {
         // alert(JSON.stringify(values));
-        props.onFormSubmit(values.appSettings);
+        props.onFormSubmit({ ...values.settings });
         setSubmitting(false);
     },
 

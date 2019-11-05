@@ -58,10 +58,10 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 class App extends React.Component<AppProps, AppState> {
   static defaultProps = {
     className: "layout",
-    rowHeight: 100,
+    rowHeight: 40,
     onLayoutChange: function (currLayout: Layout, allLayouts) { },
     breakpoints: { lg: 1200, md: 996, sm: 768 },
-    cols: { lg: 12, md: 10, sm: 6 },
+    cols: { lg: 60, md: 50, sm: 30 },
     initialLayout: { lg: [] },
     appSettings: {
       scadaServerBase: "localhost",
@@ -75,10 +75,14 @@ class App extends React.Component<AppProps, AppState> {
       pmuSoapPath: "",
       pmuSoapUsername: "",
       pmuSoapPassword: "",
-      pmuSoapRefMeasId: 2127,
+      pmuSoapRefMeasId: 2127
+    },
+    boardSettings: {
+      backgroundColor: "white"
+    },
+    timerSettings: {
       timerOn: false,
       timerPeriodicity: new TimePeriod(),
-      backgroundColor: "white"
     },
     widgetProps: generateWidgetProps()
   };
@@ -94,13 +98,15 @@ class App extends React.Component<AppProps, AppState> {
     },
     widgetProps: this.props.widgetProps,
     appSettings: this.props.appSettings,
+    boardSettings: this.props.boardSettings,
+    timerSettings: this.props.timerSettings,
     adapters: []
   };
 
   timer: NodeJS.Timer;
 
   startTimer = (duringRender: boolean) => {
-    const timerPeriod = 1000 * TimePeriod.getSeconds(this.state.appSettings.timerPeriodicity);
+    const timerPeriod = 1000 * TimePeriod.getSeconds(this.state.timerSettings.timerPeriodicity);
     if (timerPeriod <= 0) {
       return;
     }
@@ -134,7 +140,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   toggleTimerClick = () => {
-    this.setState({ appSettings: { ...this.state.appSettings, timerOn: !this.state.appSettings.timerOn } } as unknown as AppState);
+    this.setState({ timerSettings: { ...this.state.timerSettings, timerOn: !this.state.timerSettings.timerOn } } as unknown as AppState);
   }
 
   openAssociatedFile = () => {
@@ -253,9 +259,13 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState);
   }
 
-  editAppSettings = (appSettings: AppState["appSettings"]) => {
-    console.log(JSON.stringify(appSettings));
-    this.setState({ appSettings: appSettings } as AppState);
+  editAppSettings = (settingsObj: { appSettings: AppState["appSettings"], timerSettings: AppState["timerSettings"], boardSettings: AppState["boardSettings"] }) => {
+    console.log(JSON.stringify(settingsObj));
+    this.setState({
+      appSettings: settingsObj.appSettings,
+      timerSettings: settingsObj.timerSettings,
+      boardSettings: settingsObj.boardSettings
+    } as AppState);
   }
 
   AddWidgetModalContent = () => {
@@ -269,7 +279,7 @@ class App extends React.Component<AppProps, AppState> {
   AppSettingsModalContent = () => {
     return (
       <>
-        <FormikAppSettingsEditForm {...{ appSettings: this.state.appSettings, onFormSubmit: this.editAppSettings }} />
+        <FormikAppSettingsEditForm {...{ appSettings: this.state.appSettings, timerSettings: this.state.timerSettings, boardSettings: this.state.boardSettings, onFormSubmit: this.editAppSettings }} />
       </>
     );
   };
@@ -358,7 +368,7 @@ class App extends React.Component<AppProps, AppState> {
     if (!(dialogRes.cancelled == true)) {
       const saveFilename: string = dialogRes.filePath;
       console.log(`Saving state to ${saveFilename}`);
-      const fileContents = JSON.stringify(stripDataFromAppState(this.state), null, 2);
+      const fileContents = JSON.stringify(stripDataFromAppState({ ...this.state, timer: { isOn: false, start: 0, busy: false } }), null, 2);
       const isSaved = await writeFileAsync(saveFilename, fileContents);
       console.log(`Save status = ${isSaved}`);
     }
@@ -651,22 +661,22 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     // check if we have to stop the timer
-    if (this.state.timer.isOn == true && this.state.appSettings.timerOn == false) {
+    if (this.state.timer.isOn == true && this.state.timerSettings.timerOn == false) {
       this.stopTimer(true);
     }
 
     // check if we have to start the timer
-    if (this.state.timer.isOn == false && this.state.appSettings.timerOn == true) {
+    if (this.state.timer.isOn == false && this.state.timerSettings.timerOn == true) {
       this.startTimer(true);
     }
 
     const layoutsDict = this.deriveLayouts();
     const divStyle = {
-      backgroundColor: this.state.appSettings.backgroundColor
+      backgroundColor: this.state.boardSettings.backgroundColor
     };
 
     return (
-      <div style={{ backgroundColor: this.state.appSettings.backgroundColor, minHeight: '100vh' }}>
+      <div style={{ backgroundColor: this.state.boardSettings.backgroundColor, minHeight: '100vh' }}>
         <button onClick={this.onOpenDashboard}>Open Dashboard</button>
         <button onClick={this.onSaveDashboard}>Save Dashboard</button>
         <button onClick={this.onOpenPrefsEditor}>Settings</button>
@@ -736,8 +746,8 @@ function generateWidgetProps(): IDashWidgetProps[] {
         lg: {
           x: (ind * 2) % 12,
           y: Math.floor(ind / 6),
-          w: 5,
-          h: 3,
+          w: 38,
+          h: 8,
           i: layKey,
           static: false
         }
