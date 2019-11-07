@@ -9,6 +9,9 @@
 ## Grab and move widgets intuitively
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/grab_move.gif" /></kbd>
 
+## Terminology
+<kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/electron_dashboard_terminology.png" /></kbd>
+
 ## Resize intuitively using Resize handles
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/resize_widget.gif" /></kbd>
 
