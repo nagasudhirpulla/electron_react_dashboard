@@ -43,6 +43,9 @@ export interface ITslpSeriesProps {
     displayTimeShift: ITimePeriod,
     renderStrategy: PlotlyRenderStrategy,
     seriesStyle: TslpSeriesStyle,
+    yAxisIndex: number,
+    yAxisSide: YAxisSide,
+    yAxisOffset: number,
     points: ITslpDataPoint[]
 }
 
@@ -56,6 +59,9 @@ export class TslpSeriesProps implements ITslpSeriesProps {
     fromVarTime: VarTime = new VarTime();
     toVarTime: VarTime = new VarTime();
     displayTimeShift: ITimePeriod = new DisplayTimeShift();
+    yAxisIndex: number = 1;
+    yAxisSide: YAxisSide = YAxisSide.left;
+    yAxisOffset: number = 0;
     points: ITslpDataPoint[] = []
 }
 
@@ -82,6 +88,7 @@ export enum TslpSeriesStyle {
     duration = "duration",
     boxplot = "boxplot",
 }
+
 export interface ITimePeriod {
     years: number,
     months: number,
@@ -124,4 +131,9 @@ export interface IFrame {
 export interface IFigure {
     data: Data[];
     layout: Partial<Layout>;
+}
+
+export enum YAxisSide {
+    left = "left",
+    right = "right"
 }

@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import './TimeSeriesLinePlot.css';
-import { ITslpProps, ITslpState, ITslpDataPoint, IFrame, TslpProps, TimePeriod, TslpSeriesStyle } from "./ITimeSeriesLinePlot";
+import { ITslpProps, ITslpState, ITslpDataPoint, IFrame, TslpProps, TimePeriod, TslpSeriesStyle, YAxisSide } from "./ITimeSeriesLinePlot";
 import Plot from 'react-plotly.js';
 import { Data, Datum, Config, Layout } from 'plotly.js';
 import { Color } from 'plotly.js';
@@ -52,6 +52,12 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
             seriesData.line.width = this.state.seriesList[seriesIter].size;
         }
 
+        // implement y axis settings
+        let yAxisInd = this.state.seriesList[seriesIter].yAxisIndex;
+        if (yAxisInd > 0) {
+            seriesData['yaxis'] = `y${yAxisInd}`;
+        }
+
         // determine series data display time shift
         let shiftMillis: number = 0;
         if (seriesStyle != TslpSeriesStyle.duration) {
@@ -95,6 +101,11 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
     render() {
         // this.fetchAndSetPntData();
         let plot_data: Data[] = this.generatePlotData();
+        let y_axis_common_obj = {
+            tickfont: {
+                color: this.state.titleColor
+            }
+        };
         let plot_layout: Partial<Layout> = {
             autosize: true,
             paper_bgcolor: this.state.backgroundColor,
@@ -114,11 +125,38 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
                 }
             },
             yaxis: {
-                tickfont: {
-                    color: this.state.titleColor
-                }
+                ...y_axis_common_obj
             }
         };
+
+        // iterate through all series objects to create the Y Axis Summary object
+        let yAxSummObj: { [key: string]: { side: YAxisSide, offset: number } } = {};
+        for (let serIter = 0; serIter < this.state.seriesList.length; serIter++) {
+            let yAxisInd = this.state.seriesList[serIter].yAxisIndex;
+            let yAxisSide = this.state.seriesList[serIter].yAxisSide;
+            let yAxisOffset = this.state.seriesList[serIter].yAxisOffset;
+            if (yAxisInd > 1) {
+                yAxSummObj[yAxisInd] = { side: yAxisSide, offset: yAxisOffset };
+            }
+        }
+        const yAxisIndices = Object.keys(yAxSummObj);
+        // create additional yAxis objects
+        for (let yInd = 0; yInd < yAxisIndices.length; yInd++) {
+            let yAxObj = {
+                ...y_axis_common_obj,
+                overlaying: 'y',
+                anchor: 'x'
+            };
+            if (yAxSummObj[yAxisIndices[yInd]].side == YAxisSide.right) {
+                yAxObj['side'] = 'right';
+            }
+            if (yAxSummObj[yAxisIndices[yInd]].offset != 0) {
+                yAxObj['anchor'] = 'free';
+                yAxObj['position'] = yAxSummObj[yAxisIndices[yInd]].offset;
+            }
+            plot_layout[`yaxis${yAxisIndices[yInd]}`] = yAxObj;
+        }
+
         let plot_frames: IFrame[] = [];
         let plot_config: Partial<Config> = {};
 

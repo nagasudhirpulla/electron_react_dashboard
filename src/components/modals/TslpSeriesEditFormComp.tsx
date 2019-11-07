@@ -2,7 +2,7 @@ import React from 'react';
 import { VarTimeEditFormComp } from '../../variable_time/VarTimeEditFormComp';
 import { TimePeriodEditFormComp } from './TimePeriodEditFormComp';
 import { MeasEditFormComp } from './MeasEditFormComp';
-import { PlotlyRenderStrategy, TslpSeriesStyle } from '../ITimeSeriesLinePlot';
+import { PlotlyRenderStrategy, TslpSeriesStyle, ITslpSeriesProps, YAxisSide } from '../ITimeSeriesLinePlot';
 
 const SeriesCompDivider = () => (<div className="series_divider"><hr /></div>);
 
@@ -19,7 +19,7 @@ export const TslpSeriesEditFormComp = (props) => {
         errors,
         setFieldValue,
         setFieldTouched
-    } = props;
+    }: { [key: string]: any, values: ITslpSeriesProps } = props;
     return (
         <>
             <span><b>Series Title{" "}</b></span>
@@ -130,6 +130,42 @@ export const TslpSeriesEditFormComp = (props) => {
                 <option value={TslpSeriesStyle.duration}>Duration Curve</option>
                 <option value={TslpSeriesStyle.boxplot}>Box Plot</option>
             </select>
+
+            <SeriesCompDivider />
+
+            <span><b>Y Axis Number{" "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.yAxisIndex}
+                name={`${name}.yAxisIndex`}
+                min="0"
+            />
+
+            <SeriesCompDivider />
+
+            <span><b>Y Axis Side{" "}</b></span>
+            <select
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.yAxisSide}
+                name={`${name}.yAxisSide`}
+            >
+                <option value={YAxisSide.left}>Left</option>
+                <option value={YAxisSide.right}>Right</option>
+            </select>
+
+            <SeriesCompDivider />
+
+            <span><b>Y Axis Offset{" "}</b></span>
+            <input
+                type="number"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.yAxisOffset}
+                name={`${name}.yAxisOffset`}                
+            />
 
             <SeriesCompDivider />
 
