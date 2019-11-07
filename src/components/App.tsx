@@ -402,7 +402,15 @@ class App extends React.Component<AppProps, AppState> {
         ws.getRow(1).getCell(2 * seriesIter + 2).value = `${seriesTitle}`;
         for (let pntIter = 0; pntIter < (contentProps as TslpProps).seriesList[seriesIter].points.length; pntIter++) {
           const pnt = (contentProps as TslpProps).seriesList[seriesIter].points[pntIter];
-          ws.getRow(pntIter + 2).getCell(2 * seriesIter + 1).value = new Date(pnt.timestamp + 5.5 * 60 * 60 * 1000);
+          const seriesStyle = (contentProps as TslpProps).seriesList[seriesIter].seriesStyle;
+          // handle export of box plot and duration plot
+          let tsVal: any = 0;
+          if (seriesStyle == TslpSeriesStyle.line) {
+            tsVal = new Date(pnt.timestamp + 5.5 * 60 * 60 * 1000);
+          } else {
+            tsVal = pnt.timestamp;
+          }
+          ws.getRow(pntIter + 2).getCell(2 * seriesIter + 1).value = tsVal;
           ws.getRow(pntIter + 2).getCell(2 * seriesIter + 2).value = pnt.value;
         }
       }
