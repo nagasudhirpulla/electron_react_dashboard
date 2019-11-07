@@ -130,13 +130,14 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         };
 
         // iterate through all series objects to create the Y Axis Summary object
-        let yAxSummObj: { [key: string]: { side: YAxisSide, offset: number } } = {};
+        let yAxSummObj: { [key: string]: { side: YAxisSide, offset: number, color: string } } = {};
         for (let serIter = 0; serIter < this.state.seriesList.length; serIter++) {
             let yAxisInd = this.state.seriesList[serIter].yAxisIndex;
             let yAxisSide = this.state.seriesList[serIter].yAxisSide;
             let yAxisOffset = this.state.seriesList[serIter].yAxisOffset;
+            let yAxisCol = this.state.seriesList[serIter].color;
             if (yAxisInd > 1) {
-                yAxSummObj[yAxisInd] = { side: yAxisSide, offset: yAxisOffset };
+                yAxSummObj[yAxisInd] = { side: yAxisSide, offset: yAxisOffset, color: yAxisCol };
             }
         }
         const yAxisIndices = Object.keys(yAxSummObj);
@@ -145,7 +146,9 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
             let yAxObj = {
                 ...y_axis_common_obj,
                 overlaying: 'y',
-                anchor: 'x'
+                anchor: 'x',
+                titlefont: { color: yAxSummObj[yAxisIndices[yInd]].color },
+                tickfont: { color: yAxSummObj[yAxisIndices[yInd]].color },
             };
             if (yAxSummObj[yAxisIndices[yInd]].side == YAxisSide.right) {
                 yAxObj['side'] = 'right';
