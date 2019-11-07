@@ -27,7 +27,7 @@ export const TslpEditFormComp = (props) => {
         errors,
         setFieldValue,
         setFieldTouched
-    } = props;
+    }: { [key: string]: any, values: ITslpProps } = props;
     let TslpSeriesFormComps = [];
     for (let seriesIter = 0; seriesIter < values.seriesList.length; seriesIter++) {
         TslpSeriesFormComps.push(
@@ -92,6 +92,16 @@ export const TslpEditFormComp = (props) => {
                 onBlur={handleBlur}
                 name={`${name}.border`}
                 value={values.border}
+            />
+            <WidgetContentDivider />
+
+            <span>Show Grid{" "}</span>
+            <input
+                type="checkbox"
+                name={`${name}.showGrid`}
+                onChange={handleChange}
+                checked={values.showGrid}
+                onBlur={handleBlur}
             />
             <WidgetContentDivider />
 

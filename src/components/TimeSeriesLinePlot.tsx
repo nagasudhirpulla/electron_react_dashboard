@@ -17,6 +17,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         titleColor: 'black',
         seriesList: [],
         title: 'Default Title',
+        showGrid: true
     };
 
     state = {
@@ -25,6 +26,7 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         titleColor: this.props.titleColor,
         mounted: false,
         title: this.props.title,
+        showGrid: this.props.showGrid
     };
 
     componentDidMount() {
@@ -104,14 +106,18 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
         let y_axis_common_obj = {
             tickfont: {
                 color: this.state.titleColor
-            }
+            },
+            showgrid: this.state.showGrid
         };
         let plot_layout: Partial<Layout> = {
             autosize: true,
             paper_bgcolor: this.state.backgroundColor,
             plot_bgcolor: this.state.backgroundColor,
             legend: {
-                orientation: "h"
+                orientation: "h",
+                font: {
+                    color: this.state.titleColor
+                }
             },
             title: {
                 text: this.state.title,
@@ -122,7 +128,8 @@ class TimeSeriesLinePlot extends Component<ITslpProps, ITslpState> implements ID
             xaxis: {
                 tickfont: {
                     color: this.state.titleColor
-                }
+                },
+                showgrid: this.state.showGrid
             },
             yaxis: {
                 ...y_axis_common_obj

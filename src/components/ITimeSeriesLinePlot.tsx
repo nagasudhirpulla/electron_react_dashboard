@@ -8,7 +8,8 @@ export interface ITslpProps extends IDashWidgetContentProps {
     seriesList: ITslpSeriesProps[],
     backgroundColor: Color,
     titleColor: Color,
-    title: string
+    title: string,
+    showGrid: boolean
 }
 
 export class TslpProps implements ITslpProps {
@@ -19,6 +20,7 @@ export class TslpProps implements ITslpProps {
     backgroundColor: Color = "white";
     titleColor: Color = "black";
     title: string = "Timeseries Plot";
+    showGrid: boolean = true;
 }
 
 export interface ITslpState extends IDashWidgetContentState {
@@ -26,6 +28,7 @@ export interface ITslpState extends IDashWidgetContentState {
     backgroundColor: Color,
     titleColor: Color,
     title: string,
+    showGrid: boolean,
     mounted: boolean
 }
 
