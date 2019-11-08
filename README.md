@@ -27,6 +27,9 @@
 ## Refresh one or all widgets
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/refresh_widgets.gif" /></kbd>
 
+## Supports Multiple Axes
+<kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/multiple_axes_example.png" /></kbd>
+
 ## Open and Save dashboards
 <kbd><img src="https://github.com/nagasudhirpulla/electron_react_dashboard/raw/master/wiki_assets/open_save_widget.gif" /></kbd>
 
